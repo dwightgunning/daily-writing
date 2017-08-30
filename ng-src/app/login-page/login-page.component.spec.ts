@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { LoginFormComponent } from '../login-form/login-form.component';
@@ -19,7 +19,7 @@ describe('LoginPageComponent', () => {
       ],
       imports: [
         FormsModule,
-        HttpModule
+        HttpClientModule
       ],
       providers: [
         { provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); } },

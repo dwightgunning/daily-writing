@@ -1,0 +1,6 @@
+@mixin words-textarea {
+  font-size: rem-calc(24);
+  height: 80vh;
+  line-height: rem-calc(40);
+  padding: rem-calc(60);
+}

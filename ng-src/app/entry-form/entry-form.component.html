@@ -1,0 +1,13 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="medium-12 cell">
+      <form #entryForm="ngForm">
+        <textarea id="words" name="words" type="text" [(ngModel)]="model.words" #words="ngModel"></textarea>
+      </form>
+      <div>Date: {{ entryDate | amLocal | amDateFormat: 'YYYY-MM-DD' }} </div>
+      <div>Word count: {{ model.wordCount() }}</div>
+      <div *ngIf="model.finish_time">Last saved: {{ lastSavedLocalString() }} {{ model.entry_timezone }}</div>
+      <div *ngIf="model.milestone_time">Milestone reached at: {{ milestoneTimeLocalString() }} {{ model.entry_timezone }}</div>
+    </div>
+  </div>
+</div>

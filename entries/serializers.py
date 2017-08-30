@@ -9,20 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .models import Entry
-
-
-class TimezoneField(serializers.Field):
-
-    def to_representation(self, obj):
-        return str(obj)
-
-    def to_internal_value(self, data):
-        try:
-            return pytz.timezone(str(data))
-        except pytz.exceptions.UnknownTimeZoneError:
-            raise serializers.ValidationError(_('Unknown timezone'))
-
+from entries.models import Entry
+from users.serializers import TimezoneField
 
 class EntryDetailSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(

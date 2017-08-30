@@ -1,0 +1,49 @@
+@import '../../assets/foundation-sites/foundation';
+
+.timezone {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .select2-container { // sass-lint:disable-line force-element-nesting
+  @include form-select;
+  background-image: none;
+
+  &:focus {
+    outline: none;
+  }
+
+
+  &.select2-container--focus { // sass-lint:disable-line class-name-format
+    background-color: $input-background-focus;
+    border: $input-border-focus;
+    box-shadow: $input-shadow-focus;
+    outline: none;
+
+    @if has-value($input-transition) {
+      transition: $input-transition;
+    }
+  }
+
+  .select2-selection {
+    border: 0;
+
+    &:focus {
+      outline: none;
+    }
+
+    .select2-selection__rendered { // sass-lint:disable-line class-name-format
+      line-height: inherit;
+      padding-left: 0;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .select2-selection__arrow { // sass-lint:disable-line class-name-format
+    height: 100%;
+  }
+}

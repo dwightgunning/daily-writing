@@ -1,21 +1,21 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AuthService } from './auth.service';
+import { ProfileService } from './profile.service';
 
-describe('AuthService', () => {
+describe('ProfileService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule
       ],
       providers: [
-        AuthService
+        ProfileService
       ]
     });
   });
 
-  it('should be created', inject([AuthService], (service: AuthService) => {
+  it('should be created', inject([ProfileService], (service: ProfileService) => {
     expect(service).toBeTruthy();
   }));
 });

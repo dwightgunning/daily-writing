@@ -1,0 +1,10 @@
+@import '../../assets/foundation-sites/foundation';
+@import '../../assets/scss/words-textarea';
+
+.words {
+  @include shadow;
+  @include words-textarea;
+  background-color: $white;
+  cursor: default;
+}
+

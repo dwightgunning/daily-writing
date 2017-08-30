@@ -26,7 +26,7 @@ export class LoginFormComponent implements OnInit {
       (response) => {
         this.submitted = false;
         if (response instanceof UserLoginCredentials) {
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/write']);
         } else {
           this.error = response;
         }

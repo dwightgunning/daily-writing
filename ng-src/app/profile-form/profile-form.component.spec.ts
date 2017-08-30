@@ -3,30 +3,39 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { LoginFormComponent } from './login-form.component';
-import { AuthService } from '../services/auth.service';
+import { MomentModule } from 'angular2-moment';
+import { TimezonePickerModule } from 'ng2-timezone-selector';
 
-describe('LoginFormComponent', () => {
-  let component: LoginFormComponent;
-  let fixture: ComponentFixture<LoginFormComponent>;
+import { AuthService } from '../services/auth.service';
+import { ProfileFormComponent } from './profile-form.component';
+import { ProfileService } from '../services/profile.service';
+
+describe('ProfileFormComponent', () => {
+  let component: ProfileFormComponent;
+  let fixture: ComponentFixture<ProfileFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginFormComponent ],
+      declarations: [
+        ProfileFormComponent
+      ],
       imports: [
         FormsModule,
-        HttpClientModule
+        HttpClientModule,
+        MomentModule,
+        TimezonePickerModule
       ],
       providers: [
         { provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); } },
-        AuthService
+        AuthService,
+        ProfileService
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoginFormComponent);
+    fixture = TestBed.createComponent(ProfileFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

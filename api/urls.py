@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^user/$', user.UserView.as_view(), name='user'),
 
     url(r'^', include('entries.urls')),
+    url(r'^', include('users.urls')),
 ]

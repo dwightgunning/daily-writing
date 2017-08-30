@@ -1,0 +1,6 @@
+@import '../../assets/foundation-sites/foundation';
+@import '../../assets/scss/words-textarea';
+
+textarea {
+  @include words-textarea;
+}

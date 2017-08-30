@@ -1,0 +1,65 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <form #profileForm="ngForm" (submit)="profileFormSubmit()">
+      <div class="medium-6 cell">
+        <label>Email
+          <input
+            id="email"
+            name="email"
+            type="email"
+            tabindex="0"
+            [(ngModel)]="model.email"
+            #email="ngModel">
+        </label>
+      </div>
+      <div class="medium-6 cell">
+        <label>First name
+          <input
+            id="first_name"
+            name="first_name"
+            type="text"
+            tabindex="0"
+            [(ngModel)]="model.first_name"
+            #first_name="ngModel">
+        </label>
+      </div>
+      <div class="medium-6 cell">
+        <label>Last name
+          <input
+            id="last_name"
+            name="last_name"
+            type="text"
+            tabindex="0"
+            [(ngModel)]="model.last_name"
+            #last_name="ngModel">
+        </label>
+      </div>
+      <div class="medium-6 cell">
+        <label>Timezone
+          <ng2-timezone-picker
+            class="timezone"
+            [(timezone)]="model.timezone">
+          </ng2-timezone-picker>
+        </label>
+      </div>
+      <div class="medium-6 cell">
+        <label>Last name
+          <input
+            id="target_milestone_word_count"
+            name="target_milestone_word_count"
+            type="text"
+            tabindex="0"
+            [(ngModel)]="model.target_milestone_word_count"
+            #target_milestone_word_count="ngModel">
+          </label>
+        </div>
+      <button
+        type="submit"
+        class="button primary"
+        tabindex="0"
+        [disabled]="!profileForm.form.valid">
+        Submit
+      </button>
+    </form>
+  </div>
+</div>
