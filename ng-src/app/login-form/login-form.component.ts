@@ -16,13 +16,13 @@ export class LoginFormComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private AuthService: AuthService) { }
+    private authService: AuthService) { }
 
   ngOnInit() { }
 
   loginFormSubmit() {
     this.submitted = true;
-    this.AuthService.login(this.model).subscribe(
+    this.authService.login(this.model).subscribe(
       (response) => {
         this.submitted = false;
         if (response instanceof UserLoginCredentials) {

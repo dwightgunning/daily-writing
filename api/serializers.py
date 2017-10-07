@@ -2,7 +2,7 @@ from collections import Counter
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -52,7 +52,7 @@ class UserSerializer(serializers.ModelSerializer):
         if password:
             try:
                 validate_password(password, self.instance)
-            except ValidationError as e:
+            except django_exceptions.ValidationError as e:
                 raise serializers.ValidationError({'password': e.messages})
         else:
             raise serializers.ValidationError(
@@ -89,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
             else:
                 try:
                     validate_password(password_new, self.instance)
-                except ValidationError as e:
+                except django_exceptions.ValidationError as e:
                     raise serializers.ValidationError(
                         {'password_new': e.messages})
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
@@ -10,22 +11,22 @@ import 'rxjs/add/operator/toPromise';
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements OnInit {
-  url = 'http://localhost:8000/api/';
   apiResponse;
   title = 'Daily Writing';
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    console.log('Initialising the homepage');
     this.getApi();
   }
 
   private getApi() {
-    this.http.get(this.url).toPromise().then((res) => {
-      this.apiResponse = res;
-      console.log(res);
-    });
+    this.http.get(
+        environment.API_BASE_URL,
+        {headers: new HttpHeaders({'Authorization': 'SkipInterceptor'})})
+      .toPromise().then((res) => {
+        this.apiResponse = JSON.stringify(res);
+      });
   }
 
 }

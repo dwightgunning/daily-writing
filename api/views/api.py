@@ -17,5 +17,6 @@ class APIRootView(APIView):
             'auth': '/auth',
             'objects': '/objects',
             'user': '/user',
+            'entries': '/entries',
         }
         return Response(paths)

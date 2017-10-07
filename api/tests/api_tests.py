@@ -17,5 +17,6 @@ class APITests(APITestCase):
         self.assertEqual(response.data, {
             'auth': '/auth',
             'objects': '/objects',
-            'user': '/user'
+            'user': '/user',
+            'entries': '/entries',
             })
