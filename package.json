@@ -1,14 +1,16 @@
 {
-  "name": "djangongboilerplate",
+  "name": "ng-dj-daily-words",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "heroku-postbuild": "./bin/heroku-postbuild-node",
+    "lint": "ng lint && npm run lint-sass",
+    "lint-sass": "./node_modules/sass-lint/bin/sass-lint.js -c sass-lint.yml -v -q",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -26,8 +28,11 @@
     "foundation-sites": "^6.4.1",
     "jquery": "^3.2.1",
     "moment-timezone": "^0.5.13",
+    "newrelic": "^2.2.2",
+    "ng2-timezone-selector": "^0.1.4",
     "node-sass": "^4.5.3",
     "raven-js": "^3.17.0",
+    "replace": "^0.3.0",
     "rxjs": "^5.4.1",
     "webfontloader": "^1.6.28",
     "zone.js": "^0.8.14"
@@ -52,5 +57,14 @@
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
     "typescript": "~2.3.3"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "and_chr >= 2.3",
+    "not ie <= 10",
+    "not ie_mob <= 10"
+  ],
+  "engines": {
+    "node": "8.4.0"
   }
 }

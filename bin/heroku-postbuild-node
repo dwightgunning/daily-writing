@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+yarn run replace '%SENTRY_DSN_PUBLIC%' $SENTRY_DSN_PUBLIC ng-src/environments/environment.prod.ts
+
+yarn run replace '%API_BASE_URL%' $API_BASE_URL ng-src/environments/environment.prod.ts
+
+ng build --aot --prod --output-hashing=all

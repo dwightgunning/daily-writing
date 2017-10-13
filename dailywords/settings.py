@@ -17,13 +17,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
     'rest_framework',
+    'timezone_field',
     'api.apps.ApiConfig',
+    'entries.apps.EntriesConfig',
     'users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
     'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -33,22 +36,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'dailywords.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
 
 WSGI_APPLICATION = 'dailywords.wsgi.application'
 
@@ -88,12 +75,27 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'django-staticfiles')
 STATIC_URL = '/static/'
 
+WHITENOISE_INDEX_FILE = True
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'ng-dist')
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': (WHITENOISE_ROOT,),  # For dailywords.urls catch all mapping
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # Django Rest Framework
 
@@ -133,8 +135,8 @@ except:
     DEBUG = os.environ['DEBUG'] == 'True'
     EMAIL_BACKEND = os.environ['EMAIL_BACKEND']
     RAVEN_CONFIG = {
-        'dsn': os.environ['RAVEN_CONFIG_DSN'],
-        'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+        'dsn': os.environ['SENTRY_DSN'],
+        'release': os.environ['SOURCE_VERSION']
     }
     SECRET_KEY = os.environ['SECRET_KEY']
 

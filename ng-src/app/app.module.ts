@@ -20,7 +20,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { UserService } from './services/user.service';
 
 Raven
-  .config(environment.SENTRY_PUBLIC_DSN)
+  .config(environment.SENTRY_DSN_PUBLIC)
   .install();
 
 export class RavenErrorHandler implements ErrorHandler {
