@@ -6,14 +6,14 @@ from django.dispatch import receiver
 from timezone_field import TimeZoneField
 
 
-class DailyWordsProfile(models.Model):
+class DailyWritingProfile(models.Model):
     user = models.OneToOneField(get_user_model(),
-                                related_name='daily_words_profile')
+                                related_name='daily_writing_profile')
     timezone = TimeZoneField(default='UTC')
     target_milestone_word_count = models.PositiveIntegerField(default=700)
 
 @receiver(post_save, sender=get_user_model())
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        DailyWordsProfile.objects.create(user=instance)
-    instance.daily_words_profile.save()
+        DailyWritingProfile.objects.create(user=instance)
+    instance.daily_writing_profile.save()

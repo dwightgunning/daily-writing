@@ -32,7 +32,7 @@ LOGGING = {
         }
     },
     'loggers': {
-        'dailywords': {
+        'dailywriting': {
             'handlers': ['console', 'sentry'],
             'level': 'WARNING',
         },

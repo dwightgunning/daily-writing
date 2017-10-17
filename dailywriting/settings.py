@@ -35,9 +35,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'dailywords.urls'
+ROOT_URLCONF = 'dailywriting.urls'
 
-WSGI_APPLICATION = 'dailywords.wsgi.application'
+WSGI_APPLICATION = 'dailywriting.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -85,7 +85,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
-        'DIRS': (WHITENOISE_ROOT,),  # For dailywords.urls catch all mapping
+        'DIRS': (WHITENOISE_ROOT,),  # For dailywriting.urls catch all mapping
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -125,7 +125,7 @@ JWT_AUTH = {
 # Environment specific settings
 
 try:
-    from dailywords.settings_local import *  # NOQA
+    from dailywriting.settings_local import *  # NOQA
 except:
     import raven  # NOQA
     print('No settings_local.py available.')
@@ -141,7 +141,7 @@ except:
     SECRET_KEY = os.environ['SECRET_KEY']
 
 try:
-    from dailywords.settings_logging import *  # NOQA
+    from dailywriting.settings_logging import *  # NOQA
 except:
     print('Error loading logging configuration')
     raise

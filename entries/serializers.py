@@ -50,7 +50,7 @@ class EntryDetailSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         author = validated_data['author']
-        dw_profile = author.daily_words_profile
+        dw_profile = author.daily_writing_profile
 
         today = datetime.now(timezone.utc)
         if validated_data['entry_date'].strftime('%Y-%m-%d') != \
@@ -71,7 +71,7 @@ class EntryDetailSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         author = validated_data['author']
-        dw_profile = author.daily_words_profile
+        dw_profile = author.daily_writing_profile
 
         today = datetime.now(timezone.utc)
         if validated_data['entry_date'].strftime('%Y-%m-%d') != \

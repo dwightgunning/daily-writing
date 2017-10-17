@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 
-from users.models import DailyWordsProfile
+from users.models import DailyWritingProfile
 
 
 class TimezoneField(serializers.Field):
@@ -19,14 +19,14 @@ class TimezoneField(serializers.Field):
             raise serializers.ValidationError(_('Unknown timezone'))
 
 
-class DailyWordsProfileSerializer(serializers.ModelSerializer):
+class DailyWritingProfileSerializer(serializers.ModelSerializer):
     timezone = TimezoneField()
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     email = serializers.EmailField(source='user.email')
 
     class Meta:
-        model = DailyWordsProfile
+        model = DailyWritingProfile
         fields = ('first_name', 'last_name', 'email', 'timezone', 'target_milestone_word_count',)
 
     def update(self, instance, validated_data):
@@ -36,4 +36,4 @@ class DailyWordsProfileSerializer(serializers.ModelSerializer):
                 for (key, value) in user_updates.items():
                     setattr(instance.user, key, value)
                 instance.user.save()
-            return super(DailyWordsProfileSerializer, self).update(instance, validated_data)
+            return super(DailyWritingProfileSerializer, self).update(instance, validated_data)

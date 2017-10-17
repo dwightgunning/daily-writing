@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import DailyWordsProfile
+from .models import DailyWritingProfile
 
 
-@admin.register(DailyWordsProfile)
-class DailyWordsProfileAdmin(admin.ModelAdmin):
+@admin.register(DailyWritingProfile)
+class DailyWritingProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'timezone')

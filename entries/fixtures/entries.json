@@ -36,7 +36,7 @@
     }
   },
   {
-    "model": "users.dailywordsprofile",
+    "model": "users.dailywritingprofile",
     "pk": 1,
     "fields": {
       "user": 2,
@@ -45,7 +45,7 @@
     }
   },
   {
-    "model": "users.dailywordsprofile",
+    "model": "users.dailywritingprofile",
     "pk": 2,
     "fields": {
       "user": 1,
