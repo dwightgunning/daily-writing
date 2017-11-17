@@ -1,11 +1,11 @@
+import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
 
-import { LoginFormComponent } from '../login-form/login-form.component';
-import { LoginPageComponent } from './login-page.component';
 import { AuthService } from '../services/auth.service';
+import { LoginPageComponent } from './login-page.component';
+
+@Component({selector: 'app-login-form', template: ''})
+class StubLoginFormComponent {}
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -15,16 +15,10 @@ describe('LoginPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         LoginPageComponent,
-        LoginFormComponent
+        StubLoginFormComponent
       ],
-      imports: [
-        FormsModule,
-        HttpClientModule
-      ],
-      providers: [
-        { provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); } },
-        AuthService
-      ]
+      imports: [],
+      providers: []
     })
     .compileComponents();
   }));

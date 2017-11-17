@@ -1,11 +1,12 @@
-import { environment } from '../../environments/environment';
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/share';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/map';
 
+import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 
 @Injectable()

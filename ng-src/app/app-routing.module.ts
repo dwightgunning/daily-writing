@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
-import { AuthGuard } from './guards/auth.guard';
 import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
+import { AuthGuard } from './guards/auth.guard';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { LogoutComponent } from './logout/logout.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { ReviewPageComponent } from './review-page/review-page.component';
 import { WritingPageComponent } from './writing-page/writing-page.component';
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent,
   },
   {
     path: 'write',

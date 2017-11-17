@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { Observable } from 'rxjs/Observable';
 
-import { AuthService } from '../services/auth.service';
 import { UserLoginCredentials } from '../models/user-login-credentials';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-top-nav-bar',
@@ -14,17 +15,10 @@ export class TopNavBarComponent implements OnInit {
   userLoginCredentials: Observable<UserLoginCredentials>;
 
   constructor(
-    private router: Router,
-    private AuthService: AuthService) {
-      this.userLoginCredentials = AuthService.getUserLoginCredentials();
-  }
+    private authService: AuthService) { }
 
   ngOnInit() {
-  }
-
-  public logoutUser(): void {
-    this.AuthService.logout();
-    this.router.navigate(['/']);
+    this.userLoginCredentials = this.authService.getUserLoginCredentials();
   }
 
 }

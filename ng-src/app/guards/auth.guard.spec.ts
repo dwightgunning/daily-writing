@@ -1,9 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
-import { TestBed, async, inject } from '@angular/core/testing';
+import { async, inject, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { AuthGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
+import { AuthGuard } from './auth.guard';
 
 describe('AuthGuard', () => {
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe('AuthGuard', () => {
     });
   });
 
-  it('should ...', inject([AuthGuard], (guard: AuthGuard) => {
+  xit('should have tests', inject([AuthGuard], (guard: AuthGuard) => {
     expect(guard).toBeTruthy();
   }));
 });

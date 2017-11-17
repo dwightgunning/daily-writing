@@ -13,7 +13,6 @@ export class ProfilePageComponent implements OnInit {
   private user: User = new User();
 
   constructor(
-    private router: Router,
     private userService: UserService) { }
 
   ngOnInit() {
@@ -22,8 +21,7 @@ export class ProfilePageComponent implements OnInit {
 
   getUser(): void {
     this.userService.getUser().subscribe(
-      user => this.user = user,
-      error => this.router.navigate(['/login'])
+      user => this.user = user
     );
   }
 

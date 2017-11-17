@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { EntryService } from '../services/entry.service';
-import { Entry } from '../models/entry';
 import { ApiDataPage } from '../models/api-data-page';
+import { Entry } from '../models/entry';
+import { EntryService } from '../services/entry.service';
 
 @Component({
   selector: 'app-entry-list',

@@ -1,14 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 import { MomentModule } from 'angular2-moment';
 import { TimezonePickerModule } from 'ng2-timezone-selector';
 
-import { AuthService } from '../services/auth.service';
-import { ProfileFormComponent } from './profile-form.component';
+import { Profile } from '../models/profile';
 import { ProfileService } from '../services/profile.service';
+import { ProfileFormComponent } from './profile-form.component';
+
+const stubProfileFormComponent = {
+  getProfile(): Observable<Profile> {
+    return Observable.of(new Profile());
+  }
+};
 
 describe('ProfileFormComponent', () => {
   let component: ProfileFormComponent;
@@ -21,14 +29,12 @@ describe('ProfileFormComponent', () => {
       ],
       imports: [
         FormsModule,
-        HttpClientModule,
         MomentModule,
+        RouterTestingModule.withRoutes([]),
         TimezonePickerModule
       ],
       providers: [
-        { provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); } },
-        AuthService,
-        ProfileService
+        { provide: ProfileService, useValue: stubProfileFormComponent }
       ]
     })
     .compileComponents();

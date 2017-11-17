@@ -1,26 +1,19 @@
-import { APP_BASE_HREF } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
-import { MomentModule } from 'angular2-moment';
-import { TimezonePickerModule } from 'ng2-timezone-selector';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
-import { AppComponent } from '../app.component';
-import { AppRoutingModule } from '../app-routing.module';
-import { AuthService } from '../services/auth.service';
-import { EntryFormComponent } from '../entry-form/entry-form.component';
-import { EntryListComponent } from '../entry-list/entry-list.component';
-import { EntryService } from '../services/entry.service';
 import { EntryReviewPageComponent } from '../entry-review-page/entry-review-page.component';
-import { LoginFormComponent } from '../login-form/login-form.component';
-import { LoginPageComponent } from '../login-page/login-page.component';
-import { HomePageComponent } from '../home-page/home-page.component';
-import { TopNavBarComponent } from '../top-nav-bar/top-nav-bar.component';
-import { ProfileFormComponent } from '../profile-form/profile-form.component';
-import { ProfilePageComponent } from '../profile-page/profile-page.component';
-import { ReviewPageComponent } from '../review-page/review-page.component';
-import { WritingPageComponent } from '../writing-page/writing-page.component';
+import { Entry } from '../models/entry';
+import { EntryService } from '../services/entry.service';
+
+const entryServiceStub = {
+  getEntry(entry_date: string): Observable<Entry> {
+    return Observable.of(new Entry());
+  }
+};
 
 describe('EntryReviewPageComponent', () => {
   let component: EntryReviewPageComponent;
@@ -29,30 +22,16 @@ describe('EntryReviewPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent,
-        EntryFormComponent,
-        EntryListComponent,
         EntryReviewPageComponent,
-        LoginPageComponent,
-        HomePageComponent,
-        TopNavBarComponent,
-        ProfileFormComponent,
-        ProfilePageComponent,
-        LoginFormComponent,
-        ReviewPageComponent,
-        WritingPageComponent
       ],
       imports: [
-        AppRoutingModule,
-        FormsModule,
-        HttpClientModule,
-        MomentModule,
-        TimezonePickerModule
+        FormsModule
       ],
       providers: [
-        AuthService,
-        {provide: APP_BASE_HREF, useValue: '/'},
-        EntryService
+        {provide: EntryService, useValue: entryServiceStub},
+        {provide: ActivatedRoute, useValue: {
+          params: Observable.of({entry_date: '2017-10-01'})},
+        }
       ]
     })
     .compileComponents();

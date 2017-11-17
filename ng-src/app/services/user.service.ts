@@ -1,14 +1,14 @@
-import { environment } from '../../environments/environment';
-import { Injectable } from '@angular/core';
-import { UserLoginCredentials } from '../models/user-login-credentials';
-import { Headers, RequestOptions } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
 
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs/Observable';
+
+import { environment } from '../../environments/environment';
 import { User } from '../models/user';
+import { UserLoginCredentials } from '../models/user-login-credentials';
 
 @Injectable()
 export class UserService {

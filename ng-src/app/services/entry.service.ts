@@ -1,18 +1,18 @@
-import { environment } from '../../environments/environment';
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/observable/of';
+import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
-import { AuthService } from './auth.service';
-import { Entry } from '../models/entry';
+import { environment } from '../../environments/environment';
 import { ApiDataPage } from '../models/api-data-page';
+import { Entry } from '../models/entry';
 import { UserLoginCredentials } from '../models/user-login-credentials';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class EntryService {

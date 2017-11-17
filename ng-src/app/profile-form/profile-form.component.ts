@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
-import { AuthService } from '../services/auth.service';
-import { ProfileService } from '../services/profile.service';
 import { Profile } from '../models/profile';
-
+import { ProfileService } from '../services/profile.service';
 
 @Component({
   selector: 'app-profile-form',
@@ -18,7 +16,6 @@ export class ProfileFormComponent implements OnInit {
   @ViewChild('profileForm') profileForm: any;
 
   constructor(
-    private authService: AuthService,
     private profileService: ProfileService) { }
 
   ngOnInit() {

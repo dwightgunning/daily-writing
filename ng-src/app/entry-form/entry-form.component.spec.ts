@@ -1,12 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MomentModule } from 'angular2-moment';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
-import { AuthService } from '../services/auth.service';
-import { EntryFormComponent } from './entry-form.component';
+import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry.service';
+import { EntryFormComponent } from './entry-form.component';
+
+const entryServiceStub = {
+  getOrCreateEntry(): Observable<Entry> {
+    return Observable.of(new Entry());
+  }
+};
 
 describe('EntryFormComponent', () => {
   let component: EntryFormComponent;
@@ -19,12 +26,10 @@ describe('EntryFormComponent', () => {
       ],
       imports: [
         FormsModule,
-        HttpClientModule,
         MomentModule
       ],
       providers: [
-        AuthService,
-        EntryService
+        {provide: EntryService, useValue: entryServiceStub }
       ]
     })
     .compileComponents();
@@ -37,6 +42,13 @@ describe('EntryFormComponent', () => {
   });
 
   it('should be created', () => {
+    const entryService = fixture.debugElement.injector.get(EntryService);
+
     expect(component).toBeTruthy();
   });
+
+  it('should retrieve the day\'s entry on initialisation', () => {
+    expect(component).toBeTruthy();
+  });
+
 });

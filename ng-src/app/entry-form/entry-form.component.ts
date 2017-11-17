@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
 import moment from 'moment-timezone';
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/sample';
 import 'rxjs/add/operator/skip';
+import {Observable} from 'rxjs/Observable';
 
-import { AuthService } from '../services/auth.service';
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry.service';
 
@@ -23,8 +22,7 @@ export class EntryFormComponent implements OnInit {
   @ViewChild('entryForm') entryForm: any;
 
   constructor(
-    private entryService: EntryService,
-    private authService: AuthService) { }
+    private entryService: EntryService) { }
 
   ngOnInit() {
     this.entryService.getOrCreateEntry().subscribe(

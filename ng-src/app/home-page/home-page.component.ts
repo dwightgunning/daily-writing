@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
+import { Component, OnInit } from '@angular/core';
 
+import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',

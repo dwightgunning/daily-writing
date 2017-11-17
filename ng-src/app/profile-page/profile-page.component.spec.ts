@@ -1,16 +1,22 @@
+import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { MomentModule } from 'angular2-moment';
-import { TimezonePickerModule } from 'ng2-timezone-selector';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
-import { AuthService } from '../services/auth.service';
-import { ProfilePageComponent } from './profile-page.component';
-import { ProfileFormComponent } from '../profile-form/profile-form.component';
-import { ProfileService } from '../services/profile.service';
+import { UserLoginCredentials } from '../models/user-login-credentials';
 import { UserService } from '../services/user.service';
+import { ProfilePageComponent } from './profile-page.component';
+
+@Component({selector: 'app-profile-form', template: ''})
+class StubProfileFormComponent {}
+
+const userServiceStub = {
+  getUser(): Observable<UserLoginCredentials> {
+    return Observable.of(new UserLoginCredentials());
+  }
+};
 
 describe('ProfilePageComponent', () => {
   let component: ProfilePageComponent;
@@ -20,19 +26,13 @@ describe('ProfilePageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ProfilePageComponent,
-        ProfileFormComponent
+        StubProfileFormComponent
       ],
       imports: [
-        FormsModule,
-        HttpClientModule,
-        MomentModule,
-        TimezonePickerModule
+        RouterTestingModule.withRoutes([])
       ],
       providers: [
-        { provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); } },
-        AuthService,
-        ProfileService,
-        UserService
+        {provide: UserService, useValue: userServiceStub }
       ]
     })
     .compileComponents();
@@ -46,5 +46,14 @@ describe('ProfilePageComponent', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have the title "Profile"', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1').textContent).toContain('Profile');
+  });
+
+  xit('should input the user object into the child form', () => {
+    expect(false).toBeTruthy();
   });
 });

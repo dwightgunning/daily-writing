@@ -10,7 +10,7 @@
     "heroku-postbuild": "./bin/heroku-postbuild-node",
     "lint": "ng lint && npm run lint-sass",
     "lint-sass": "./node_modules/sass-lint/bin/sass-lint.js -c sass-lint.yml -v -q",
-    "test": "ng test"
+    "test": "ng test --code-coverage"
   },
   "private": true,
   "dependencies": {
