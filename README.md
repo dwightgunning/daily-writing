@@ -76,7 +76,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 The backend API for this project is built upon the [Django Framework](https://www.djangoproject.com).
 
-The backed developer tooling and experience is consistent with the Angular CLI, with the following adjustments:
+The backed developer tooling and experience is consistent with the Django Framework, with the following adjustments:
  - Linting
 
 #### Linting
@@ -89,6 +89,6 @@ To get more help on the Django Framework use `python manage.py help`, go check o
 
 ## Copyright and License Information
 
-Copyright (c) 2015-2017 Stream.io Inc, and individual contributors. All rights reserved.
+Copyright (c) 2015-2017 Dwight Gunning, and individual contributors. All rights reserved.
 
 See the file "LICENSE" for information on the history of this software, terms & conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.
