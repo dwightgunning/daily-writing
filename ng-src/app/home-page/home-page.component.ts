@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/operator/toPromise';
+// import { Observable } from 'rxjs/Observable';
 
-import { environment } from '../../environments/environment';
+// import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',
@@ -15,19 +15,7 @@ export class HomePageComponent implements OnInit {
   apiResponse;
   title = 'Daily Writing';
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
-  ngOnInit() {
-    this.getApi();
-  }
-
-  private getApi() {
-    this.http.get(
-        environment.API_BASE_URL,
-        {headers: new HttpHeaders({'Authorization': 'SkipInterceptor'})})
-      .toPromise().then((res) => {
-        this.apiResponse = JSON.stringify(res);
-      });
-  }
-
+  ngOnInit() { }
 }
