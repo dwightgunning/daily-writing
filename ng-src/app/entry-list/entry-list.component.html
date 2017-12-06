@@ -1,26 +1,34 @@
 <div *ngIf="entryDataPage">
-  <ul>
-    <li *ngFor="let entry of entryDataPage.results">
-      <a *ngIf="entry.entry_date == todayDate" [routerLink]="'/write'">{{ entry.entry_date }}</a>
-      <a *ngIf="entry.entry_date != todayDate" [routerLink]="['/review/entry', entry.entry_date]">{{ entry.entry_date }}</a>
-      <span *ngIf="entry.milestone_time"> Milestone reached!</span>
-    </li>
-  </ul>
-  <div>
-    <span>
-      <button
-        class="hollow button"
-        (click)="onPaginate(entryDataPage.next)"
-        [disabled]="!entryDataPage.next">
-          < Earlier
-      </button>
-    </span>
-    <span>
-      <button class="hollow button"
-        (click)="onPaginate(entryDataPage.previous)"
-        [disabled]="!entryDataPage.previous">
-        Later >
-      </button>
-    </span>
+  <div *ngIf="entryDataPage.results.length">
+    <ul *ngIf="entryDataPage.results">
+      <li *ngFor="let entry of entryDataPage.results">
+        <a *ngIf="entry.entry_date == todayDate" [routerLink]="'/write'">{{ entry.entry_date }}</a>
+        <a *ngIf="entry.entry_date != todayDate" [routerLink]="['/review/entry', entry.entry_date]">{{ entry.entry_date }}</a>
+        <span *ngIf="entry.milestone_time"> Milestone reached!</span>
+      </li>
+    </ul>
+    <div>
+      <span>
+        <button
+          class="hollow button"
+          (click)="onPaginate(entryDataPage.next)"
+          [disabled]="!entryDataPage.next">
+            < Earlier
+        </button>
+      </span>
+      <span>
+        <button class="hollow button"
+          (click)="onPaginate(entryDataPage.previous)"
+          [disabled]="!entryDataPage.previous">
+          Later >
+        </button>
+      </span>
+    </div>
   </div>
+  <div *ngIf="!entryDataPage.results.length">
+    <p>No entries. Let's start writing</p>
+  </div>
+</div>
+<div id="spinner" *ngIf="!entryDataPage">
+  <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>
 </div>

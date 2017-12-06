@@ -18,7 +18,7 @@ export class EntryListComponent implements OnInit {
   constructor(private entryService: EntryService) { }
 
   ngOnInit() {
-     this.todayDate = moment().endOf('day').format('YYYY-MM-DD');
+    this.todayDate = moment().endOf('day').format('YYYY-MM-DD');
 
     this.entryService.listEntries().subscribe((response: ApiDataPage) => {
       this.entryDataPage = response;
