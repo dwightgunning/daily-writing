@@ -68,18 +68,34 @@
 $global-font-size: 100%;
 $global-width: rem-calc(1200);
 $global-lineheight: 1.5;
+// $foundation-palette: (
+//   primary: #1779ba,
+//   secondary: #767676,
+//   success: #3adb76,
+//   warning: #ffae00,
+//   alert: #cc4b37,
+// );
+
+// $light-gray: #e6e6e6;
+// $medium-gray: #cacaca;
+// $dark-gray: #8a8a8a;
+// $black: #0a0a0a;
+// $white: #fefefe;
+
 $foundation-palette: (
-  primary: #1779ba,
-  secondary: #767676,
+  primary: rgba(15, 82, 87, 1),
+  secondary: rgba(156, 146, 163, 1),
   success: #3adb76,
   warning: #ffae00,
   alert: #cc4b37,
-);
-$light-gray: #e6e6e6;
-$medium-gray: #cacaca;
-$dark-gray: #8a8a8a;
-$black: #0a0a0a;
-$white: #fefefe;
+) !default;
+
+$light-gray: rgba(188, 198, 203, 1) !default;
+$medium-gray: rgba(99, 123, 134, 1) !default;
+$dark-gray: rgba(11, 49, 66, 1) !default;
+$black: rgba(8, 7, 8, 1) !default;
+$white: rgba(251, 247, 244, 1) !default;
+
 $body-background: $white;
 $body-font-color: $black;
 $body-font-family: 'Open Sans', Roboto, Arial, sans-serif;

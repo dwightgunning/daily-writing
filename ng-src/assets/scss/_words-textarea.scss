@@ -1,4 +1,7 @@
+@import 'node_modules/foundation-sites/scss/foundation';
+
 @mixin words-textarea {
+  @include shadow;
   font-size: rem-calc(24);
   height: 80vh;
   line-height: rem-calc(40);
