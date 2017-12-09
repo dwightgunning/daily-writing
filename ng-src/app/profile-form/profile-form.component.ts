@@ -10,7 +10,8 @@ import { ProfileService } from '../services/profile.service';
   styleUrls: ['./profile-form.component.scss']
 })
 export class ProfileFormComponent implements OnInit {
-  submitted = false;
+  submitting = false;
+  success = false;
   error: any;
   model: Profile = new Profile();
   @ViewChild('profileForm') profileForm: any;
@@ -26,19 +27,26 @@ export class ProfileFormComponent implements OnInit {
   }
 
   profileFormSubmit() {
-    this.submitted = true;
+    this.submitting = true;
     this.profileService.updateProfile(this.model).subscribe(
       (response) => {
-        this.submitted = false;
+        this.submitting = false;
         if (response instanceof Profile) {
           this.model = response;
+          this.success = true;
+          (function (component) {
+            setTimeout(function(){
+              component.success = false;
+            }, 3000);
+          })(this);
         } else {
           this.error = response;
         }
       },
       (error) => {
-        this.submitted = false;
+        this.submitting = false;
         this.error = error;
       });
   }
+
 }

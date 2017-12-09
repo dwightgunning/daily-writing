@@ -43,7 +43,7 @@
         </label>
       </div>
       <div class="medium-6 cell">
-        <label>Last name
+        <label>Wordcount target
           <input
             id="target_milestone_word_count"
             name="target_milestone_word_count"
@@ -53,13 +53,17 @@
             #target_milestone_word_count="ngModel">
           </label>
         </div>
-      <button
-        type="submit"
-        class="button primary"
-        tabindex="0"
-        [disabled]="!profileForm.form.valid">
-        Submit
-      </button>
+      <div>
+        <button
+          type="submit"
+          class="button primary"
+          tabindex="0"
+          [disabled]="profileForm.form.pristine || !profileForm.form.valid">
+          Update
+        </button>
+        <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitting"></i>
+        <i class="fa fa-check form-submit-success" aria-hidden="true" *ngIf="success"></i>
+      </div>
     </form>
   </div>
 </div>

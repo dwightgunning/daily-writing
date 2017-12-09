@@ -47,3 +47,37 @@
     height: 100%;
   }
 }
+
+.form-submit-spinner {
+  padding: 0.85em 1em;
+  vertical-align: top;
+}
+
+@keyframes flickerAnimation {
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerAnimation{
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerAnimation{
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes flickerAnimation{
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+.form-submit-success {
+  -webkit-animation: flickerAnimation 3s 1;
+  -moz-animation: flickerAnimation 3s 1;
+  -o-animation: flickerAnimation 3s 1;
+  animation: flickerAnimation 3s 1;
+  padding: 0.85em 1em;
+  vertical-align: top;
+}
