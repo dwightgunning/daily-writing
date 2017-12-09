@@ -7,7 +7,7 @@ from api.models import BaseModel
 
 
 class Entry(BaseModel):
-    author = models.ForeignKey(get_user_model())
+    author = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     entry_date = models.DateField()
     entry_timezone = TimeZoneField()
     words = models.TextField(blank=True, null=True)

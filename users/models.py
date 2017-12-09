@@ -8,7 +8,8 @@ from timezone_field import TimeZoneField
 
 class DailyWritingProfile(models.Model):
     user = models.OneToOneField(get_user_model(),
-                                related_name='daily_writing_profile')
+                                related_name='daily_writing_profile',
+                                on_delete=models.PROTECT)
     timezone = TimeZoneField(default='UTC')
     target_milestone_word_count = models.PositiveIntegerField(default=700)
 

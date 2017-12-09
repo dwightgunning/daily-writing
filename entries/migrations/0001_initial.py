@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('finish_time', models.DateTimeField(blank=True, null=True)),
                 ('milestone_word_count', models.PositiveIntegerField()),
                 ('milestone_time', models.DateTimeField(blank=True, null=True)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name_plural': 'entries',
