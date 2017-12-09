@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
+
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/sample';
