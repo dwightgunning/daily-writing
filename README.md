@@ -11,20 +11,16 @@ The main technologies used to build the app are:
 
 ## Project setup
 
-1. Install the frontend dependencies with NPM or Yarn:
-
-```(bash)
-npm install
-```
+1. Install the frontend dependencies with Yarn:
 
 ```(bash)
 yarn
 ```
 
-2. Install the backend API dependencies:
+2. Install the backend API dependencies with Pipenv:
 
 ```(bash)
-pip install -r requirements/dev.txt
+pipenv install
 ```
 
 3. Create the database:
@@ -33,7 +29,7 @@ pip install -r requirements/dev.txt
 python manage.py migrate
 ```
 
-4. Create a supseruser account:
+4. Create a superuser account:
 
 ```(bash)
 python manage.py createsuperuser
@@ -89,6 +85,6 @@ To get more help on the Django Framework use `python manage.py help`, go check o
 
 ## Copyright and License Information
 
-Copyright (c) 2015-2017 Dwight Gunning, and individual contributors. All rights reserved.
+Copyright (c) 2015-2018 Dwight Gunning, and individual contributors. All rights reserved.
 
 See the file "LICENSE" for information on the history of this software, terms & conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.
