@@ -1,7 +1,8 @@
 import pytz
 
-from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework import serializers
 
 from users.models import DailyWritingProfile

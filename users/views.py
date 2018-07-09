@@ -1,10 +1,13 @@
 import logging
 
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from rest_framework.generics import RetrieveUpdateAPIView
 
 from users.models import DailyWritingProfile
 from users.serializers import DailyWritingProfileSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class DailyWritingProfileView(RetrieveUpdateAPIView):
