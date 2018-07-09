@@ -67,7 +67,7 @@ export class EntryService {
   public getEntry(entry_date: string): Observable<Entry> {
     const entryUrl = this.entryBaseUrl + this.user.username + '/' + entry_date + '/';
 
-    return this.http.get(this.entryBaseUrl + this.user.username + '/' + entry_date + '/')
+    return this.http.get(entryUrl)
       .map((data: any) => {
         const entry = new Entry();
         for (const propName of Object.keys(data)) {
