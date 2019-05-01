@@ -15,42 +15,45 @@
       <div class="medium-6 cell">
         <label>First name
           <input
-            id="first_name"
-            name="first_name"
+            id="firstName"
+            name="firstName"
             type="text"
             tabindex="0"
-            [(ngModel)]="model.first_name"
-            #first_name="ngModel">
+            [(ngModel)]="model.firstName"
+            #firstName="ngModel">
         </label>
       </div>
       <div class="medium-6 cell">
         <label>Last name
           <input
-            id="last_name"
-            name="last_name"
+            id="lastName"
+            name="lastName"
             type="text"
             tabindex="0"
-            [(ngModel)]="model.last_name"
-            #last_name="ngModel">
+            [(ngModel)]="model.lastName"
+            #lastName="ngModel">
         </label>
       </div>
       <div class="medium-6 cell">
         <label>Timezone
-          <ng2-timezone-picker
+          <app-timezone-picker
+            id="timezone"
+            name="timezone"
             class="timezone"
-            [(timezone)]="model.timezone">
-          </ng2-timezone-picker>
+            [(ngModel)]="model.timezone"
+            #timezone="ngModel">
+          </app-timezone-picker>
         </label>
       </div>
       <div class="medium-6 cell">
         <label>Wordcount target
           <input
-            id="target_milestone_word_count"
-            name="target_milestone_word_count"
+            id="targetMilestoneWordCount"
+            name="targetMilestoneWordCount"
             type="text"
             tabindex="0"
-            [(ngModel)]="model.target_milestone_word_count"
-            #target_milestone_word_count="ngModel">
+            [(ngModel)]="model.targetMilestoneWordCount"
+            #targetMilestoneWordCount="ngModel">
           </label>
         </div>
       <div>

@@ -42,7 +42,7 @@ const routes: Routes = [
         component: ReviewPageComponent
       },
       {
-        path: 'entry/:entry_date',
+        path: 'entry/:entryDate',
         component: EntryReviewPageComponent
       }
     ]

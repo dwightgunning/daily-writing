@@ -1,12 +1,12 @@
 <form #loginForm="ngForm" (submit)="loginFormSubmit()">
   <label for="username">Username:</label>
-  <input id="username" name="username" type="text" placeholder="username" [(ngModel)]="model.username" #username="ngModel" required>
+  <input id="username" name="username" type="text" placeholder="username" [(ngModel)]="model.username" #username="ngModel" autocomplete="on" required>
     <div [hidden]="username.valid || (username.pristine && username.untouched)"
        class="alert alert-danger">
     Username is required
   </div>
   <label for="password">Password:</label>
-  <input id="password" name="password" type="password" placeholder="password" [(ngModel)]="model.password" #password="ngModel" required>
+  <input id="password" name="password" type="password" placeholder="password" [(ngModel)]="model.password" #password="ngModel" autocomplete="off" required>
   <div [hidden]="password.valid || (password.pristine && password.untouched)"
        class="alert alert-danger">
     Password is required

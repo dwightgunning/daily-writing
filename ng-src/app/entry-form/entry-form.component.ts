@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
 import * as moment from 'moment-timezone';
-
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/sample';
-import 'rxjs/add/operator/skip';
-import {Observable} from 'rxjs/Observable';
+import {interval as observableInterval, Observable, Subject } from 'rxjs';
+import { sample, takeUntil } from 'rxjs/operators';
 
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry.service';
@@ -17,9 +14,9 @@ import { EntryService } from '../services/entry.service';
   templateUrl: './entry-form.component.html',
   styleUrls: ['./entry-form.component.scss']
 })
-export class EntryFormComponent implements OnInit {
+export class EntryFormComponent implements OnInit, OnDestroy {
   model: Entry = new Entry();
-  entryDate = new Date();
+  ngUnsubscribe = new Subject();
   @ViewChild('entryForm') entryForm: any;
 
   constructor(
@@ -29,45 +26,61 @@ export class EntryFormComponent implements OnInit {
     this.entryService.getOrCreateEntry().subscribe(
       (entry: Entry) => {
         this.model = entry;
-        this.setupEntryChangeHandler();
+        this.createEntryChangeHandler();
       });
   }
 
+  ngOnDestroy() {
+      this.removeEntryChangeHandler();
+  }
+
   lastSavedLocalString() {
-    if (this.model.finish_time && this.model.entry_timezone) {
-      return moment(this.model.finish_time).tz(this.model.entry_timezone).format('HH:mm:ss');
+    if (this.model.finishTime && this.model.entryTimezone) {
+      return moment(this.model.finishTime).tz(this.model.entryTimezone).format('HH:mm:ss');
     }
     return '';
   }
 
   milestoneTimeLocalString(): string {
-    if (this.model.milestone_time && this.model.entry_timezone) {
-      return moment(this.model.milestone_time).tz(this.model.entry_timezone).format('HH:mm:ss');
+    if (this.model.milestoneTime && this.model.entryTimezone) {
+      return moment(this.model.milestoneTime).tz(this.model.entryTimezone).format('HH:mm:ss');
     }
     return '';
   }
 
-  private setupEntryChangeHandler() {
+  private createEntryChangeHandler() {
+    // Check milestone wordcount on every keystroke
     this.entryForm.valueChanges
-        .distinctUntilChanged()
-        .skip(1) // Skip the change resulting from model assignment
+        .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(data => {
-          if (!this.model.milestone_time && this.model.wordCount() >= this.model.milestone_word_count) {
-            this.model.milestone_time = new Date();
+          if (!this.model.milestoneTime && this.model.countWords() >= this.model.milestoneWordCount) {
+            this.model.milestoneTime = new Date();
           }
         });
 
+    // Update the entry with a 5-sec sampling interval
     this.entryForm.valueChanges
-        .sample(Observable.interval(5000))
-        .distinctUntilChanged()
-        .skip(1) // Skip the change resulting from model assignment
-        .subscribe(data => {
-            this.entryService.updateEntry(this.model).subscribe((newEntry) => {
-              for (const property of ['finish_time', 'milestone_time']) {
-                this.model[property] = newEntry[property];
-              }
-          });
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .pipe(sample(observableInterval(5000)))
+      .subscribe(data => {
+          this.entryService.updateEntry(this.model).subscribe((newEntry) => {
+            for (const property of ['finishTime', 'milestoneTime']) {
+              this.model[property] = newEntry[property];
+            }
         });
+      });
   }
 
+  private removeEntryChangeHandler() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+
+    // Send a final update
+    console.log('Final entry update');
+    this.entryService.updateEntry(this.model).subscribe((newEntry) => {
+      for (const property of ['finishTime', 'milestoneTime']) {
+        this.model[property] = newEntry[property];
+      }
+    });
+  }
 }

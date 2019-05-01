@@ -12,9 +12,9 @@ import { ProfileService } from '../services/profile.service';
 export class ProfileFormComponent implements OnInit {
   submitting = false;
   success = false;
-  error: any;
-  model: Profile = new Profile();
+  error: any;  model: Profile = new Profile();
   @ViewChild('profileForm') profileForm: any;
+
 
   constructor(
     private profileService: ProfileService) { }
@@ -34,9 +34,10 @@ export class ProfileFormComponent implements OnInit {
         if (response instanceof Profile) {
           this.model = response;
           this.success = true;
-          (function (component) {
-            setTimeout(function(){
+          ((component) => {
+            setTimeout(() => {
               component.success = false;
+              component.profileForm.form.markAsPristine();
             }, 3000);
           })(this);
         } else {
@@ -47,6 +48,7 @@ export class ProfileFormComponent implements OnInit {
         this.submitting = false;
         this.error = error;
       });
+
   }
 
 }

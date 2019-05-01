@@ -1,10 +1,10 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
@@ -17,8 +17,10 @@ export class UserService {
 
   public getUser(): Observable<User>  {
     return this.http.get(environment.API_BASE_URL + 'user/')
-      .map((response: Response) => response as User)
-      .catch((error: any) => Observable.throw(error));
+      .pipe(
+        map((response) => response as User),
+        catchError((error: any) => observableThrowError(error))
+      );
   }
 
 }

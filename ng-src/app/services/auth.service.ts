@@ -1,10 +1,11 @@
+
+import {share, map} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/share';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+
+import { Observable ,  ReplaySubject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
@@ -14,7 +15,7 @@ export class AuthService {
   private LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
   userLoginCredentialsSubject = new ReplaySubject<UserLoginCredentials>(1);
 
-  constructor(private http: HttpClient) {
+  constructor(private httpClient: HttpClient) {
     let storedUserLoginCredentials: UserLoginCredentials;
     try {
       storedUserLoginCredentials = JSON.parse(
@@ -24,7 +25,7 @@ export class AuthService {
     } finally {
       if (storedUserLoginCredentials && storedUserLoginCredentials.token) {
         // Check the stored credentials are still valid
-        this.http.get(
+        this.httpClient.get(
             environment.API_BASE_URL + 'user/')
           .subscribe(
             (authenticatedToken: UserLoginCredentials) => {
@@ -42,14 +43,16 @@ export class AuthService {
   }
 
   public login(credentials: UserLoginCredentials): Observable<UserLoginCredentials|string> {
-    return this.http.post(
+    return this.httpClient.post(
         environment.API_BASE_URL + 'auth/login/',
         {
           username: credentials.username,
           password: credentials.password,
-          headers: new HttpHeaders({'Authorization': 'SkipInterceptor'})
-        })
-      .map((authenticatedToken: UserLoginCredentials) => {
+
+        },
+        {headers: new HttpHeaders({Authorization: 'SkipInterceptor'})}
+        ).pipe(
+      map((authenticatedToken: UserLoginCredentials) => {
         if (authenticatedToken.token) {
           const userLoginCredentials = new UserLoginCredentials(
             credentials.username,
@@ -70,7 +73,7 @@ export class AuthService {
           this.userLoginCredentialsSubject.next(null);
           return 'Invalid username/password';
         }
-      });
+      }));
   }
 
   public logout(): void {
@@ -81,6 +84,6 @@ export class AuthService {
   }
 
   public getUserLoginCredentials(): Observable<UserLoginCredentials> {
-    return this.userLoginCredentialsSubject.asObservable().share();
+    return this.userLoginCredentialsSubject.asObservable().pipe(share());
   }
 }

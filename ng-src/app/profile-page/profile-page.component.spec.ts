@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs';
+import { Observable } from 'rxjs/observable';
 
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { UserService } from '../services/user.service';
@@ -14,7 +14,7 @@ class StubProfileFormComponent {}
 
 const userServiceStub = {
   getUser(): Observable<UserLoginCredentials> {
-    return Observable.of(new UserLoginCredentials());
+    return of(new UserLoginCredentials()); // tslint:disable-line deprecation
   }
 };
 

@@ -6,8 +6,9 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 
@@ -22,7 +23,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> {
-      return this.authService.getUserLoginCredentials().map(
+      return this.authService.getUserLoginCredentials().pipe(map(
         userLoginCredentials => {
           if (userLoginCredentials) {
             return true;
@@ -30,6 +31,6 @@ export class AuthGuard implements CanActivate {
             this.router.navigate(['/login']);
             return false;
           }
-        });
+        }));
     }
 }

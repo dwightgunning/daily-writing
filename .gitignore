@@ -1,28 +1,10 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
 # compiled output
-/dist
+/ng-dist
 /tmp
 /out-tsc
 
 # dependencies
 /node_modules
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 # misc
 /.sass-cache
@@ -30,9 +12,16 @@
 /coverage
 /libpeerconnection.log
 npm-debug.log
-testem.log
 /typings
 yarn-error.log
+
+# e2e
+/ng-e2e/*.js
+/ng-e2e/*.map
+
+# Local files containing secrets/keys etc.
+src/environments/environment*.ts
+.env
 
 # e2e
 /ng-e2e/*.js
@@ -44,6 +33,32 @@ Thumbs.db
 
 # sqlite Databases
 *.sqlite3
+
+# Yarn
+.yarn/
+.yarnrc
+yarn-error.log
+
+# dependencies
+/node_modules
+
+# misc
+/.sass-cache
+/coverage
+/typings
+npm-debug.log
+
+# e2e
+/ng-e2e/*.js
+/ng-e2e/*.map
+
+# sqlite Databases
+*.sqlite3
+
+# Yarn
+.yarn/
+.yarnrc
+yarn-error.log
 
 # Local files containing secrets/keys etc.
 settings_local.py

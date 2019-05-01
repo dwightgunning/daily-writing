@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { MomentModule } from 'angular2-moment';
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import { MomentModule } from 'ngx-moment';
+import { of, Observable } from 'rxjs';
 
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry.service';
@@ -11,7 +10,7 @@ import { EntryFormComponent } from './entry-form.component';
 
 const entryServiceStub = {
   getOrCreateEntry(): Observable<Entry> {
-    return Observable.of(new Entry());
+    return of(new Entry()); // tslint:disable-line deprecation
   }
 };
 

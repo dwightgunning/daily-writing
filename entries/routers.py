@@ -8,18 +8,21 @@ class EntriesRouter(SimpleRouter):
 
     routes = [
         Route(
-            url=r'^{prefix}/$',
+            detail=False,
+            initkwargs={'suffix': 'Create'},
             mapping={'post': 'create'},
             name='{basename}-create',
-            initkwargs={'suffix': 'Create'}
+            url=r'^{prefix}/$'
         ),
         Route(
-            url=r'^{prefix}/(?P<username>[\w.@+-]+)/$',
+            detail=False,
+            initkwargs={'suffix': 'List'},
             mapping={'get': 'list'},
             name='{basename}-list',
-            initkwargs={'suffix': 'List'}
+            url=r'^{prefix}/(?P<username>[\w.@+-]+)/$'
         ),
         Route(
+            detail=True,
             url=r'^{prefix}/(?P<username>[\w.@+-]+)/{lookup}/$',
             mapping={
                 'get': 'retrieve',

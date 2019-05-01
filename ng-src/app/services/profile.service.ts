@@ -1,10 +1,11 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Headers, RequestOptions, Response } from '@angular/http';
-
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import { Observable } from 'rxjs/Observable';
+import { Headers, RequestOptions } from '@angular/http';
 
 import { environment } from '../../environments/environment';
 import { Profile } from '../models/profile';
@@ -17,22 +18,27 @@ export class ProfileService {
 
   public getProfile(): Observable<Profile>  {
     return this.http.get(this.profileUrl)
-      .map((response: Response) => response as Profile)
-      .catch((error: any) => Observable.throw(error));
+      .pipe(
+        map((response) => response as Profile),
+        catchError((error: any) => observableThrowError(error))
+      );
   }
 
   public updateProfile(profile: Profile): Observable<Profile> {
     return this.http.patch(this.profileUrl, profile)
-      .map((data: any) => {
-        const updatedProfile = new Profile();
-        for (const propName of Object.keys(data)) {
-          updatedProfile[propName] = data[propName];
-        }
-        return updatedProfile;
-      })
-      .catch((response: HttpErrorResponse, caught: Observable<any>) => {
-         return Observable.of(null); // TODO: Raise an appropriate error
-      });
+      .pipe(
+        map((data: any) => {
+          const updatedProfile = new Profile();
+          for (const propName of Object.keys(data)) {
+            updatedProfile[propName] = data[propName];
+          }
+          return updatedProfile;
+        }),
+        catchError((response: HttpErrorResponse, caught: Observable<any>) => {
+          // TODO: Raise an appropriate error
+          return of(null);  // tslint:disable-line deprecation
+        })
+      );
   }
 
 }

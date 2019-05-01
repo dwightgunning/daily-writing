@@ -17,7 +17,7 @@ The main technologies used to build the app are:
 yarn
 ```
 
-2. Install the backend API dependencies with Pipenv:
+2. Install the backend API dependencies with Pip:
 
 ```(bash)
 pipenv install
@@ -85,6 +85,6 @@ To get more help on the Django Framework use `python manage.py help`, go check o
 
 ## Copyright and License Information
 
-Copyright (c) 2015-2018 Dwight Gunning, and individual contributors. All rights reserved.
+Copyright (c) 2017-2019 Dwight Gunning, and individual contributors. All rights reserved.
 
 See the file "LICENSE" for information on the history of this software, terms & conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.

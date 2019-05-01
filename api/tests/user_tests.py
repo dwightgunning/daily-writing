@@ -41,8 +41,8 @@ class UserTests(APITestCase):
     def test_patch_password(self):
         factory = APIRequestFactory()
         request = factory.patch('/user/', {
-            'password': 'testtest1',
-            'password_new': 'testtest1'
+            'password': '4##@$@#$adf09908t1',
+            'password_new': '4##@$@#$adf09908t1'
             })
         self.add_auth(request)
 
@@ -65,7 +65,7 @@ class UserTests(APITestCase):
 
     def test_patch_password_missing_new_password(self):
         factory = APIRequestFactory()
-        request = factory.patch('/user/', {'password': 'testtest1'})
+        request = factory.patch('/user/', {'password': '4##@$@#$adf09908t1'})
         self.add_auth(request)
 
         view = UserView.as_view()
@@ -77,7 +77,7 @@ class UserTests(APITestCase):
     def test_patch_password_blank_new_password(self):
         factory = APIRequestFactory()
         request = factory.patch('/user/', {
-            'password': 'testtest1',
+            'password': '4##@$@#$adf09908t1',
             'password_new': ''
             })
         self.add_auth(request)
@@ -91,7 +91,7 @@ class UserTests(APITestCase):
     def test_patch_password_invalid_new_password(self):
         factory = APIRequestFactory()
         request = factory.patch('/user/', {
-            'password': 'testtest1',
+            'password': '4##@$@#$adf09908t1',
             'password_new': 'simple'
             })
         self.add_auth(request)
@@ -105,8 +105,8 @@ class UserTests(APITestCase):
     def test_patch_password_matching_new_password(self):
         factory = APIRequestFactory()
         request = factory.patch('/user/', {
-            'password': 'testtest1',
-            'password_new': 'testtest1'
+            'password': '4##@$@#$adf09908t1',
+            'password_new': '4##@$@#$adf09908t1'
             })
         self.add_auth(request)
 
@@ -134,7 +134,7 @@ class UserTests(APITestCase):
 
     def test_put_password(self):
         factory = APIRequestFactory()
-        request = factory.put('/user/', {'password': 'testtest1'})
+        request = factory.put('/user/', {'password': '4##@$@#$adf09908t1'})
         self.add_auth(request)
 
         view = UserView.as_view()
@@ -161,7 +161,7 @@ class UserTests(APITestCase):
         request = factory.post('/user/', {
             'username': 'tester2',
             'email': 'tester2@tester.com',
-            'password': 'testtest1'
+            'password': '234asdf2$$@1'
             })
 
         view = UserView.as_view()
@@ -174,7 +174,7 @@ class UserTests(APITestCase):
         request = factory.post('/user/', {
             'username': 'tester',
             'email': 'new_email@tester.com',
-            'password': 'testtest1'
+            'password': '4##@$@#$adf09908t1'
             })
 
         view = UserView.as_view()
@@ -189,7 +189,7 @@ class UserTests(APITestCase):
         request = factory.post('/user/', {
             'username': 'new_tester',
             'email': 'tester@tester.com',
-            'password': 'testtest1'
+            'password': '4##@$@#$adf09908t1'
             })
 
         view = UserView.as_view()

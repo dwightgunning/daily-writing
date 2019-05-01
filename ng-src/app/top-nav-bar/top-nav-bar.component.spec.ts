@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import { of, Observable } from 'rxjs';
 
 import { RouterLinkStubDirective } from '../../testing/router-stubs';
 import { UserLoginCredentials } from '../models/user-login-credentials';
@@ -12,7 +11,7 @@ import { TopNavBarComponent } from './top-nav-bar.component';
 
 const authServiceStub = {
   getUserLoginCredentials(): Observable<UserLoginCredentials> {
-    return Observable.of(null);
+    return of(null); // tslint:disable-line deprecation
   }
 };
 
@@ -65,7 +64,7 @@ describe('TopNavBarComponent', () => {
   it('should display logout link when authenticated', () => {
     const authService = fixture.debugElement.injector.get(AuthService) as any;
     authService.getUserLoginCredentials =
-      (): Observable<UserLoginCredentials> => Observable.of(new UserLoginCredentials());
+      (): Observable<UserLoginCredentials> => of(new UserLoginCredentials()); // tslint:disable-line deprecation
     fixture.detectChanges();
 
     // find DebugElements with an attached RouterLinkStubDirective

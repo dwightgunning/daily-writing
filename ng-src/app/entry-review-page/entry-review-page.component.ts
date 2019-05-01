@@ -1,7 +1,9 @@
+
+import {switchMap} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import 'rxjs/add/operator/switchMap';
+
 
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry.service';
@@ -20,8 +22,8 @@ export class EntryReviewPageComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.route.params
-      .switchMap((params: Params) => this.entryService.getEntry(params['entry_date']))
+    this.route.params.pipe(
+      switchMap((params: Params) => this.entryService.getEntry(params.entryDate)))
       .subscribe(entry => this.entry = entry);
   }
 

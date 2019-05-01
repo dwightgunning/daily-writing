@@ -4,10 +4,10 @@
       <form #entryForm="ngForm">
         <textarea id="words" name="words" type="text" [(ngModel)]="model.words" #words="ngModel"></textarea>
       </form>
-      <div>Date: {{ entryDate | amLocal | amDateFormat: 'YYYY-MM-DD' }} </div>
-      <div>Word count: {{ model.wordCount() }}</div>
-      <div *ngIf="model.finish_time">Last saved: {{ lastSavedLocalString() }} {{ model.entry_timezone }}</div>
-      <div *ngIf="model.milestone_time">Milestone reached at: {{ milestoneTimeLocalString() }} {{ model.entry_timezone }}</div>
+      <div>Date: {{ model.entryDate | amLocal | amDateFormat: 'YYYY-MM-DD' }} </div>
+      <div>Word count: {{ model.countWords() }}</div>
+      <div *ngIf="model.finishTime">Last saved: {{ lastSavedLocalString() }} {{ model.entryTimezone }}</div>
+      <div *ngIf="model.milestoneTime">Milestone reached at: {{ milestoneTimeLocalString() }} {{ model.entryTimezone }}</div>
     </div>
   </div>
 </div>

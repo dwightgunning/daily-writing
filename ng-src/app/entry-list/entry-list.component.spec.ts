@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import { of, Observable } from 'rxjs';
 
 import { RouterLinkStubDirective } from '../../testing/router-stubs';
 import { EntryListComponent } from '../entry-list/entry-list.component';
@@ -22,15 +21,16 @@ export class EntryServiceStub {
   }
 
   listEntries(entriesUrl?: string): Observable<ApiDataPage> {
-    return Observable.of(this.entries);
+    return of(this.entries);  // tslint:disable-line deprecation
   }
 }
 
-const entryServiceStub = new EntryServiceStub();
 
 describe('EntryListComponent', () => {
   let component: EntryListComponent;
   let fixture: ComponentFixture<EntryListComponent>;
+
+  const entryServiceStub = new EntryServiceStub();
 
   beforeEach(() => {
     TestBed.configureTestingModule({

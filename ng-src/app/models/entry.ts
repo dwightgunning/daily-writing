@@ -2,20 +2,19 @@ import { User } from './user';
 
 export class Entry {
   author = '';
-  entry_date: Date = new Date();
+  entryDate: Date = new Date();
   words = '';
-  created_date?: Date;
-  entry_timezone?: string;
-  finish_time?: Date;
-  milestone_time?: Date;
-  milestone_word_count?: number;
-  modified_date?: Date;
-  start_time?: Date;
-  word_count?: number;
+  createdDate?: Date;
+  entryTimezone?: string;
+  finishTime?: Date;
+  milestoneTime?: Date;
+  milestoneWordCount?: number;
+  modifiedDate?: Date;
+  startTime?: Date;
 
   constructor() { }
 
-  public wordCount(): number {
+  public countWords(): number {
     if (this.words.length) {
       return this.words
         .replace(/(\r\n|\n|\r)/g, ' ')

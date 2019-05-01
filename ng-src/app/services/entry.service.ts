@@ -1,12 +1,11 @@
+
+import { of,  Observable } from 'rxjs';
+
+import {map, catchError} from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../environments/environment';
 import { ApiDataPage } from '../models/api-data-page';
@@ -29,68 +28,71 @@ export class EntryService {
   }
 
   public getOrCreateEntry(): Observable<Entry>  {
-    const entry_date: string =  moment().utc().format('YYYY-MM-DD');
+    const entryDate: string =  moment().utc().format('YYYY-MM-DD');
 
-    return this.http.get(this.entryBaseUrl + this.user.username + '/' + entry_date + '/')
-      .map((data: object) => {
+    return this.http.get(this.entryBaseUrl + this.user.username + '/' + entryDate + '/').pipe(
+      map((data: object) => {
         const entry = new Entry();
         for (const propName of Object.keys(data)) {
           entry[propName] = data[propName];
         }
 
         return entry;
-      })
-      .catch((getEntryErrorResponse: HttpErrorResponse, getEntryCaught: Observable<any>) => {
+      }),
+      catchError((getEntryErrorResponse: HttpErrorResponse, getEntryCaught: Observable<any>) => {
           if (getEntryErrorResponse.status === 404) {
             return this.http.post(this.entryBaseUrl,
             {
-              'author': this.user.username,
-              'entry_date': entry_date,
-              'words': '' // TODO: Fix backend error when not provided; shouldn't be mandatory
-            }).map((data: object) => {
+              author: this.user.username,
+              entryDate,
+              words: '' // TODO: Fix backend error when not provided; shouldn't be mandatory
+            }).pipe(map((data: object) => {
               const entry = new Entry();
               for (const propName of Object.keys(data)) { // TODO: Flip so that the local Class properties are keyed
                 entry[propName] = data[propName];
                 // TODO: Unit Test that date fields are parsed assuming current timezone is UTC.
               }
               return entry;
-            })
-            .catch((createEntryErrorResponse: HttpErrorResponse, createEntryCaught: Observable<any>) => {
-              return Observable.of(null); // TODO: Raise an appropriate error
-            });
+            }),
+            catchError((createEntryErrorResponse: HttpErrorResponse, createEntryCaught: Observable<any>) => {
+              // TODO: Raise an appropriate error
+              return of(null);  // tslint:disable-line deprecation
+            }), );
           } else {
-            return Observable.of(null); // TODO: Raise an appropriate error
+            // TODO: Raise an appropriate error
+            return of(null);  // tslint:disable-line deprecation
           }
-        });
+        }), );
   }
 
-  public getEntry(entry_date: string): Observable<Entry> {
-    const entryUrl = this.entryBaseUrl + this.user.username + '/' + entry_date + '/';
+  public getEntry(entryDate: string): Observable<Entry> {
+    const entryUrl = this.entryBaseUrl + this.user.username + '/' + entryDate + '/';
 
-    return this.http.get(entryUrl)
-      .map((data: any) => {
+    return this.http.get(entryUrl).pipe(
+      map((data: any) => {
         const entry = new Entry();
         for (const propName of Object.keys(data)) {
           entry[propName] = data[propName];
         }
         return entry;
-      });
+      }));
   }
 
   public updateEntry(entry: Entry): Observable<Entry> {
-    const entryUrl = this.entryBaseUrl + this.user.username + '/' + entry.entry_date + '/';
+    const entryUrl = this.entryBaseUrl + this.user.username + '/' + entry.entryDate + '/';
 
-    return this.http.patch(entryUrl, entry)
-      .map((data: any) => {
+    return this.http.patch(entryUrl, entry).pipe(
+      map((data: any) => {
         const updatedEntry = new Entry();
         for (const propName of Object.keys(data)) {
           updatedEntry[propName] = data[propName];
         }
         return updatedEntry;
-      })
-      .catch((response: HttpErrorResponse, caught: Observable<any>) => {
-         return Observable.of(null); // TODO: Raise an appropriate error
-      });
+      }),
+      catchError((response: HttpErrorResponse, caught: Observable<any>) => {
+          // TODO: Raise an appropriate error
+          return of(null);  // tslint:disable-line deprecation
+      }), );
   }
 
   public listEntries(entriesUrl?: string): Observable<ApiDataPage> {
@@ -98,8 +100,8 @@ export class EntryService {
       entriesUrl = this.entryBaseUrl + this.user.username + '/';
     }
 
-    return this.http.get(entriesUrl).map(
+    return this.http.get(entriesUrl).pipe(map(
       entryList => new ApiDataPage(entryList)
-    );
+    ));
   }
 }

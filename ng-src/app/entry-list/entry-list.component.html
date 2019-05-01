@@ -2,9 +2,9 @@
   <div *ngIf="entryDataPage.results.length">
     <ul *ngIf="entryDataPage.results">
       <li *ngFor="let entry of entryDataPage.results">
-        <a *ngIf="entry.entry_date == todayDate" [routerLink]="'/write'">{{ entry.entry_date }}</a>
-        <a *ngIf="entry.entry_date != todayDate" [routerLink]="['/review/entry', entry.entry_date]">{{ entry.entry_date }}</a>
-        <span *ngIf="entry.milestone_time"> Milestone reached!</span>
+        <a *ngIf="entry.entryDate == todayDate" [routerLink]="'/write'">{{ entry.entryDate }}</a>
+        <a *ngIf="entry.entryDate != todayDate" [routerLink]="['/review/entry', entry.entryDate]">{{ entry.entryDate }}</a>
+        <span *ngIf="entry.milestoneTime"> Milestone reached!</span>
       </li>
     </ul>
     <div>
