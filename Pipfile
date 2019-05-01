@@ -6,10 +6,8 @@ name = "pypi"
 [dev-packages]
 django-cors-headers = "==2.5.3"
 django-nose = "==1.4.6"
-"flake8" = "==3.7.7"
 isort = "==4.3.17"
 nose = "==1.3.7"
-"pep8" = "==1.7.1"
 selenium = "==3.141.0"
 
 [packages]
@@ -28,6 +26,7 @@ newrelic = "==4.18.0.118"
 "psycopg2" = "==2.8.2"
 djangorestframework-camel-case = "*"
 six = "*"
+black = "==19.3b0"
 
 [requires]
 python_full_version = "3.6.4"

@@ -7,15 +7,16 @@ from .permissions import IsAuthor
 
 
 class EntryViewSet(viewsets.ModelViewSet):
-    lookup_field = 'entry_date'
+    lookup_field = "entry_date"
     permission_classes = (IsAuthenticated, IsAuthor)
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return EntryListSerializer
         else:
             return EntryDetailSerializer
 
     def get_queryset(self):
-        return Entry.objects.filter(
-            author__username=self.kwargs['username']).order_by('-entry_date')
+        return Entry.objects.filter(author__username=self.kwargs["username"]).order_by(
+            "-entry_date"
+        )

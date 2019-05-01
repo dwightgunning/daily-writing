@@ -12,18 +12,34 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
-            name='DailyWritingProfile',
+            name="DailyWritingProfile",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timezone', timezone_field.fields.TimeZoneField(default='UTC')),
-                ('target_milestone_word_count', models.PositiveIntegerField(default=700)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='daily_words_profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("timezone", timezone_field.fields.TimeZoneField(default="UTC")),
+                (
+                    "target_milestone_word_count",
+                    models.PositiveIntegerField(default=700),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="daily_words_profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-        ),
+        )
     ]

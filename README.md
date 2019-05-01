@@ -77,7 +77,7 @@ The backed developer tooling and experience is consistent with the Django Framew
 
 #### Linting
 
-To lint Python, run `pep8` or `flake8`.
+To lint Python, run `black`.
 
 #### Further help
 

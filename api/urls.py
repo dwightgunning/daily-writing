@@ -4,10 +4,9 @@ from rest_framework_jwt.views import obtain_jwt_token
 from api.views import api, user
 
 urlpatterns = [
-    url(r'^$', api.APIRootView.as_view(), name='APIRootView'),
-    url(r'^auth/login/$', obtain_jwt_token, name='login'),
-    url(r'^user/$', user.UserView.as_view(), name='user'),
-
-    url(r'^', include('entries.urls')),
-    url(r'^', include('users.urls')),
+    url(r"^$", api.APIRootView.as_view(), name="APIRootView"),
+    url(r"^auth/login/$", obtain_jwt_token, name="login"),
+    url(r"^user/$", user.UserView.as_view(), name="user"),
+    url(r"^", include("entries.urls")),
+    url(r"^", include("users.urls")),
 ]
