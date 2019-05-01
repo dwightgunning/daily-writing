@@ -7,10 +7,10 @@
     "start": "ng serve",
     "build": "ng build",
     "e2e": "ng e2e",
-    "heroku-postbuild": "./bin/heroku-postbuild-node",
-    "lint": "ng lint && npm run lint-sass",
+    "test": "ng test --code-coverage",
+    "lint": "ng lint",
     "lint-sass": "./node_modules/sass-lint/bin/sass-lint.js -c sass-lint.yaml -v -q",
-    "test": "ng test --code-coverage"
+    "heroku-postbuild": "./bin/heroku-postbuild-node"
   },
   "private": true,
   "dependencies": {

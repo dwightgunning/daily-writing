@@ -4,3 +4,12 @@ repos:
     hooks:
     - id: black
       language_version: python3.7
+-   repo: git://github.com/elidupuis/mirrors-sass-lint
+    sha: '5cc45653263b423398e4af2561fae362903dd45d'
+    hooks:
+    -   id: sass-lint
+        args: [-c,sass-lint.yaml, -q, -v]
+-   repo: git://github.com/dwightgunning/pre-commit-nglint/
+    sha: 'stable'
+    hooks:
+    -   id: nglint
