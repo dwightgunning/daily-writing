@@ -106,7 +106,7 @@
       }
     },
     "daily-writing-e2e": {
-      "root": "./e2e",
+      "root": "./ng-e2e",
       "sourceRoot": "ng-e2e",
       "projectType": "application",
       "architect": {
