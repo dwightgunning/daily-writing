@@ -1,15 +1,15 @@
 repos:
 -   repo: https://github.com/ambv/black
-    rev: stable
+    rev: 19.3b0
     hooks:
     - id: black
       language_version: python3.7
 -   repo: git://github.com/elidupuis/mirrors-sass-lint
-    sha: '5cc45653263b423398e4af2561fae362903dd45d'
+    rev: 5cc45653263b423398e4af2561fae362903dd45d
     hooks:
     -   id: sass-lint
         args: [-c,sass-lint.yaml, -q, -v]
 -   repo: git://github.com/dwightgunning/pre-commit-nglint/
-    sha: 'stable'
+    rev: d9221d4f240883e84b8a166fb024f535783bdf98
     hooks:
     -   id: nglint
