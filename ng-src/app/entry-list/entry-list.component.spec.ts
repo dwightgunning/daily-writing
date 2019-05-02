@@ -13,8 +13,12 @@ import { EntryService } from '../services/entry.service';
 
 @Injectable()
 export class EntryServiceStub {
-  private entries: ApiDataPage = new ApiDataPage(
-    {count: 0, next: null, previous: null, results: []});
+  private entries: ApiDataPage;
+
+  public constructor() {
+    this.entries = new ApiDataPage(
+      {count: 0, next: null, previous: null, results: []});
+  }
 
   set testEntries(entries: ApiDataPage) {
     this.entries = entries;
@@ -66,6 +70,7 @@ describe('EntryListComponent', () => {
 
   it('should handle zero entries', () => {
     const compiled = fixture.debugElement.nativeElement;
+
     fixture.detectChanges();
     expect(compiled.querySelector('div').textContent).toContain(
       'No entries. Let\'s start writing');
@@ -85,7 +90,4 @@ describe('EntryListComponent', () => {
     expect(compiled.querySelector('ul').querySelectorAll('li').length).toBe(1);
   });
 
-  xit('should paginate', () => {
-  expect(false).toBeTruthy();
-  });
 });
