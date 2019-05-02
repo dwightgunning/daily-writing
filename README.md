@@ -55,14 +55,7 @@ Now navigate to `http://localhost:8000/api/`.
 
 ### Angular.io - Frontend Development with Angular CLI
 
-This frontend for this project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.7.
-
-The frontend developer tooling and experience is consistent with the Angular CLI, with the following adjustments:
- - Linting
-
-#### Linting
-
-To lint both TypeScript and SASS, run `npm run lint`.
+This frontend for this project is developed with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
 
 #### Further help
 
@@ -70,18 +63,15 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### Django - Backend API Development
 
-The backend API for this project is built upon the [Django Framework](https://www.djangoproject.com).
-
-The backed developer tooling and experience is consistent with the Django Framework, with the following adjustments:
- - Linting
-
-#### Linting
-
-To lint Python, run `black`.
+The backend API for this project is developed with [Django](https://www.djangoproject.com) version 2.2.1.
 
 #### Further help
 
 To get more help on the Django Framework use `python manage.py help`, go check out the [Django Framework Documentation] and the [Django REST framework API guide](http://www.django-rest-framework.org/#api-guide).
+
+### Linting and pre-commit hooks
+
+Python code follows [Black](https://github.com/ambv/black) (`black .`). TypeScript can linted with the built-in linter (`ng lint`). [Sass-lint](https://github.com/sasstools/sass-lint) is setup (`npm run lint-sass`). [Pre-commit](https://www.pre-commit.com) hooks are also present.
 
 ## Copyright and License Information
 
