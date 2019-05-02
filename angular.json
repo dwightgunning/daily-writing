@@ -124,7 +124,8 @@
               "ng-e2e/tsconfig.e2e.json"
             ],
             "exclude": [
-              "**/node_modules/**"
+              "**/node_modules/**",
+              "**/ng-src/**"
             ]
           }
         }
