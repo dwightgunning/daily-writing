@@ -40,7 +40,7 @@
     "rxjs-compat": "^6.4.0",
     "rxjs-tslint": "^0.1.7",
     "sass-lint": "^1.12.0",
-    "select2": "^4.0.6-rc.1",
+    "select2": "4.0.7-rc.0",
     "tslib": "^1.9.0",
     "webfontloader": "^1.6.28",
     "what-input": "^5.2.1",
