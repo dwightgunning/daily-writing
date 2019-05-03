@@ -10,6 +10,6 @@ repos:
     -   id: sass-lint
         args: [-c,sass-lint.yaml, -q, -v]
 -   repo: git://github.com/dwightgunning/pre-commit-nglint/
-    rev: d9221d4f240883e84b8a166fb024f535783bdf98
+    rev: stable
     hooks:
     -   id: nglint
