@@ -224,10 +224,10 @@
         },
         "sendgrid": {
             "hashes": [
-                "sha256:351a7fc501d2b9d5afdcbc70a02490917057d6ce5cc22c558cadfc16229f157b",
-                "sha256:e1f93c72b3db3bd00d86f79ee926a093ee7e65533936a140855916569b08e0b0"
+                "sha256:297d33363a70df9b39419210e1273b165d487730e85c495695e0015bc626db71",
+                "sha256:8b82c8c801dde8180a567913a9f80d8a63f38e39f209edde302b6df899b4bca1"
             ],
-            "version": "==6.0.4"
+            "version": "==6.0.5"
         },
         "six": {
             "hashes": [
