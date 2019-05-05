@@ -10,11 +10,14 @@ declare let $: any;
 })
 export class AppComponent implements OnInit {
   title = 'Daily Writing';
+  documentEl: any;
 
-  constructor() { }
+  constructor() {
+    this.documentEl = $(document);
+  }
 
   ngOnInit() {
-    $(document).foundation();
+    (this.documentEl as any).foundation();
 
     WebFont.load({
       google: {
