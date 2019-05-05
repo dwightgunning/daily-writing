@@ -49,9 +49,7 @@ export class AuthService {
           username: credentials.username,
           password: credentials.password,
 
-        },
-        {headers: new HttpHeaders({Authorization: 'SkipInterceptor'})}
-        ).pipe(
+        }).pipe(
       map((authenticatedToken: UserLoginCredentials) => {
         if (authenticatedToken.token) {
           const userLoginCredentials = new UserLoginCredentials(

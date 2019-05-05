@@ -6,7 +6,8 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { empty, Observable } from 'rxjs';
+import * as Sentry from '@sentry/browser';
 
 import { UserLoginCredentials } from './models/user-login-credentials';
 
@@ -15,19 +16,20 @@ export class AuthHeaderInterceptor implements HttpInterceptor {
   private LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.headers.get('Authorization') === 'SkipInterceptor') {
-      req = req.clone({ headers: req.headers.delete('Authorization')});
-    } else {
-      const headers = req.headers;
-      try {
-        const loadedCredentials: UserLoginCredentials =
-          JSON.parse(localStorage.getItem(this.LOGIN_CREDENTIALS_KEY));
-        if (loadedCredentials.token) {
-          // Pass a cloned request instead of the original request to the next handle
-          req = req.clone({ headers: req.headers.set('Authorization', 'JWT ' + loadedCredentials.token)});
-        }
-      } catch (e) { }
+    let loadedCredentials: UserLoginCredentials;
+    try {
+      loadedCredentials = JSON.parse(localStorage.getItem(this.LOGIN_CREDENTIALS_KEY));
+    } catch (err) {
+      Sentry.captureException(err);
     }
+
+    if (loadedCredentials && loadedCredentials.token) {
+      // Pass a cloned request instead of the original request to the next handle
+      req = req.clone({
+        headers: req.headers.set('Authorization', 'JWT ' + loadedCredentials.token)
+      });
+    }
+
     return next.handle(req);
   }
 }

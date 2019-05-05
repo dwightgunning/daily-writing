@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { MomentModule } from 'ngx-moment';
-import * as Raven from 'raven-js';
+import { init as sentryInit } from '@sentry/browser';
 
 import { AppComponent } from './app.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -30,15 +30,9 @@ import { TopNavBarComponent } from './top-nav-bar/top-nav-bar.component';
 import { WritingPageComponent } from './writing-page/writing-page.component';
 import { UserService } from './services/user.service';
 
-Raven
-  .config(environment.SENTRY_DSN_PUBLIC)
-  .install();
-
-export class RavenErrorHandler implements ErrorHandler {
-  handleError(err: any): void {
-    Raven.captureException(err);
-  }
-}
+sentryInit({
+  dsn: environment.SENTRY_DSN_PUBLIC
+});
 
 @NgModule({
   declarations: [
