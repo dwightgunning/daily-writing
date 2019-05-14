@@ -29,6 +29,8 @@ import { TimezonePickerModule } from './timezone-picker/timezone-picker.module';
 import { TopNavBarComponent } from './top-nav-bar/top-nav-bar.component';
 import { WritingPageComponent } from './writing-page/writing-page.component';
 import { UserService } from './services/user.service';
+import { SignupPageComponent } from './signup-page/signup-page.component';
+import { InviteRequestFormComponent } from './invite-request-form/invite-request-form.component';
 
 sentryInit({
   dsn: environment.SENTRY_DSN_PUBLIC
@@ -48,7 +50,9 @@ sentryInit({
     EntryListComponent,
     EntryReviewPageComponent,
     ProfileFormComponent,
-    LogoutComponent
+    LogoutComponent,
+    SignupPageComponent,
+    InviteRequestFormComponent
   ],
   imports: [
     AppRoutingModule,

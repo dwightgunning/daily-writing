@@ -56,9 +56,10 @@ describe('TopNavBarComponent', () => {
     const links = linkDes
       .map(de => de.injector.get(RouterLinkStubDirective) as RouterLinkStubDirective);
 
-    expect(links.length).toBe(2, 'should have 2 links');
+    expect(links.length).toBe(3, 'should have 3 links');
     expect(links[0].linkParams).toBe('', '1st link should go to Home');
-    expect(links[1].linkParams).toBe('login', '2nd link should go to Login');
+    expect(links[1].linkParams).toBe('signup', '2rd link should go to Signup');
+    expect(links[2].linkParams).toBe('login', '3nd link should go to Login');
   });
 
   it('should display logout link when authenticated', () => {

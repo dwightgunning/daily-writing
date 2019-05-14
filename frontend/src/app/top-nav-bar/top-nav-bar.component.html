@@ -8,6 +8,7 @@
   </div>
   <div class="top-bar-right">
     <ul class="dropdown menu" data-dropdown-menu *ngIf="!(userLoginCredentials | async)">
+        <li><a class="hvr-line" [routerLink]="'signup'" routerLinkActive="active-link">Signup</a></li>
         <li><a class="hvr-line" [routerLink]="'login'" routerLinkActive="active-link">Login</a></li>
     </ul>
     <ul class="dropdown menu" data-dropdown-menu *ngIf="(userLoginCredentials | async)">

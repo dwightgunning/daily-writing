@@ -8,12 +8,17 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { ReviewPageComponent } from './review-page/review-page.component';
+import { SignupPageComponent } from './signup-page/signup-page.component';
 import { WritingPageComponent } from './writing-page/writing-page.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomePageComponent
+  },
+  {
+    path: 'signup',
+    component: SignupPageComponent,
   },
   {
     path: 'login',
