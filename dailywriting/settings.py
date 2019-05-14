@@ -123,7 +123,7 @@ except:
     import raven  # NOQA
 
     print("No settings_local.py available.")
-    ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"]]
+    ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
     DATABASES = {"default": dj_database_url.config(default=os.environ["DATABASE_URL"])}
     DEBUG = os.environ["DEBUG"] == "True"
     EMAIL_BACKEND = os.environ["EMAIL_BACKEND"]
