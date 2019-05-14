@@ -2,6 +2,8 @@
 
 This project is a working application for daily writing.
 
+See it up and running at [www.daily-writing.com](http://www.daily-writing.com).
+
 The main technologies used to build the app are:
 - [Angular.io](https://angular.io/) ([TypeScript](https://www.typescriptlang.org))
 - [SASS](http://sass-lang.com/)
