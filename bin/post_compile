@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-python manage.py migrate --noinput
+python backend/manage.py migrate --noinput
 
-python manage.py collectstatic
+python backend/manage.py collectstatic
