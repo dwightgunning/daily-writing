@@ -13,6 +13,9 @@ The main technologies used to build the app are:
 
 ## Project setup
 
+* Frontend Node/Yarn/Angular-cli commands must be run within the `frontend/` dir.
+* Backend Python/Django commands must be run within the `backend/` dir.
+
 1. Install the frontend dependencies with Yarn:
 
 ```(bash)
