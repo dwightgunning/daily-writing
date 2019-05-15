@@ -70,7 +70,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "django-staticfiles")
 STATIC_URL = "/static/"
 
 WHITENOISE_INDEX_FILE = True
-WHITENOISE_ROOT = os.path.join(BASE_DIR, "ng-dist")
+WHITENOISE_ROOT = os.path.join(BASE_DIR, "frontend", "dist")
 
 TEMPLATES = [
     {
