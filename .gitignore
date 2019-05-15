@@ -1,31 +1,6 @@
-# compiled output
-/ng-dist
-/tmp
-/out-tsc
-
-# dependencies
-/node_modules
-
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-/typings
-yarn-error.log
-
-# e2e
-/ng-e2e/*.js
-/ng-e2e/*.map
-
-# Local files containing secrets/keys etc.
-src/environments/environment*.ts
-.env
-
-# e2e
-/ng-e2e/*.js
-/ng-e2e/*.map
+# Angular-cli
+/frontend/dist
+*.map
 
 # System Files
 .DS_Store
@@ -39,27 +14,15 @@ Thumbs.db
 .yarnrc
 yarn-error.log
 
-# dependencies
-/node_modules
-
-# misc
-/.sass-cache
-/coverage
-/typings
+# NPM
+node_modules/
 npm-debug.log
 
-# e2e
-/ng-e2e/*.js
-/ng-e2e/*.map
-
-# sqlite Databases
-*.sqlite3
-
-# Yarn
-.yarn/
-.yarnrc
-yarn-error.log
+# misc
+.sass-cache/
+coverage/
 
 # Local files containing secrets/keys etc.
+.env
 settings_local.py
-/ng-src/environments/environment.ts
+environment.ts

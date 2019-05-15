@@ -4,7 +4,7 @@ import os
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Application definition
 
@@ -70,7 +70,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "django-staticfiles")
 STATIC_URL = "/static/"
 
 WHITENOISE_INDEX_FILE = True
-WHITENOISE_ROOT = os.path.join(BASE_DIR, "ng-dist")
+WHITENOISE_ROOT = os.path.join(BASE_DIR, "frontend", "dist")
 
 TEMPLATES = [
     {
