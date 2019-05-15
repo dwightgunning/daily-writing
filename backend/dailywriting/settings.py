@@ -113,6 +113,8 @@ REST_FRAMEWORK = {
     ),
 }
 
+AUTH_USER_MODEL = "users.User"
+
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": datetime.timedelta(days=7)}
 
 # Environment specific settings
