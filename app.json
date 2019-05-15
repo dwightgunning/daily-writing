@@ -37,14 +37,14 @@
     },
     "API_BASE_URL": {
       "description": "The base URL for the API.",
-      "value": "https://<<APP NAME>>.herokuapp.com"
+      "value": "http://<<APP NAME>>.herokuapp.com"
     },
     "DEBUG": {
       "description": "A boolean that turns on/off debug mode.",
       "value": "false"
     },
     "DISABLE_COLLECTSTATIC": {
-      "description": "Disable Heroku's automatic 'collectstatic' build step.",
+      "description": "Disable Heroku's automatic 'collectstatic' build step. Must be 'true' so the app can be built on Heroku at deploy time..",
       "value": "true"
     },
     "EMAIL_BACKEND": {
@@ -70,7 +70,19 @@
     "SENTRY_CSP_ENDPOINT": {
       "description": "The Content-Security Policy(CSP) error reporting endpoint associated Sentry.io project.",
       "value": ""
-    }
+    },
+    "SECURE_SSL_REDIRECT": {
+      "description": "",
+      "value": "If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT)."
+    },
+    "SESSION_COOKIE_SECURE": {
+      "description": "Whether to use a secure cookie for the session cookie. If this is set to True, the cookie will be marked as “secure”, which means browsers may ensure that the cookie is only sent under an HTTPS connection.",
+      "value": ""
+    },
+    "CSRF_COOKIE_SECURE": {
+      "description": "Whether to use a secure cookie for the CSRF cookie. If this is set to True, the cookie will be marked as “secure”, which means browsers may ensure that the cookie is only sent with an HTTPS connection.",
+      "value": ""
+    },
   },
   "formation": {
     "web": {

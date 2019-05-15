@@ -132,7 +132,11 @@ except:
         "release": os.environ["SOURCE_VERSION"],
     }
     SECRET_KEY = os.environ["SECRET_KEY"]
-
+    SECURE_SSL_REDIRECT = os.environ["SECURE_SSL_REDIRECT"] == "True"
+    SESSION_COOKIE_SECURE = os.environ["SESSION_COOKIE_SECURE"] == "True"
+    CSRF_COOKIE_SECURE = os.environ["CSRF_COOKIE_SECURE"] == "True"
+    if SECURE_SSL_REDIRECT:
+        SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 try:
     from dailywriting.settings_logging import *  # NOQA
 except:
