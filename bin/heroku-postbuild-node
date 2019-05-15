@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-yarn run replace '%SENTRY_DSN_PUBLIC%' $SENTRY_DSN_PUBLIC frontend/src/environments/environment.prod.ts
-
-yarn run replace '%API_BASE_URL%' $API_BASE_URL frontend/src/environments/environment.prod.ts
-
-mv frontend/src/environments/environment.ts.dist frontend/src/environments/environment.ts
-
-ng build --configuration=production --output-hashing=all
