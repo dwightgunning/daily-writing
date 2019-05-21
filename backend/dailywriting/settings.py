@@ -12,11 +12,18 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.sites",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "raven.contrib.django.raven_compat",
     "rest_framework",
+    "rest_framework.authtoken",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "rest_auth",
+    "rest_auth.registration",
     "timezone_field",
     "api.apps.ApiConfig",
     "entries.apps.EntriesConfig",
@@ -25,12 +32,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware",
-    "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",  #  Must be after Session Middleware
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -94,7 +101,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
@@ -117,17 +123,32 @@ AUTH_USER_MODEL = "users.User"
 
 JWT_AUTH = {"JWT_EXPIRATION_DELTA": datetime.timedelta(days=7)}
 
-# Environment specific settings
+# django-rest-auth
+REST_USE_JWT = True
 
+# django-allauth
+ACCOUNT_ADAPTER = "users.account_adapters.DailyWritingAccountAdapter"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_USERNAME_REQUIRED = True
+
+# Environment specific settings
 try:
     from dailywriting.settings_local import *  # NOQA
 except:
     import raven  # NOQA
 
     print("No settings_local.py available.")
+    ADMINS = [(os.environ["ADMIN_NAME"], os.environ["ADMIN_EMAIL"])]
+    API_BASE_URL = os.environ["API_BASE_URL"]
+    SITE_BASE_URL = os.environ["SITE_BASE_URL"]
     ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
     DATABASES = {"default": dj_database_url.config(default=os.environ["DATABASE_URL"])}
     DEBUG = os.environ["DEBUG"] == "True"
+    DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
     EMAIL_BACKEND = os.environ["EMAIL_BACKEND"]
     RAVEN_CONFIG = {
         "dsn": os.environ["SENTRY_DSN"],
@@ -137,6 +158,7 @@ except:
     SECURE_SSL_REDIRECT = os.environ["SECURE_SSL_REDIRECT"] == "True"
     SESSION_COOKIE_SECURE = os.environ["SESSION_COOKIE_SECURE"] == "True"
     CSRF_COOKIE_SECURE = os.environ["CSRF_COOKIE_SECURE"] == "True"
+    SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]
     if SECURE_SSL_REDIRECT:
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 try:

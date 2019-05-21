@@ -26,35 +26,30 @@ LOGGING = {
         },
     },
     "loggers": {
-        "dailywriting": {"handlers": ["console", "sentry"], "level": "WARNING"},
+        "api": {"handlers": ["sentry"], "level": "WARNING"},
+        "dailywriting": {"handlers": ["sentry"], "level": "WARNING"},
+        "entries": {"handlers": ["sentry"], "level": "WARNING"},
+        "users": {"handlers": ["sentry"], "level": "WARNING"},
         #  Django framework logging
         "django.db.backends": {
-            "handlers": ["console", "sentry"],
+            "handlers": ["sentry"],
             "level": "WARNING",
             "propagate": False,
         },
         "django.request": {
-            "handlers": ["console", "sentry"],
+            "handlers": ["sentry"],
             "level": "WARNING",
             "propagate": False,
         },
-        "django": {"handlers": ["console", "sentry"], "level": "WARNING"},
-        "django.db": {"handlers": ["console", "sentry"], "level": "WARNING"},
+        "django": {"handlers": ["sentry"], "level": "WARNING"},
+        "django.db": {"handlers": ["sentry"], "level": "WARNING"},
         #  Ops related logging
-        "raven": {
-            "level": "DEBUG",
-            "handlers": ["console", "sentry"],
-            "propagate": False,
-        },
-        "sentry.errors": {
-            "level": "DEBUG",
-            "handlers": ["console", "sentry"],
-            "propagate": False,
-        },
+        "raven": {"level": "DEBUG", "handlers": ["sentry"], "propagate": False},
+        "sentry.errors": {"level": "DEBUG", "handlers": ["sentry"], "propagate": False},
         #  Test related logging
         "selenium.webdriver.remote.remote_connection": {
             "level": "WARNING",
-            "handlers": ["console"],
+            "handlers": [],
             "propagate": False,
         },
         "sentry.errors": {
@@ -72,6 +67,11 @@ if settings.DEBUG:
         "propagate": False,
     }
     # make all loggers use the console.
+    LOGGING["handlers"]["console"] = {
+        "level": "DEBUG",
+        "class": "logging.StreamHandler",
+        "formatter": "verbose",
+    }
     for logger in LOGGING["loggers"]:
         LOGGING["loggers"][logger]["handlers"] = ["console"]
         LOGGING["loggers"][logger]["propagate"] = False

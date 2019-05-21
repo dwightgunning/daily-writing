@@ -1,5 +1,5 @@
-from .routers import EntriesRouter
-from .views import EntryViewSet
+from entries.routers import EntriesRouter
+from entries.views import EntryViewSet
 
 router = EntriesRouter()
 router.register(prefix=r"entries", viewset=EntryViewSet, base_name="entries")

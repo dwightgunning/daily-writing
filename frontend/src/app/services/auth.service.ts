@@ -25,8 +25,7 @@ export class AuthService {
     } finally {
       if (storedUserLoginCredentials && storedUserLoginCredentials.token) {
         // Check the stored credentials are still valid
-        this.httpClient.get(
-            environment.API_BASE_URL + 'user/')
+        this.httpClient.get(environment.API_BASE_URL + '/auth/user/')
           .subscribe(
             (authenticatedToken: UserLoginCredentials) => {
               this.userLoginCredentialsSubject.next(storedUserLoginCredentials);

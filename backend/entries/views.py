@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import EntryDetailSerializer, EntryListSerializer
-from .models import Entry
-from .permissions import IsAuthor
+from entries.serializers import EntryDetailSerializer, EntryListSerializer
+from entries.models import Entry
+from entries.permissions import IsAuthor
 
 
 class EntryViewSet(viewsets.ModelViewSet):

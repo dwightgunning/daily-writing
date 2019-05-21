@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Entry
+from entries.models import Entry
 
 
 @admin.register(Entry)

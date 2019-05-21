@@ -12,7 +12,7 @@ import { InviteRequest } from '../models/invite-request';
   providedIn: 'root'
 })
 export class InviteRequestService {
-  static readonly INVITE_REQUEST_ENDPOINT = environment.API_BASE_URL + 'auth/requestInvite/';
+  static readonly INVITE_REQUEST_ENDPOINT = environment.API_BASE_URL + 'auth/registration/invite-request/';
   constructor(private httpClient: HttpClient) { }
 
   createInviteRequest(inviteRequest: InviteRequest): Observable<null> {

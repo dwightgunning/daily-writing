@@ -31,17 +31,29 @@
     }
   ],
   "env": {
+    "ADMIN_NAME": {
+      "description": "Administrator name. Used for system and error notifications.",
+      "value": ""
+    },
+    "ADMIN_EMAIL": {
+      "description": "Administrator email address. Used for system and error notifications.",
+      "value": "webmaster@daily-writing.com"
+    },
     "ALLOWED_HOSTS": {
       "description": "A list of strings representing the host/domain names that this Django site can serve.",
       "value": "<<APP NAME>>.herokuapp.com"
     },
     "API_BASE_URL": {
-      "description": "The base URL for the API.",
+      "description": "The base URL for the API. Usually the same as API_BASE_URL though useful for local development.",
       "value": "http://<<APP NAME>>.herokuapp.com"
     },
     "DEBUG": {
       "description": "A boolean that turns on/off debug mode.",
       "value": "false"
+    },
+    "DEFAULT_FROM_EMAIL": {
+      "description": "Default email address to use for various automated correspondence from the site manager(s).",
+      "value": "noreply@daily-writing.com"
     },
     "DISABLE_COLLECTSTATIC": {
       "description": "Disable Heroku's automatic 'collectstatic' build step. Must be 'true' so the app can be built on Heroku at deploy time..",
@@ -58,6 +70,10 @@
     "SECRET_KEY": {
       "description": "A secret key for verifying the integrity of signed cookies.",
       "generator": "secret"
+    },
+    "SENDGRID_API_KEY": {
+      "description": "A SendGrid API Key is needed for sending email. This key needs to be generated from the SendGrid account dashboard after the Heroku App and the SendGrid add-on is initialised.",
+      "value": "false"
     },
     "SENTRY_DSN_PUBLIC": {
       "description": "The public Data Source Name (DSN) for the associated Sentry.io project.",
@@ -82,6 +98,10 @@
     "CSRF_COOKIE_SECURE": {
       "description": "Whether to use a secure cookie for the CSRF cookie. If this is set to True, the cookie will be marked as “secure”, which means browsers may ensure that the cookie is only sent with an HTTPS connection.",
       "value": ""
+    },
+    "SITE_BASE_URL": {
+      "description": "The base URL for the website. Usually the same as API_BASE_URL though useful for local development.",
+      "value": "http://<<APP NAME>>.herokuapp.com"
     },
   },
   "formation": {

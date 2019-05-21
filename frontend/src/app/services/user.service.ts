@@ -16,7 +16,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   public getUser(): Observable<User>  {
-    return this.http.get(environment.API_BASE_URL + 'user/')
+    return this.http.get(environment.API_BASE_URL + 'auth/user/')
       .pipe(
         map((response) => response as User),
         catchError((error: any) => observableThrowError(error))

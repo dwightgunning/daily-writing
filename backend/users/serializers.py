@@ -1,8 +1,16 @@
-import pytz
+from collections import Counter
 
+from allauth.account import app_settings as allauth_settings
+from allauth.account.adapter import get_adapter
+from allauth.account.utils import setup_user_email
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.core import exceptions as django_exceptions
+from django.core import mail
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-
+import pytz
 from rest_framework import serializers
 
 from users.models import DailyWritingProfile
@@ -17,6 +25,22 @@ class TimezoneField(serializers.Field):
             return pytz.timezone(str(data))
         except pytz.exceptions.UnknownTimeZoneError:
             raise serializers.ValidationError(_("Unknown timezone"))
+
+
+class InviteRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate_email(self, email):
+        email = get_adapter().clean_email(email)
+        return email
+
+    def get_cleaned_data(self):
+        return {"email": self.validated_data.get("email", "")}
+
+    def save(self, request):
+        self.cleaned_data = self.get_cleaned_data()
+        adapter = get_adapter()
+        return adapter.new_user_invite_request(request, self)
 
 
 class DailyWritingProfileSerializer(serializers.ModelSerializer):

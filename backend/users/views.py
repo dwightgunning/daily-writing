@@ -2,12 +2,24 @@ import logging
 
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from rest_auth.registration.views import RegisterView
 from rest_framework.generics import RetrieveUpdateAPIView
 
 from users.models import DailyWritingProfile
-from users.serializers import DailyWritingProfileSerializer
+from users.serializers import DailyWritingProfileSerializer, InviteRequestSerializer
 
 logger = logging.getLogger(__name__)
+
+
+class InviteRequestView(RegisterView):
+    serializer_class = InviteRequestSerializer
+
+    def get_response_data(self, user):
+        return {"email": user.email}
+
+    def perform_create(self, serializer):
+        user = serializer.save(self.request)
+        return user
 
 
 class DailyWritingProfileView(RetrieveUpdateAPIView):
