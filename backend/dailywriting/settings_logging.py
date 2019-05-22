@@ -5,10 +5,10 @@ from django.conf import settings
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
-    "root": {"level": "WARNING", "handlers": ["sentry"]},
+    "root": {"level": "WARNING", "handlers": ["console", "sentry"]},
     "formatters": {
         "verbose": {
-            "format": "[%(asctime)s %(levelname)s %(module)s "
+            "format": "[%(name)s - %(asctime)s %(levelname)s %(module)s "
             "%(process)d %(thread)d] %(message)s"
         },
         "simple": {"format": "[%(asctime)s: %(levelname)s] %(message)s"},
@@ -57,10 +57,22 @@ LOGGING = {
             "handlers": ["console"],
             "propagate": False,
         },
+        "sentry.errors": {
+            "level": "DEBUG",
+            "handlers": ["console", "sentry"],
+            "propagate": False,
+        },
     },
 }
 
 if settings.DEBUG:
+    LOGGING["loggers"]["selenium.webdriver.remote.remote_connection"] = {
+        "level": "WARNING",
+        "handlers": ["console"],
+        "propagate": False,
+    }
     # make all loggers use the console.
     for logger in LOGGING["loggers"]:
         LOGGING["loggers"][logger]["handlers"] = ["console"]
+        LOGGING["loggers"][logger]["propagate"] = False
+        LOGGING["loggers"][logger]["level"] = "INFO"
