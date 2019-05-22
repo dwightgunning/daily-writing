@@ -67,6 +67,10 @@
       "description": "Heroku Production NPM Configuration. Must be 'false' so the app can be built on Heroku at deploy time.",
       "value": "false"
     },
+    "PREPEND_WWW": {
+      "description": "Whether to prepend the “www.” subdomain to URLs that don’t have it.",
+      "value": "True"
+    },
     "SECRET_KEY": {
       "description": "A secret key for verifying the integrity of signed cookies.",
       "generator": "secret"

@@ -158,9 +158,10 @@ except:
     SECURE_SSL_REDIRECT = os.environ["SECURE_SSL_REDIRECT"] == "True"
     SESSION_COOKIE_SECURE = os.environ["SESSION_COOKIE_SECURE"] == "True"
     CSRF_COOKIE_SECURE = os.environ["CSRF_COOKIE_SECURE"] == "True"
-    SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]
+    PREPEND_WWW = os.environ["PREPEND_WWW"] == "True"
     if SECURE_SSL_REDIRECT:
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]
 try:
     from dailywriting.settings_logging import *  # NOQA
 except:
