@@ -18,33 +18,36 @@ def send_invite(modeladmin, request, queryset):
 
     # Populate invitable_objects, a data structure of all related objects that
     # will also be deleted.
-    inviteable_users = queryset.filter(groups__name__in=["Invite Requested", "Invited"])
-    protected = queryset.filter(groups__name__in=["Invite Accepted"])
+    invitable_groups = ["Invite Requested", "Invited"]
+    inviteable_users = queryset.filter(groups__name__in=invitable_groups)
+    protected = queryset.exclude(groups__name__in=invitable_groups)
 
     # The user has already confirmed the deletion.
     # Do the deletion and return None to display the change list view again.
-    if request.POST.get("post") and not protected:
-        n = queryset.count()
-        if n:
-            for obj in queryset:
-                obj_display = str(obj)
-                get_adapter().send_invite_email(obj)
-                obj.groups.remove(Group.objects.get(name="Invite Requested"))
-                obj.groups.add(Group.objects.get(name="Invited"))
-                LogEntry.objects.log_action(
-                    user_id=request.user.pk,
-                    content_type_id=ContentType.objects.get_for_model(obj).pk,
-                    object_id=obj.pk,
-                    object_repr=str(obj),
-                    action_flag=CHANGE,
-                    change_message="Sent invite to user",
-                )
-            modeladmin.message_user(
-                request,
-                _("Successfully invited %(count)d %(items)s.")
-                % {"count": n, "items": model_ngettext(modeladmin.opts, n)},
-                messages.SUCCESS,
+    if request.POST.get("post") and inviteable_users and not protected:
+        inviteable_user_count = inviteable_users.count()
+        for obj in queryset:
+            obj_display = str(obj)
+            get_adapter().send_invite_email(obj)
+            obj.groups.remove(Group.objects.get(name="Invite Requested"))
+            obj.groups.add(Group.objects.get(name="Invited"))
+            LogEntry.objects.log_action(
+                user_id=request.user.pk,
+                content_type_id=ContentType.objects.get_for_model(obj).pk,
+                object_id=obj.pk,
+                object_repr=str(obj),
+                action_flag=CHANGE,
+                change_message="Sent invite to user",
             )
+        modeladmin.message_user(
+            request,
+            _("Successfully invited %(count)d %(items)s.")
+            % {
+                "count": inviteable_user_count,
+                "items": model_ngettext(modeladmin.opts, inviteable_user_count),
+            },
+            messages.SUCCESS,
+        )
         # Return None to display the change list page again.
         return None
 

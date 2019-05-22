@@ -1,6 +1,7 @@
 from django.contrib.admin import helpers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.messages import get_messages
 from django.core import mail
 from django.template.response import TemplateResponse
 from django.test import TestCase
@@ -42,7 +43,11 @@ class TestDailyWritingUserAdmin(TestCase):
         # A POST request to invite users displays the confirmation page
         response = self.client.post(user_changelist_url, action_data)
         self.assertIsInstance(response, TemplateResponse)
-        # self.assertContains(response, 'Are you sure you want to invite the selected', html=True)
+        self.assertContains(
+            response,
+            "<p>Are you sure you want to invite the selected users?</p>",
+            html=True,
+        )
         self.assertContains(response, f"<li>{u1}</li>", html=True)
         self.assertContains(response, f"<li>{u2}</li>", html=True)
         confirmation = self.client.post(user_changelist_url, invite_confirmation_data)
@@ -129,3 +134,62 @@ class TestDailyWritingUserAdmin(TestCase):
             .groups.filter(name="Invite Accepted")
             .exists()
         )
+
+    def test_send_user_invite_select_none(self):
+        """ Posting action with no users selected is a no-op
+        """
+        action_data = {
+            helpers.ACTION_CHECKBOX_NAME: [],
+            "action": "send_invite",
+            "index": 0,
+        }
+        invite_confirmation_data = action_data.copy()
+        invite_confirmation_data["post"] = "yes"
+        user_changelist_url = reverse("admin:users_user_changelist")
+        # A POST request to invite users with no users selected, redirects
+        response = self.client.post(user_changelist_url, action_data)
+        self.assertRedirects(response, user_changelist_url)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "Items must be selected in order to perform actions on them. No items have been changed.",
+        )
+        # A POST request to confirm inviting users with no users selected, redirects
+        confirmation = self.client.post(user_changelist_url, invite_confirmation_data)
+        self.assertRedirects(confirmation, user_changelist_url)
+        self.assertEqual(len(mail.outbox), 0)
+        messages = list(get_messages(confirmation.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "Items must be selected in order to perform actions on them. No items have been changed.",
+        )
+
+    def test_send_user_invite_select_unexpected_groups(self):
+        """ Posting action with no users selected is a no-op
+        """
+        u1 = get_user_model().objects.create(
+            email="groupless@tester.com", username="groupless"
+        )
+        action_data = {
+            helpers.ACTION_CHECKBOX_NAME: [u1.pk],
+            "action": "send_invite",
+            "index": 0,
+        }
+        invite_confirmation_data = action_data.copy()
+        invite_confirmation_data["post"] = "yes"
+        user_changelist_url = reverse("admin:users_user_changelist")
+        # A POST request to invite users with no users selected, redirects
+        response = self.client.post(user_changelist_url, action_data)
+        self.assertContains(
+            response,
+            "<p>The selected user already accepted the invitation:</p>",
+            html=True,
+        )
+        self.assertContains(response, f"<li>{u1}</li>", html=True)
+        # A POST request to confirm inviting users with no users selected has no effect
+        confirmation = self.client.post(user_changelist_url, invite_confirmation_data)
+        self.assertEqual(len(mail.outbox), 0)
+        messages = list(get_messages(confirmation.wsgi_request))
+        self.assertEqual(len(messages), 0)
