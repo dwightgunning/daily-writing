@@ -73,7 +73,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, "django-staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "backend", "dist", "static")
 STATIC_URL = "/static/"
 
 WHITENOISE_INDEX_FILE = True

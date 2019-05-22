@@ -1,6 +1,9 @@
 # Angular-cli
 /frontend/dist
 *.map
+.env
+.sass-cache/
+environment.ts
 
 # System Files
 .DS_Store
@@ -18,11 +21,10 @@ yarn-error.log
 node_modules/
 npm-debug.log
 
-# misc
-.sass-cache/
-coverage/
-
-# Local files containing secrets/keys etc.
-.env
+# Django
+.pytest_cache
+/backend/dist
 settings_local.py
-environment.ts
+
+# misc
+coverage/

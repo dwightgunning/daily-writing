@@ -27,8 +27,7 @@ INSTALLED_APPS = [
     'timezone_field',
     'api.apps.ApiConfig',
     'entries.apps.EntriesConfig',
-    'users.apps.UsersConfig',
-    'django_nose' # Must be last
+    'users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
@@ -61,5 +60,3 @@ ADMINS = [("Admin", "admin@admin.com"),]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 SITE_BASE_URL = "http://localhost:4200"
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
