@@ -5,16 +5,25 @@ from rest_auth.registration.views import RegisterView
 from rest_auth.views import PasswordResetConfirmView, PasswordResetView
 
 from api.views import empty_view
-from users.views import DailyWritingProfileView, InviteRequestView
+from users.views import (
+    DailyWritingProfileView,
+    InviteRequestView,
+    InviteRequestAcceptanceView,
+)
 
 urlpatterns = [
     path(
         "auth/registration/", csrf_exempt(RegisterView.as_view()), name="rest_register"
     ),
     path(
-        "auth/registration/invite-request/",
+        "auth/registration/invite/",
         csrf_exempt(InviteRequestView.as_view()),
         name="invite_request",
+    ),
+    path(
+        "auth/registration/invite/<token>/",
+        InviteRequestAcceptanceView.as_view(),
+        name="invite_token",
     ),
     path(
         "auth/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"

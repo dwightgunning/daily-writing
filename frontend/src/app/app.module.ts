@@ -1,9 +1,8 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-
 import { MomentModule } from 'ngx-moment';
 import { init as sentryInit } from '@sentry/browser';
 
@@ -27,6 +26,8 @@ import { TopNavBarComponent } from './top-nav-bar/top-nav-bar.component';
 import { WritingPageComponent } from './writing-page/writing-page.component';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { InviteRequestFormComponent } from './invite-request-form/invite-request-form.component';
+import { InviteAcceptancePageComponent } from './invite-acceptance-page/invite-acceptance-page.component';
+import { InviteAcceptanceFormComponent } from './invite-acceptance-form/invite-acceptance-form.component';
 
 sentryInit({
   dsn: environment.SENTRY_DSN_PUBLIC
@@ -48,7 +49,9 @@ sentryInit({
     ProfileFormComponent,
     LogoutComponent,
     SignupPageComponent,
-    InviteRequestFormComponent
+    InviteRequestFormComponent,
+    InviteAcceptancePageComponent,
+    InviteAcceptanceFormComponent
   ],
   imports: [
     AppRoutingModule,
@@ -57,6 +60,7 @@ sentryInit({
     HttpClientModule,
     MomentModule,
     TimezonePickerModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   providers: [

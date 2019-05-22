@@ -27,7 +27,7 @@ class UserAPITests(APITestCase):
         test_email = "new_tester@tester.com"
 
         request = self.factory.post(
-            path="/api/auth/registration/invite-request/",
+            path="/api/auth/registration/invite/",
             data={"email": test_email},
             format="json",
         )
@@ -46,7 +46,7 @@ class UserAPITests(APITestCase):
         test_email = self.existing_user.email
 
         request = self.factory.post(
-            path="/api/auth/registration/invite-request/",
+            path="/api/auth/registration/invite/",
             data={"email": test_email},
             format="json",
         )
@@ -119,7 +119,7 @@ class UserAPIE2ETests(APITestCase):
         test_email = "new_tester@tester.com"
 
         response = self.client.post(
-            path="/api/auth/registration/invite-request/",
+            path="/api/auth/registration/invite/",
             data={"email": test_email},
             format="json",
         )

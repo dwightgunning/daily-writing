@@ -1,11 +1,16 @@
 from allauth.account.adapter import get_adapter
-from allauth.account.models import EmailAddress
+from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.core import mail
 from unittest.mock import ANY, Mock, patch
+from rest_framework import serializers
 from rest_framework.test import APIRequestFactory, APITestCase
-
-from users.serializers import InviteRequestSerializer
+from users.serializers import (
+    InviteAcceptanceSerializer,
+    InviteRequestSerializer,
+    InviteTokenSerializer,
+)
 
 
 class InviteRequestSerializerTest(APITestCase):
@@ -99,3 +104,81 @@ class InviteRequestSerializerTest(APITestCase):
         serializer = InviteRequestSerializer(data=test_data)
         with self.assertRaises(AssertionError):
             serializer.save(request=stub_request)
+
+
+class InviteTokenSerializerTest(APITestCase):
+    fixtures = ["dailywriting/fixtures/seed.json"]
+
+    def test_validate_token_valid(self):
+        test_email = "tester@tester.com"
+        tmp_username = "temp_username"
+        test_user = get_adapter().new_user(None)
+        test_user.email = test_email
+        test_user.username = tmp_username
+        test_user.save()
+        test_user.groups.add(Group.objects.get(name="Invited"))
+        email_address = EmailAddress.objects.create(
+            email=test_user.email, user=test_user
+        )
+        test_token = EmailConfirmationHMAC(email_address).key
+        serializer = InviteTokenSerializer()
+        self.assertEqual(serializer.validate_token(test_token), test_token)
+
+    def test_validate_token_invalid(self):
+        test_data = {
+            "token": "not a token",
+            "username": "tester",
+            "password": "kl#23jrkja11pf",
+        }
+
+        serializer = InviteTokenSerializer(data=test_data)
+        with self.assertRaises(serializers.ValidationError):
+            serializer.validate_token(test_data["token"])
+
+    def test_validate_token_already_accepted(self):
+        test_email = "tester@tester.com"
+        tmp_username = "temp_username"
+        test_user = get_adapter().new_user(None)
+        test_user.email = test_email
+        test_user.username = tmp_username
+        test_user.set_unusable_password()
+        test_user.save()
+        test_user.groups.add(Group.objects.get(name="Invite Accepted"))
+        email_address = EmailAddress(email=test_user.email, user=test_user)
+
+        serializer = InviteTokenSerializer()
+        with self.assertRaises(serializers.ValidationError):
+            serializer.validate_token(EmailConfirmationHMAC(email_address).key)
+
+
+class InviteAcceptanceSerializerTest(APITestCase):
+    fixtures = ["dailywriting/fixtures/seed.json"]
+
+    def test_save(self):
+        test_email = "tester@tester.com"
+        tmp_username = "temp_username"
+        test_user = get_adapter().new_user(None)
+        test_user.email = test_email
+        test_user.username = tmp_username
+        test_user.set_unusable_password()
+        test_user.save()
+        test_user.groups.add(Group.objects.get(name="Invited"))
+        email_address = EmailAddress.objects.create(
+            email=test_user.email, user=test_user
+        )
+        test_data = {
+            "token": EmailConfirmationHMAC(email_address).key,
+            "username": "tester",
+            "password": "kl#23jrkja11pf",
+        }
+
+        serializer = InviteAcceptanceSerializer(data=test_data)
+        serializer.is_valid()
+        serializer.save(None)
+
+        EmailAddress.objects.get(email=test_user.email, primary=True, verified=True)
+        updated_user = get_user_model().objects.get(
+            email=test_user.email, username=test_data["username"]
+        )
+        self.assertTrue(updated_user.check_password(test_data["password"]))
+        self.assertEqual(len(mail.outbox), 0)  # No email confirmations sent to the user

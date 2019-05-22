@@ -1,5 +1,6 @@
 from unittest.mock import ANY, call, Mock, patch
 
+from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from callee import operators
 from django.core import mail
@@ -167,6 +168,7 @@ class DailyWritingAccountAdapterTest(TestCase):
         adapter = DailyWritingAccountAdapter()
         test_user = adapter.new_user(None)
         test_user.email = "tester@tester.com"
+        test_user.save()
         adapter.send_invite_request_received_email(test_user)
 
         expected_args_send_mail = {
@@ -183,12 +185,17 @@ class DailyWritingAccountAdapterTest(TestCase):
 
     @patch("users.account_adapters.mail")
     def test_send_invite_email(self, mock_mail):
+        adapter = DailyWritingAccountAdapter()
         test_email = "tester@tester.com"
-        test_email_address = EmailAddress(email=test_email)
+        test_user = adapter.new_user(None)
+        test_user.email = test_email
+        test_user.save()
+        test_email_address = EmailAddress.objects.create(
+            email=test_email, user=test_user
+        )
         expected_hmac = EmailConfirmationHMAC(test_email_address)
 
-        adapter = DailyWritingAccountAdapter()
-        adapter.send_invite_email(test_email_address)
+        adapter.send_invite_email(test_user)
 
         expected_args_send_mail = {
             "from_email": ANY,
@@ -202,14 +209,22 @@ class DailyWritingAccountAdapterTest(TestCase):
     @patch("users.account_adapters.logger")
     def test_send_invite_email_error(self, mock_logger, mock_mail):
         test_email = "tester@tester.com"
-        test_email_address = EmailAddress(email=test_email)
+
+        adapter = DailyWritingAccountAdapter()
+        test_user = adapter.new_user(None)
+        test_user.email = test_email
+        test_user.username = "fakeusername"
+        test_user.save()
+
+        test_email_address = EmailAddress.objects.create(
+            email=test_email, user=test_user
+        )
         expected_hmac = EmailConfirmationHMAC(test_email_address)
 
         mailing_error = Exception()
         mock_mail.send_mail = Mock(side_effect=mailing_error)
 
-        adapter = DailyWritingAccountAdapter()
-        adapter.send_invite_email(test_email_address)
+        adapter.send_invite_email(test_user)
 
         expected_args_send_mail = {
             "from_email": ANY,
@@ -229,8 +244,11 @@ class DailyWritingAccountAdapterTest(TestCase):
         test_user = adapter.new_user(None)
         test_user.username = test_username
         test_user.email = test_email
+        test_user.save()
 
-        test_email_address = EmailAddress(email=test_email, user=test_user)
+        test_email_address = EmailAddress.objects.create(
+            email=test_email, user=test_user
+        )
 
         adapter.send_account_username_email_address_reminder_email(test_user)
 
@@ -255,8 +273,11 @@ class DailyWritingAccountAdapterTest(TestCase):
         test_user = adapter.new_user(None)
         test_user.username = test_username
         test_user.email = test_email
+        test_user.save()
 
-        test_email_address = EmailAddress(email=test_email, user=test_user)
+        test_email_address = EmailAddress.objects.create(
+            email=test_email, user=test_user
+        )
 
         mailing_error = Exception()
         mock_mail.send_mail = Mock(side_effect=mailing_error)

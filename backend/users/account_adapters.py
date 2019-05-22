@@ -1,7 +1,7 @@
 import logging
 
 from allauth.account.adapter import DefaultAccountAdapter
-from allauth.account.models import EmailConfirmationHMAC
+from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from allauth.account.utils import setup_user_email
 from allauth.utils import email_address_exists
 from django.conf import settings
@@ -70,7 +70,8 @@ class DailyWritingAccountAdapter(DefaultAccountAdapter):
         """Constructs the invite acceptance url."""
         return f"{settings.SITE_BASE_URL}/invite/{email_confirmation.key}/"
 
-    def send_invite_email(self, email_address):
+    def send_invite_email(self, user):
+        email_address = EmailAddress.objects.get(user=user)
         confirmation_hmac = EmailConfirmationHMAC(email_address)
         invite_acceptance_url = self.get_invite_acceptance_url(confirmation_hmac)
 

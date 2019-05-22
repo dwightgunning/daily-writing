@@ -6,22 +6,22 @@ import { of, throwError } from 'rxjs';
 
 import { InviteRequest } from '../models/invite-request';
 import { InviteRequestFormComponent } from './invite-request-form.component';
-import { InviteRequestService } from '../services/invite-request.service';
+import { InviteService } from '../services/invite.service';
 
 describe('InviteRequestFormComponent', () => {
   let component: InviteRequestFormComponent;
   let fixture: ComponentFixture<InviteRequestFormComponent>;
-  let inviteRequestServiceSpy;
-  let inviteRequestService;
+  let inviteServiceSpy;
+  let inviteService;
 
   beforeEach(async(() => {
-    inviteRequestServiceSpy = jasmine.createSpyObj('InviteRequestService', ['createInviteRequest']);
+    inviteServiceSpy = jasmine.createSpyObj('InviteService', ['createInviteRequest', 'checkInviteTokenIsValid', 'acceptInvite']);
 
     TestBed.configureTestingModule({
       declarations: [ InviteRequestFormComponent ],
       imports: [ FormsModule ],
       providers: [
-        { provide: InviteRequestService, useValue: inviteRequestServiceSpy }
+        { provide: InviteService, useValue: inviteServiceSpy }
       ]
     })
     .compileComponents();
@@ -30,7 +30,7 @@ describe('InviteRequestFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InviteRequestFormComponent);
     component = fixture.componentInstance;
-    inviteRequestService = TestBed.get(InviteRequestService);
+    inviteService = TestBed.get(InviteService);
     fixture.detectChanges();
   });
 
@@ -38,10 +38,10 @@ describe('InviteRequestFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('invokes the InviteRequestService to create a new request', (onExpectationsMet) => {
+  it('invokes the InviteService to create a new request', (onExpectationsMet) => {
     const testData = new InviteRequest({email: 'tester@tester.com'});
     component.model = testData;
-    const createInviteRequestSpy = inviteRequestServiceSpy.createInviteRequest.and.callFake(
+    const createInviteRequestSpy = inviteServiceSpy.createInviteRequest.and.callFake(
       (data) => {
         expect(createInviteRequestSpy).toHaveBeenCalledWith(testData);
         onExpectationsMet();
@@ -50,10 +50,10 @@ describe('InviteRequestFormComponent', () => {
     component.inviteRequestFormSubmit();
   });
 
-  it('handles errors from the InviteRequestService when creating new request', (onExpectationsMet) => {
+  it('handles errors from the InviteService when creating new request', (onExpectationsMet) => {
     const testData = new InviteRequest({email: 'tester@tester.com'});
     component.model = testData;
-    const createInviteRequestSpy = inviteRequestServiceSpy.createInviteRequest.and.callFake(
+    const createInviteRequestSpy = inviteServiceSpy.createInviteRequest.and.callFake(
       (data) => {
         expect(createInviteRequestSpy).toHaveBeenCalledWith(testData);
         onExpectationsMet();

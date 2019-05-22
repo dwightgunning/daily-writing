@@ -1,4 +1,5 @@
 from allauth.account.adapter import get_adapter
+from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.admin import helpers
 from django.contrib.admin.models import LogEntry, CHANGE
@@ -26,16 +27,16 @@ def send_invite(modeladmin, request, queryset):
     # Do the deletion and return None to display the change list view again.
     if request.POST.get("post") and inviteable_users and not protected:
         inviteable_user_count = inviteable_users.count()
-        for obj in queryset:
-            obj_display = str(obj)
-            get_adapter().send_invite_email(obj)
-            obj.groups.remove(Group.objects.get(name="Invite Requested"))
-            obj.groups.add(Group.objects.get(name="Invited"))
+        for user in queryset:
+            obj_display = str(user)
+            get_adapter().send_invite_email(user)
+            user.groups.remove(Group.objects.get(name="Invite Requested"))
+            user.groups.add(Group.objects.get(name="Invited"))
             LogEntry.objects.log_action(
                 user_id=request.user.pk,
-                content_type_id=ContentType.objects.get_for_model(obj).pk,
-                object_id=obj.pk,
-                object_repr=str(obj),
+                content_type_id=ContentType.objects.get_for_model(user).pk,
+                object_id=user.pk,
+                object_repr=str(user),
                 action_flag=CHANGE,
                 change_message="Sent invite to user",
             )

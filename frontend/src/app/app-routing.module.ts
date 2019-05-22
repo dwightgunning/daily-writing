@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomePageComponent } from './home-page/home-page.component';
+import { InviteAcceptancePageComponent } from './invite-acceptance-page/invite-acceptance-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+  },
+  {
+    path: 'invite/:token',
+    component: InviteAcceptancePageComponent,
   },
   {
     path: 'logout',

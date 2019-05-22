@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from django.contrib.admin import helpers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -27,10 +28,12 @@ class TestDailyWritingUserAdmin(TestCase):
             email="tester1@tester.com", username="tester1"
         )
         u1.groups.add(Group.objects.get(name="Invite Requested"))
+        EmailAddress.objects.create(email="tester1@tester.com", user=u1)
         u2 = get_user_model().objects.create(
             email="tester2@tester.com", username="tester2"
         )
         u2.groups.add(Group.objects.get(name="Invite Requested"))
+        EmailAddress.objects.create(email="tester2@tester.com", user=u2)
         action_data = {
             helpers.ACTION_CHECKBOX_NAME: [u1.pk, u2.pk],
             "action": "send_invite",
@@ -91,10 +94,12 @@ class TestDailyWritingUserAdmin(TestCase):
             email="tester1@tester.com", username="tester1"
         )
         u1.groups.add(Group.objects.get(name="Invited"))
+        EmailAddress.objects.create(email="tester1@tester.com", user=u1)
         u2 = get_user_model().objects.create(
             email="tester2@tester.com", username="tester2"
         )
         u2.groups.add(Group.objects.get(name="Invite Accepted"))
+        EmailAddress.objects.create(email="tester2@tester.com", user=u2)
         action_data = {
             helpers.ACTION_CHECKBOX_NAME: [u1.pk, u2.pk],
             "action": "send_invite",
@@ -172,6 +177,7 @@ class TestDailyWritingUserAdmin(TestCase):
         u1 = get_user_model().objects.create(
             email="groupless@tester.com", username="groupless"
         )
+        EmailAddress.objects.create(email="tester1@tester.com", user=u1)
         action_data = {
             helpers.ACTION_CHECKBOX_NAME: [u1.pk],
             "action": "send_invite",

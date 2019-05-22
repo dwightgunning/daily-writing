@@ -3,7 +3,7 @@ import { ViewChild } from '@angular/core';
 
 import { finalize } from 'rxjs/operators';
 
-import { InviteRequestService } from '../services/invite-request.service';
+import { InviteService } from '../services/invite.service';
 import { InviteRequest } from '../models/invite-request';
 
 @Component({
@@ -18,11 +18,11 @@ export class InviteRequestFormComponent {
   error: any;
   model = new InviteRequest();
 
-  constructor(private inviteRequestService: InviteRequestService) { }
+  constructor(private inviteService: InviteService) { }
 
   inviteRequestFormSubmit() {
     this.submitting = true;
-    this.inviteRequestService.createInviteRequest(this.model)
+    this.inviteService.createInviteRequest(this.model)
     .pipe(
       finalize(() => this.submitting = false),
     ).subscribe(
