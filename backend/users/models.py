@@ -8,7 +8,8 @@ from timezone_field import TimeZoneField
 
 
 class User(AbstractUser):
-    pass
+    verbose_name = "user"
+    verbose_name_plural = "users"
 
 
 class DailyWritingProfile(models.Model):

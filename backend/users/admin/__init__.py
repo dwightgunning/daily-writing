@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from users.models import DailyWritingProfile, User
+from users.admin.actions import send_invite
 
 
 class InviteFilter(admin.SimpleListFilter):
@@ -11,9 +12,9 @@ class InviteFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ("requested", _("Requested by user")),
+            ("requested", _("Requested")),
             ("invited", _("Invited")),
-            ("accepted", _("Accepted by user")),
+            ("accepted", _("Accepted")),
         )
 
     def queryset(self, request, queryset):
@@ -27,6 +28,8 @@ class InviteFilter(admin.SimpleListFilter):
 
 @admin.register(User)
 class DailyWritingUserAdmin(UserAdmin):
+    invite_selected_confirmation_template = None
+    actions = [send_invite]
     list_filter = (InviteFilter,)
 
 

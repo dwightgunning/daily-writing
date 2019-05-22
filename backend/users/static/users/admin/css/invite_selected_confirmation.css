@@ -1,0 +1,30 @@
+.invite-confirmation form input[type="submit"] {
+    background: #417690;
+    border-radius: 4px;
+    padding: 10px 15px;
+    color: #fff;
+}
+
+.invite-confirmation form input[type="submit"]:active,
+.invite-confirmation form input[type="submit"]:focus,
+.invite-confirmation form input[type="submit"]:hover {
+    background: #205067;
+}
+
+.invite-confirmation form .cancel-link {
+    display: inline-block;
+    vertical-align: middle;
+    height: 15px;
+    line-height: 15px;
+    background: #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+    color: #333;
+    margin: 0 0 0 10px;
+}
+
+.invite-confirmation form .cancel-link:active,
+.invite-confirmation form .cancel-link:focus,
+.invite-confirmation form .cancel-link:hover {
+    background: #ccc;
+}
