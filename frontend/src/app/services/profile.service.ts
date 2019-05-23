@@ -10,7 +10,9 @@ import { Headers, RequestOptions } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { Profile } from '../models/profile';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProfileService {
   profileUrl = environment.API_BASE_URL + 'profile/';
 

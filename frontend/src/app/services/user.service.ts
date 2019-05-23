@@ -10,7 +10,9 @@ import { environment } from '../../environments/environment';
 import { User } from '../models/user';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
 
   constructor(private http: HttpClient) { }

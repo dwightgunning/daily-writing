@@ -10,7 +10,9 @@ import { Observable ,  ReplaySubject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   private LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
   userLoginCredentialsSubject = new ReplaySubject<UserLoginCredentials>(1);

@@ -13,7 +13,9 @@ import { Entry } from '../models/entry';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from './auth.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class EntryService {
   private entryBaseUrl = environment.API_BASE_URL + 'entries/';
   private user: UserLoginCredentials;
