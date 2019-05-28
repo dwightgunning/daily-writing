@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { RouterStub } from '../../testing/router-stubs';
 import { AuthService } from '../services/auth.service';
 import { LogoutComponent } from './logout.component';
 
@@ -27,14 +26,13 @@ describe('LogoutComponent', () => {
       ],
       providers: [
         {provide: AuthService, useClass: AuthServiceSpy },
-        // {provider: Router, useClass: RouterStub}
       ]
     })
     .compileComponents();
   }));
 
   let authServiceSpy: AuthServiceSpy;
-  let router: RouterStub;
+  let router;
   let routerNavigateSpy;
 
   beforeEach(() => {

@@ -15,8 +15,3 @@ export class RouterLinkStubDirective {
     this.navigatedTo = this.linkParams;
   }
 }
-
-export class RouterStub {
-  navigate(path: string) { return path; }
-  navigateByUrl(url: string) { return url; }
-}
