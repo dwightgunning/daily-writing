@@ -58,8 +58,8 @@ describe('TopNavBarComponent', () => {
 
     expect(links.length).toBe(3, 'should have 3 links');
     expect(links[0].linkParams).toBe('', '1st link should go to Home');
-    expect(links[1].linkParams).toBe('signup', '2rd link should go to Signup');
-    expect(links[2].linkParams).toBe('login', '3nd link should go to Login');
+    expect(links[1].linkParams).toBe('/signup', '2rd link should go to Signup');
+    expect(links[2].linkParams).toBe('/login', '3nd link should go to Login');
   });
 
   it('should display logout link when authenticated', () => {
@@ -78,9 +78,9 @@ describe('TopNavBarComponent', () => {
 
     expect(links.length).toBe(5, 'should have 5 links');
     expect(links[0].linkParams).toBe('', '1st link should go to Home');
-    expect(links[1].linkParams).toBe('write', '2st link should go to Write');
-    expect(links[2].linkParams).toBe('review', '3rd link should go to Review');
-    expect(links[3].linkParams).toBe('profile', '4th link should go to Profile');
-    expect(links[4].linkParams).toBe('logout', '5th link should go to Logout');
+    expect(links[1].linkParams).toBe('/write', '2st link should go to Write');
+    expect(links[2].linkParams).toBe('/review', '3rd link should go to Review');
+    expect(links[3].linkParams).toBe('/profile', '4th link should go to Profile');
+    expect(links[4].linkParams).toBe('/logout', '5th link should go to Logout');
   });
 });

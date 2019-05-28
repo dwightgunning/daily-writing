@@ -8,14 +8,14 @@
   </div>
   <div class="top-bar-right">
     <ul class="dropdown menu" data-dropdown-menu *ngIf="!(userLoginCredentials | async)">
-        <li><a class="hvr-line" [routerLink]="'signup'" routerLinkActive="active-link">Signup</a></li>
-        <li><a class="hvr-line" [routerLink]="'login'" routerLinkActive="active-link">Login</a></li>
+        <li><a class="hvr-line" [routerLink]="'/signup'" routerLinkActive="active-link">Signup</a></li>
+        <li><a class="hvr-line" [routerLink]="'/login'" routerLinkActive="active-link">Login</a></li>
     </ul>
     <ul class="dropdown menu" data-dropdown-menu *ngIf="(userLoginCredentials | async)">
-      <li><a class="hvr-line" [routerLink]="'write'" routerLinkActive="active-link">Write</a></li>
-      <li><a class="hvr-line" [routerLink]="'review'" routerLinkActive="active-link">Review</a></li>
-      <li><a class="hvr-line" [routerLink]="'profile'" routerLinkActive="active-link">Profile</a></li>
-      <li><a class="hvr-line" [routerLink]="'logout'" routerLinkActive="active-link">Logout</a></li>
+      <li><a class="hvr-line" [routerLink]="'/write'" routerLinkActive="active-link">Write</a></li>
+      <li><a class="hvr-line" [routerLink]="'/review'" routerLinkActive="active-link">Review</a></li>
+      <li><a class="hvr-line" [routerLink]="'/profile'" routerLinkActive="active-link">Profile</a></li>
+      <li><a class="hvr-line" [routerLink]="'/logout'" routerLinkActive="active-link">Logout</a></li>
     </ul>
   </div>
 </div>
