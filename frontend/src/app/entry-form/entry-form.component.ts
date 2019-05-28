@@ -76,7 +76,6 @@ export class EntryFormComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
 
     // Send a final update
-    console.log('Final entry update');
     this.entryService.updateEntry(this.model).subscribe((newEntry) => {
       for (const property of ['finishTime', 'milestoneTime']) {
         this.model[property] = newEntry[property];

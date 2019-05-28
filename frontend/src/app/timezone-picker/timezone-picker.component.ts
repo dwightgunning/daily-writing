@@ -84,7 +84,6 @@ export class TimezonePickerComponent implements OnInit, AfterViewInit, ControlVa
     this.nativeSelectElement.on('change', (e: any) => {
         this.onChange($(e.target).val());
     });
-    console.log('afterViewInit is done');
   }
 
   formatTimezoneString(zone: string): string {
@@ -109,7 +108,6 @@ export class TimezonePickerComponent implements OnInit, AfterViewInit, ControlVa
   writeValue(value) {
     this.currentTimezone = value;
     if (this.nativeSelectElement && value) {
-      console.log(value);
       this.nativeSelectElement
         .val(this.currentTimezone)
         .trigger('change.select2');
