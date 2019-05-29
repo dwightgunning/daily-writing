@@ -1,8 +1,34 @@
 export class ApiError {
-  errors?: Array<any>|object;
-  nonFieldErrors?: Array<any>;
+  /*
+  DRF backend typically sends errors in a json object with a single root-level
+  attribute named 'errors'.
 
-  constructor(errors: object) {
-    Object.assign(this, errors);
+  Example #1
+  {
+    errors: [
+      'Not found.'
+    ]
+  }
+
+  Example #2
+  {
+    errors: {
+      username: [
+        'This username already exists.'
+      ],
+      password: [
+        'Too short.',
+        'Too simple.'
+      ],
+      nonFieldErrors: [
+        'Passwords did not match.'
+      ]
+    }
+  }
+  */
+  errors?: Array<any>|object;
+
+  constructor(errorObj: object) {
+    Object.assign(this, errorObj);
   }
 }

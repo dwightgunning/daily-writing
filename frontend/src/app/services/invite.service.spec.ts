@@ -146,7 +146,8 @@ describe('InviteService', () => {
       req.flush(null, {status: 404, statusText: 'Not found'});
     });
 
-    it('HTTP Errors without body: Emits ApiError with \'unexpected error\' message and captures error with Sentry', (onExpectationsMet) => {
+    it('HTTP Errors without body: Emits ApiError with \'unexpected error\''
+        + ' message and captures error with Sentry', (onExpectationsMet) => {
       const testToken = 'abc123';
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
@@ -164,19 +165,18 @@ describe('InviteService', () => {
       req.flush(null, {status: 500, statusText: 'Server error'});
     });
 
-    it('HTTP Errors with body: Emits ApiError with \'unexpected error\' message and captures error with Sentry', (onExpectationsMet) => {
+    it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\''
+        + ' message and captures error with Sentry', (onExpectationsMet) => {
       const testToken = 'abc123';
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
-      const errorsObj = {
-        errors: ['Other error...']
-      };
+      const errorsObj = ['Other error...'];
 
       inviteService.checkInviteTokenIsValid(testToken).subscribe(
         (result: any) => {
           expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(errorsObj.errors);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
+          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
           onExpectationsMet();
         }
       );
@@ -185,7 +185,8 @@ describe('InviteService', () => {
       req.flush(errorsObj, {status: 500, statusText: 'Server error'});
     });
 
-    it('Other errors: Emits ApiError with \'unexpected error\' message and captures error with Sentry', (onExpectationsMet) => {
+    it('Other errors: Emits ApiError with \'unexpected error\''
+      + ' message and captures error with Sentry', (onExpectationsMet) => {
       const testToken = 'abc123';
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
@@ -247,7 +248,7 @@ describe('InviteService', () => {
       inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
         (result) => {
           expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(errorsObj);
+          expect(result).toEqual(new ApiError(errorsObj));
           expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
           onExpectationsMet();
         }
@@ -263,9 +264,7 @@ describe('InviteService', () => {
         username: 'tester123',
         password: 'fakepassword'
       });
-      const errorsObj = {
-        errors: ['Not found.']
-      };
+      const errorsObj = {errors: ['Not found.']};
 
       inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
         (result) => {
@@ -280,7 +279,8 @@ describe('InviteService', () => {
       req.flush(null, {status: 404, statusText: 'Not found'});
     });
 
-    it('HTTP Errors without body: Emits ApiError with \'unexpected error\' message and captures error with Sentry', (onExpectationsMet) => {
+    it('HTTP Errors without body: Emits ApiError with \'unexpected error\''
+        + ' message and captures error with Sentry', (onExpectationsMet) => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
@@ -302,21 +302,22 @@ describe('InviteService', () => {
       req.flush(null, {status: 500, statusText: 'Server error'});
     });
 
-    it('HTTP Errors with body: Emits ApiError with \'unexpected error\' message', (onExpectationsMet) => {
+    it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\' '
+        + 'message and captures error with Sentry', (onExpectationsMet) => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
         password: 'fakepassword'
       });
-      const errorsObj = {
-        errors: ['Other error...']
-      };
+      const errorsObj = ['Unexpected error...'];
+      const captureExceptionSpy = jasmine.createSpy('captureException');
+      sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
       inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
         (result) => {
           expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(errorsObj.errors);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
+          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
           onExpectationsMet();
         }
       );
@@ -325,7 +326,8 @@ describe('InviteService', () => {
       req.flush(errorsObj, {status: 500, statusText: 'Server error'});
     });
 
-    it('Other errors: Emits ApiError with \'unexpected error\' message and captures error with Sentry', (onExpectationsMet) => {
+    it('Other errors: Emits ApiError with \'unexpected error\''
+        + ' message and captures error with Sentry', (onExpectationsMet) => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
