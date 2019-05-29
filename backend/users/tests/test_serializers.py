@@ -3,6 +3,7 @@ from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core import mail
+from django.core.validators import ValidationError
 from unittest.mock import ANY, Mock, patch
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory, APITestCase
@@ -153,6 +154,56 @@ class InviteTokenSerializerTest(APITestCase):
 
 class InviteAcceptanceSerializerTest(APITestCase):
     fixtures = ["dailywriting/fixtures/seed.json"]
+
+    def test_validate_username_matching_same_user_model(self):
+        test_email = "tester@tester.com"
+        test_username = "autogen-username"
+        test_user = get_adapter().new_user(None)
+        test_user.email = test_email
+        test_user.username = test_username
+        test_user.set_unusable_password()
+        test_user.save()
+        test_user.groups.add(Group.objects.get(name="Invited"))
+        email_address = EmailAddress.objects.create(
+            email=test_user.email, user=test_user
+        )
+        test_data = {
+            "token": EmailConfirmationHMAC(email_address).key,
+            "username": test_username,
+            "password": "kl#23jrkja11pf",
+        }
+
+        serializer = InviteAcceptanceSerializer(data=test_data)
+        self.assertEquals(serializer.validate_username(test_username), test_username)
+
+    def test_validate_username_matching_other_user_model(self):
+        test_email = "tester@tester.com"
+        test_username = "autogen-username"
+        test_user = get_adapter().new_user(None)
+        test_user.email = test_email
+        test_user.username = test_username
+        test_user.set_unusable_password()
+        test_user.save()
+
+        other_user = get_adapter().new_user(None)
+        other_user.email = "other_user@tester.com"
+        other_user.username = "other_user"
+        other_user.set_unusable_password()
+        other_user.save()
+
+        test_user.groups.add(Group.objects.get(name="Invited"))
+        email_address = EmailAddress.objects.create(
+            email=test_user.email, user=test_user
+        )
+        test_data = {
+            "token": EmailConfirmationHMAC(email_address).key,
+            "username": other_user.username,
+            "password": "kl#23jrkja11pf",
+        }
+
+        serializer = InviteAcceptanceSerializer(data=test_data)
+        with self.assertRaises(ValidationError):
+            serializer.validate_username(other_user.username)
 
     def test_save(self):
         test_email = "tester@tester.com"

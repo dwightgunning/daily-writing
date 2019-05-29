@@ -23,6 +23,9 @@ from allauth.account import app_settings
 from allauth.account.models import EmailAddress
 
 
+from django.core.validators import ValidationError
+
+
 class TimezoneField(serializers.Field):
     def to_representation(self, obj):
         return str(obj)
@@ -75,7 +78,17 @@ class InviteAcceptanceSerializer(InviteTokenSerializer):
     password = serializers.CharField(write_only=True, required=True)
 
     def validate_username(self, username):
-        return get_adapter().clean_username(username)
+        adapter = get_adapter()
+        token = self.initial_data["token"]
+        email_address = EmailConfirmationHMAC.from_key(token).email_address
+        # Shallow clean without checking for uniqueness
+        validated_username = adapter.clean_username(username, shallow=True)
+
+        if validated_username == email_address.user.username:
+            return validated_username  # user keeps the same username
+
+        # clean again it with db uniqueness checks
+        return adapter.clean_username(validated_username)
 
     def validate_password(self, password):
         return get_adapter().clean_password(password)
