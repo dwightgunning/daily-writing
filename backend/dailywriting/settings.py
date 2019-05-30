@@ -32,8 +32,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # After SecurityMiddleware to allow http->https redirects
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
