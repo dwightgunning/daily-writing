@@ -1,7 +1,7 @@
-<div class="grid-container">
+<div class="grid-container full">
   <div class="grid-x">
-    <form #profileForm="ngForm" (submit)="profileFormSubmit()">
-      <div class="medium-6 cell">
+    <form #profileForm="ngForm" (submit)="profileFormSubmit()" class="medium-6 cell">
+      <div>
         <label>Email
           <input
             id="email"
@@ -12,7 +12,7 @@
             #email="ngModel">
         </label>
       </div>
-      <div class="medium-6 cell">
+      <div>
         <label>First name
           <input
             id="firstName"
@@ -23,7 +23,7 @@
             #firstName="ngModel">
         </label>
       </div>
-      <div class="medium-6 cell">
+      <div>
         <label>Last name
           <input
             id="lastName"
@@ -34,7 +34,7 @@
             #lastName="ngModel">
         </label>
       </div>
-      <div class="medium-6 cell">
+      <div>
         <label>Timezone
           <app-timezone-picker
             id="timezone"
@@ -45,7 +45,7 @@
           </app-timezone-picker>
         </label>
       </div>
-      <div class="medium-6 cell">
+      <div>
         <label>Wordcount target
           <input
             id="targetMilestoneWordCount"
@@ -59,7 +59,7 @@
       <div>
         <button
           type="submit"
-          class="button primary"
+          class="button primary expanded"
           tabindex="0"
           [disabled]="profileForm.form.pristine || !profileForm.form.valid">
           Update
