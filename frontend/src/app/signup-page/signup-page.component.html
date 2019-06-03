@@ -1,9 +1,20 @@
-<div class="grid-container">
-  <div class="grid-x">
-    <div class="medium-12 cell text-center">
-      <h2>Request an invite to Daily Writing</h2>
-      <p>Access to Daily Writing is currently invite-only. Let us know your email address and we'll be in touch.</p>
+<div class="grid-container page-container">
+  <div class="grid-x content-card align-middle">
+    <div class="cell medium-6 logo-container">
+      <div style="height: 100%">
+        <img src="/assets/images/logo.png">
+      </div>
+    </div>
+    <div class="cell medium-6 form-container">
+      <h2 class="h2">Request an invite</h2>
+      <p>Let us know your email address and we'll be in touch with an invite code.</p>
       <app-invite-request-form></app-invite-request-form>
+      <div class="auth-alt-nav">
+        <p>
+          Already have an account?<br/>
+          <a class="cta" [routerLink]="'/login'">Login here</a>
+        </p>
+      </div>
     </div>
   </div>
 </div>

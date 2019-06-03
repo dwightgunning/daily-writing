@@ -19,3 +19,110 @@
 .spinner {
   animation: flickerAnimation 2s infinite;
 }
+
+@import '../../assets/foundation-sites/settings';
+@import '~foundation-sites/scss/foundation';
+
+$small-background-linear-gradient-step1: rgba(255, 255, 255, 0);
+$small-background-linear-gradient-step2: rgba(255, 255, 255, 0.2);
+$small-background-linear-gradient-step3: rgba(255, 255, 255, 0.7);
+$small-background-linear-gradient-step4: rgba(255, 255, 255, 1);
+
+$medium-background-linear-gradient-step1: rgba(255, 255, 255, 0);
+$medium-background-linear-gradient-step2: rgba(255, 255, 255, 0.2);
+$medium-background-linear-gradient-step3: rgba(255, 255, 255, 0.7);
+$medium-background-linear-gradient-step4: rgba(255, 255, 255, 1);
+
+.page-container {
+  &::before {
+    background:
+    linear-gradient(
+      0deg,
+      $small-background-linear-gradient-step1 10%,
+      $small-background-linear-gradient-step2 40%,
+      $small-background-linear-gradient-step3 80%,
+      $small-background-linear-gradient-step4 95%
+    ),
+    url('/assets/images/background-pebbles.jpg') no-repeat center center;
+    bottom: 0%;
+    content: '';
+    height: 50%;
+    left: 0%;
+    opacity: 0.5;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+    @include breakpoint(medium) {
+      background: linear-gradient(
+        0deg,
+        $medium-background-linear-gradient-step1 10%,
+        $medium-background-linear-gradient-step2 40%,
+        $medium-background-linear-gradient-step3 80%,
+        $medium-background-linear-gradient-step4 95%
+      ),
+      url('/assets/images/background-pebbles.jpg') no-repeat center center;
+      height: 100%;
+      opacity: 0.5;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: -1;
+    }
+  }
+}
+
+.content-card {
+  background-color: $white;
+  border-radius: $global-radius;
+  box-shadow: 0 6px 20px 0 $shadow-gray;
+  margin-top: 32px;
+  padding: 8px;
+  position: relative;
+
+  .logo-container {
+    @include show-for(medium);
+    text-align: center;
+    z-index: 2;
+
+    &::before {
+      background:
+      linear-gradient(
+        0deg,
+        $small-background-linear-gradient-step4 0%,
+        $small-background-linear-gradient-step3 100%
+      ),
+      url('/assets/images/logo-icon-512x512.png') no-repeat center right 128px;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 50%;
+      z-index: -1;
+    }
+  }
+
+  .form-container {
+    .h2 {
+      font-size: 24px;
+    }
+
+    .auth-alt-nav {
+      font-size: 14px;
+      margin-top: 30px;
+      text-align: center;
+
+      .cta {
+        color: $success-color;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+
+    @include breakpoint(medium) {
+      margin: 64px 0;
+      padding: 0 30px;
+    }
+  }
+}

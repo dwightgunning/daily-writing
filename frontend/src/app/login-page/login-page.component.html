@@ -1,7 +1,20 @@
-<div class="grid-container">
-  <div class="grid-x">
-    <div class="medium-12 cell">
+<div class="grid-container page-container">
+  <div class="grid-x content-card align-middle">
+    <div class="cell medium-6 logo-container">
+      <div style="height: 100%">
+        <img src="/assets/images/logo.png">
+      </div>
+    </div>
+    <div class="cell medium-6 form-container">
+      <h2 class="h2">Welcome back!</h2>
+      <p>Please login to continue.</p>
       <app-login-form></app-login-form>
+      <div class="auth-alt-nav">
+        <p>
+          New to Daily Writing?<br/>
+          <a class="cta" [routerLink]="'/signup'">Create Account Here</a>
+        </p>
+      </div>
     </div>
   </div>
 </div>

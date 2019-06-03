@@ -85,7 +85,7 @@ $black: rgba(3, 6, 15, 1) !default;
 $white: rgba(255, 255, 255, 1) !default;
 
 $body-background: $white;
-$body-font-color: $black;
+$body-font-color: $dark-gray;
 $body-font-family: 'Open Sans', Roboto, Arial, sans-serif;
 $body-antialiased: true;
 $global-margin: 1rem;
@@ -93,7 +93,7 @@ $global-padding: 1rem;
 $global-position: 1rem;
 $global-weight-normal: normal;
 $global-weight-bold: bold;
-$global-radius: 0;
+$global-radius: 8px;
 $global-menu-padding: 0.7rem 1rem;
 $global-menu-nested-margin: 1rem;
 $global-text-direction: ltr;
@@ -137,7 +137,7 @@ $header-font-family: $body-font-family;
 $header-font-weight: $global-weight-normal;
 $header-font-style: normal;
 $font-family-monospace: Consolas, 'Liberation Mono', Courier, monospace;
-$header-color: inherit;
+$header-color: $black;
 $header-lineheight: 1.4;
 $header-margin-bottom: 0.5rem;
 $header-styles: (
@@ -871,3 +871,4 @@ $block-grid-max: 8;
 
 // 57. Misc
 $transparent: rgba(255, 0, 0, 0);
+$shadow-gray: rgba(13, 51, 32, 0.1)

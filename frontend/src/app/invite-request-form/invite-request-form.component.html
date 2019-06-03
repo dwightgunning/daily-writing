@@ -1,8 +1,7 @@
 <form #inviteRequestForm="ngForm" (submit)="inviteRequestFormSubmit()">
   <label for="email">Email:</label>
   <input id="email" name="email" type="email" placeholder="email" [(ngModel)]="model.email" #email="ngModel" autocomplete="on" required>
-    <div [hidden]="email.valid || (email.pristine && email.untouched)"
-       class="alert alert-danger">
+  <div [hidden]="email.valid || (email.pristine && email.untouched)">
     Email is required
   </div>
   <button
@@ -13,7 +12,7 @@
   </button>
   <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitting"></i>
   <i class="fa fa-check form-submit-success" aria-hidden="true" *ngIf="success"></i>
-  <div [hidden]="!error" class="alert alert-danger">
+  <div [hidden]="!error">
     An error occurred. Please try again.
   </div>
 </form>

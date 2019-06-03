@@ -1,20 +1,17 @@
 <form #loginForm="ngForm" (submit)="loginFormSubmit()">
   <label for="username">Username:</label>
   <input id="username" name="username" type="text" placeholder="username" [(ngModel)]="model.username" #username="ngModel" autocomplete="on" required>
-    <div [hidden]="username.valid || (username.pristine && username.untouched)"
-       class="alert alert-danger">
-    Username is required
-  </div>
+    <ul [hidden]="username.valid || (username.pristine && username.untouched)">
+    <li>Username is required</li>
+  </ul>
   <label for="password">Password:</label>
   <input id="password" name="password" type="password" placeholder="password" [(ngModel)]="model.password" #password="ngModel" autocomplete="off" required>
-  <div [hidden]="password.valid || (password.pristine && password.untouched)"
-       class="alert alert-danger">
-    Password is required
-  </div>
-  <button type="submit" class="button primary" [disabled]="!loginForm.form.valid">Login</button>
+  <ul [hidden]="password.valid || (password.pristine && password.untouched)">
+    <li>Password is required</li>
+  </ul>
+  <button type="submit" class="button primary expanded" [disabled]="!loginForm.form.valid">Login</button>
   <div *ngIf="submitted">Loading...</div>
-  <div [hidden]="!error"
-       class="alert alert-danger">
-    Username or password is incorrect.
-  </div>
+  <ul [hidden]="!error">
+    <li>Username or password is incorrect.</li>
+  </ul>
 </form>
