@@ -7,22 +7,18 @@
         <span *ngIf="entry.milestoneTime"> Milestone reached!</span>
       </li>
     </ul>
-    <div>
-      <span>
-        <button
-          class="hollow button"
-          (click)="onPaginate(entryDataPage.next)"
-          [disabled]="!entryDataPage.next">
-            < Earlier
-        </button>
-      </span>
-      <span>
-        <button class="hollow button"
-          (click)="onPaginate(entryDataPage.previous)"
-          [disabled]="!entryDataPage.previous">
-          Later >
-        </button>
-      </span>
+    <div class="list-paging-button-group">
+      <button
+        class="hollow button"
+        (click)="onPaginate(entryDataPage.next)"
+        [disabled]="!entryDataPage.next">
+          < Earlier
+      </button>
+      <button class="hollow button"
+        (click)="onPaginate(entryDataPage.previous)"
+        [disabled]="!entryDataPage.previous">
+        Later >
+      </button>
     </div>
   </div>
   <div *ngIf="!entryDataPage.results.length">
