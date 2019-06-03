@@ -2,9 +2,9 @@ options:
   formatter: stylish
   max-warnings: 0
 files:
-  include: 'frontend/src/**/*.s+(a|c)ss'
+  include: 'src/**/*.s+(a|c)ss'
   ignore:
-    - 'frontend/src/assets/foundation-sites/*.s+(a|c)ss'
+    - 'src/assets/foundation-sites/*.s+(a|c)ss'
     - 'node_modules/**/*.*'
 rules:
   # Extends

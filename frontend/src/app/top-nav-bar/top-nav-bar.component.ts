@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs';
-
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from '../services/auth.service';
 
@@ -12,6 +10,8 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./top-nav-bar.component.scss']
 })
 export class TopNavBarComponent implements OnInit {
+  private titleBarResponsiveToggle;
+  private topBarToggler;
   userLoginCredentials: Observable<UserLoginCredentials>;
 
   constructor(
@@ -20,5 +20,4 @@ export class TopNavBarComponent implements OnInit {
   ngOnInit() {
     this.userLoginCredentials = this.authService.getUserLoginCredentials();
   }
-
 }

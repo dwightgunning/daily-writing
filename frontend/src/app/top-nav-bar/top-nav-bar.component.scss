@@ -1,9 +1,18 @@
-@import 'node_modules/foundation-sites/scss/foundation';
+@import '../../assets/foundation-sites/settings';
+@import '~foundation-sites/scss/foundation';
 
-.menu-text {
-  h1 {
-    a {
-      font-size: rem-calc(map-deep-get($header-styles, small, h4, font-size));
+.top-bar {
+  .top-bar-left {
+    @include hide-for-only(small);
+
+    .menu-text,
+    a,
+    .button {
+      padding: 0;
     }
+  }
+
+  @include breakpoint(medium) {
+    padding-left: 1rem;
   }
 }

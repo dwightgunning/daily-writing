@@ -68,33 +68,21 @@
 $global-font-size: 100%;
 $global-width: rem-calc(1200);
 $global-lineheight: 1.5;
-// $foundation-palette: (
-//   primary: #1779ba,
-//   secondary: #767676,
-//   success: #3adb76,
-//   warning: #ffae00,
-//   alert: #cc4b37,
-// );
-
-// $light-gray: #e6e6e6;
-// $medium-gray: #cacaca;
-// $dark-gray: #8a8a8a;
-// $black: #0a0a0a;
-// $white: #fefefe;
 
 $foundation-palette: (
-  primary: rgba(15, 82, 87, 1),
-  secondary: rgba(156, 146, 163, 1),
-  success: #3adb76,
-  warning: #ffae00,
-  alert: #cc4b37,
+  primary: rgba(73, 115, 145, 1),
+  secondary: rgba(73, 115, 145, 0.20),
+  success: rgba(76, 168, 101, 1),
+  warning: rgba(158, 156, 109, 1),
+  alert: rgba(158, 77, 71, 1),
 ) !default;
 
-$light-gray: rgba(188, 198, 203, 1) !default;
-$medium-gray: rgba(99, 123, 134, 1) !default;
-$dark-gray: rgba(11, 49, 66, 1) !default;
-$black: rgba(8, 7, 8, 1) !default;
-$white: rgba(251, 247, 244, 1) !default;
+$lightest-gray:rgba(188, 198, 203, 1) !default;
+$light-gray: rgba(230, 230, 230, 1) !default;
+$medium-gray: rgba(204, 204, 204, 1) !default;
+$dark-gray: rgba(118, 118, 118, 1) !default;
+$black: rgba(3, 6, 15, 1) !default;
+$white: rgba(255, 255, 255, 1) !default;
 
 $body-background: $white;
 $body-font-color: $black;
@@ -507,8 +495,12 @@ $meter-fill-bad: $alert-color;
 // 25. Off-canvas
 // --------------
 
-$offcanvas-size: 250px;
-$offcanvas-vertical-size: 250px;
+$offcanvas-sizes: (
+  small: 250px,
+);
+$offcanvas-vertical-sizes: (
+  small: 250px,
+);
 $offcanvas-background: $light-gray;
 $offcanvas-shadow: 0 0 10px rgba($black, 0.7);
 $offcanvas-inner-shadow-size: 20px;
@@ -829,11 +821,11 @@ $thumbnail-radius: $global-radius;
 // 53. Title Bar
 // -------------
 
-$titlebar-background: $black;
-$titlebar-color: $white;
+$titlebar-background: $white;
+$titlebar-color: $black;
 $titlebar-padding: 0.5rem;
 $titlebar-text-font-weight: bold;
-$titlebar-icon-color: $white;
+$titlebar-icon-color: $black;
 $titlebar-icon-color-hover: $medium-gray;
 $titlebar-icon-spacing: 0.25rem;
 
@@ -856,7 +848,7 @@ $tooltip-radius: $global-radius;
 // -----------
 
 $topbar-padding: 0.5rem;
-$topbar-background: $light-gray;
+$topbar-background: $white;
 $topbar-submenu-background: $topbar-background;
 $topbar-title-spacing: 0.5rem 1rem 0.5rem 0;
 $topbar-input-width: 200px;
@@ -869,11 +861,13 @@ $xy-grid: true;
 $grid-container: $global-width;
 $grid-columns: 12;
 $grid-margin-gutters: (
-  small: 20px,
-  medium: 30px
+  small: 60px,
+  medium: 120px
 );
 $grid-padding-gutters: $grid-margin-gutters;
 $grid-container-padding: $grid-padding-gutters;
 $grid-container-max: $global-width;
 $block-grid-max: 8;
 
+// 57. Misc
+$transparent: rgba(255, 0, 0, 0);

@@ -27,7 +27,7 @@
     "@fortawesome/fontawesome-free": "^5.8.2",
     "@sentry/browser": "^5.1.2",
     "core-js": "^2.6.5",
-    "foundation-sites": "^6.4.4-rc1",
+    "foundation-sites": "^6.5.3",
     "jquery": "^3.4.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.14",

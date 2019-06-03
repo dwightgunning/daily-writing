@@ -1,9 +1,11 @@
-<div class="grid-container">
-  <div class="grid-x">
-    <div class="medium-12 cell">
-      <div class="text-center">
-        <h1>{{title}}</h1>
-        <p>An app for daily writing.</p>
+<div class="grid-container fluid">
+  <div class="grid-x grid-margin-x">
+    <div class="cell">
+      <h2 class="hero-cta">Join and start a daily writing habit today.</h2>
+      <p class="lead">A private, focus-inducing online notepad. Perfect for morning pages.</p>
+      <div class="large stacked-for-small action-button-group">
+        <a class="button" [routerLink]="'/signup'">Join Daily Writing</a>
+        <a class="hollow button success" [routerLink]="'/login'">Log-in</a>
       </div>
     </div>
   </div>

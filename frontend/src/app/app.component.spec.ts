@@ -6,7 +6,6 @@ import * as $ from 'jquery';
 import * as WebFont from 'webfontloader';
 
 import { AppComponent } from './app.component';
-import { TopNavBarComponent } from './top-nav-bar/top-nav-bar.component';
 
 @Component({selector: 'app-top-nav-bar', template: ''})
 class StubTopNavBarComponent {}

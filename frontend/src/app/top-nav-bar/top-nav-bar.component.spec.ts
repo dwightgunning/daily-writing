@@ -1,13 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Type } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-
 import { of, Observable } from 'rxjs';
 
-import { RouterLinkStubDirective } from '../../testing/router-stubs';
-import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from '../services/auth.service';
 import { TopNavBarComponent } from './top-nav-bar.component';
+import { UserLoginCredentials } from '../models/user-login-credentials';
 
 const authServiceStub = {
   getUserLoginCredentials(): Observable<UserLoginCredentials> {
@@ -20,13 +17,10 @@ describe('TopNavBarComponent', () => {
   let fixture: ComponentFixture<TopNavBarComponent>;
 
   beforeEach(async(() => {
-
     TestBed.configureTestingModule({
       declarations: [
-        TopNavBarComponent,
-        RouterLinkStubDirective
+        TopNavBarComponent
       ],
-      imports: [],
       providers: [
         {provide: AuthService, useValue: authServiceStub }
       ]
@@ -37,35 +31,23 @@ describe('TopNavBarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TopNavBarComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should be created', () => {
-    fixture.detectChanges();
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display login link when unauthenticated', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-
-    // find DebugElements with an attached RouterLinkStubDirective
-    const linkDes = fixture.debugElement
-      .queryAll(By.directive(RouterLinkStubDirective));
-
-    // get the attached link directive instances using the DebugElement injectors
-    const links = linkDes
-      .map(de => de.injector.get(RouterLinkStubDirective) as RouterLinkStubDirective);
-
-    expect(links.length).toBe(3, 'should have 3 links');
-    expect(links[0].linkParams).toBe('', '1st link should go to Home');
-    expect(links[1].linkParams).toBe('/signup', '2rd link should go to Signup');
-    expect(links[2].linkParams).toBe('/login', '3nd link should go to Login');
+  it('should display authenticated nav-bar when user authenicated', () => {
+    fail('Not implemented');
   });
+
+  it('should display unauthenticated nav-bar when no user authenicated', () => {
+    fail('Not implemented');
+  });
+
 
   it('should display logout link when authenticated', () => {
-    const authService = fixture.debugElement.injector.get(AuthService) as any;
-    authService.getUserLoginCredentials =
-      (): Observable<UserLoginCredentials> => of(new UserLoginCredentials()); // tslint:disable-line deprecation
     fixture.detectChanges();
 
     // find DebugElements with an attached RouterLinkStubDirective
@@ -74,7 +56,7 @@ describe('TopNavBarComponent', () => {
 
     // get the attached link directive instances using the DebugElement injectors
     const links = linkDes
-      .map(de => de.injector.get(RouterLinkStubDirective) as RouterLinkStubDirective);
+      .map(de => de.injector.get<RouterLinkStubDirective>(MyService as Type<RouterLinkStubDirective>);
 
     expect(links.length).toBe(5, 'should have 5 links');
     expect(links[0].linkParams).toBe('', '1st link should go to Home');
