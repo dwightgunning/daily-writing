@@ -15,7 +15,6 @@ pytest-cov = "*"
 
 [packages]
 dj-database-url = "==0.5.0"
-django = "==2.2.1"
 django-timezone-field = "==3.0"
 djangorestframework = "==3.9.3"
 djangorestframework-jwt = "==1.11.0"
@@ -32,6 +31,7 @@ six = "*"
 black = "==19.3b0"
 django-allauth = "*"
 django-rest-auth = "*"
+django = "==2.2.2"
 
 [requires]
 python_full_version = "3.6.4"
