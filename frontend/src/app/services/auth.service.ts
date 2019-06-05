@@ -27,13 +27,15 @@ export class AuthService {
     } finally {
       if (storedUserLoginCredentials && storedUserLoginCredentials.token) {
         // Check the stored credentials are still valid
-        this.httpClient.get(environment.API_BASE_URL + '/auth/user/')
+        this.httpClient.get(environment.API_BASE_URL + 'auth/user/')
           .subscribe(
             (authenticatedToken: UserLoginCredentials) => {
               this.userLoginCredentialsSubject.next(storedUserLoginCredentials);
             },
             (err: any) => {
               localStorage.removeItem(this.LOGIN_CREDENTIALS_KEY);
+              // TODO: log error, display user a message
+              this.userLoginCredentialsSubject.next(null);
             }
           );
       } else {
