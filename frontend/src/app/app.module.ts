@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthHeaderInterceptor } from './auth-header.interceptor';
+import { CenteredContentCardWrapperComponent } from './centered-content-card-wrapper/centered-content-card-wrapper.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { EntryListComponent } from './entry-list/entry-list.component';
 import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
@@ -36,22 +37,23 @@ sentryInit({
 @NgModule({
   declarations: [
     AppComponent,
-    LoginPageComponent,
-    HomePageComponent,
+    CenteredContentCardWrapperComponent,
     ProfilePageComponent,
-    LoginFormComponent,
-    WritingPageComponent,
     EntryFormComponent,
     EntryListComponent,
     EntryReviewPageComponent,
+    HomePageComponent,
     InviteRequestFormComponent,
     InviteAcceptancePageComponent,
     InviteAcceptanceFormComponent,
-    ReviewPageComponent,
+    LoginPageComponent,
+    LoginFormComponent,
     LogoutComponent,
     ProfileFormComponent,
+    ReviewPageComponent,
     SignupPageComponent,
-    TopNavBarComponent
+    TopNavBarComponent,
+    WritingPageComponent
   ],
   imports: [
     AppRoutingModule,

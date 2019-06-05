@@ -1,20 +1,13 @@
-<div class="grid-container page-container">
-  <div class="grid-x content-card align-middle">
-    <div class="cell medium-6 logo-container">
-      <div style="height: 100%">
-        <img src="/assets/images/logo.png">
-      </div>
-    </div>
-    <div class="cell medium-6 form-container">
-      <h2 class="h2">Request an invite</h2>
-      <p>Let us know your email address and we'll be in touch with an invite code.</p>
-      <app-invite-request-form></app-invite-request-form>
-      <div class="auth-alt-nav">
-        <p>
-          Already have an account?<br/>
-          <a class="cta" [routerLink]="'/login'">Login here</a>
-        </p>
-      </div>
-    </div>
+<ng-template #content>
+  <h2 class="h2">Request an invite</h2>
+  <p>Let us know your email address and we'll be in touch with an invite code.</p>
+  <app-invite-request-form></app-invite-request-form>
+  <div class="auth-alt-nav">
+    <p>
+      Already have an account?<br/>
+      <a class="cta" [routerLink]="'/login'">Login here</a>
+    </p>
   </div>
-</div>
+</ng-template>
+
+<app-centered-content-card-wrapper [centeredRightContentPane]="content"></app-centered-content-card-wrapper>
