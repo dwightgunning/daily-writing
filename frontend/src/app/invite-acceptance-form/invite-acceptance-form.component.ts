@@ -14,7 +14,7 @@ export class InviteAcceptanceFormComponent {
   USERNAME_MIN_LENGTH = 3; // Should match backend settings
   PASSWORD_MIN_LENGTH = 9; // Should match backend settings
 
-  inviteForm = new FormGroup({
+  inviteAcceptanceFormGroup = new FormGroup({
     username: new FormControl('',
       [
         Validators.required,
@@ -30,25 +30,22 @@ export class InviteAcceptanceFormComponent {
   });
   @Input() token: string;
   submitted = false;
-  error: any;
+  apiErrors: any;
   @Output() inviteAccepted: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private inviteService: InviteService) { }
 
   onSubmit() {
     this.submitted = true;
-    this.error = null;
-    const inviteAcceptance = new InviteAcceptance(this.inviteForm.value);
+    this.apiErrors = null;
+    const inviteAcceptance = new InviteAcceptance(this.inviteAcceptanceFormGroup.value);
     this.inviteService.acceptInvite(this.token, inviteAcceptance).subscribe(
       (result) => {
         this.submitted = false;
         if (result instanceof ApiError) {
-          this.error = result;
+          this.apiErrors = result;
         } else {
           this.inviteAccepted.emit();
-          // // TODO: Add an Outlet that the parent page component can pick up...
-          // // replacing the form with a success message rather than just routing like 'magic'.
-          // this.router.navigate(['/login']);
         }
       });
   }

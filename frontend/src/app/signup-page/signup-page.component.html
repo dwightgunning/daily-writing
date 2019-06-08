@@ -1,7 +1,9 @@
-<ng-template #content>
+<app-centered-content-card-wrapper [centeredRightContentPane]="inviteRequested ? pendingReview : inviteRequestForm"></app-centered-content-card-wrapper>
+
+<ng-template #inviteRequestForm>
   <h2 class="h2">Request an invite</h2>
   <p>Let us know your email address and we'll be in touch with an invite code.</p>
-  <app-invite-request-form></app-invite-request-form>
+  <app-invite-request-form  (inviteRequested)="onInviteRequested()"></app-invite-request-form>
   <div class="auth-alt-nav">
     <p>
       Already have an account?<br/>
@@ -10,4 +12,23 @@
   </div>
 </ng-template>
 
-<app-centered-content-card-wrapper [centeredRightContentPane]="content"></app-centered-content-card-wrapper>
+<ng-template #pendingReview>
+  <h2 class="h2">Request submitted</h2>
+  <p>
+    Awesome! We'll review the request and respond shortly... typically within a few hours.
+  </p>
+  <p>
+    In the meantime, why not learn a little more about what daily writing:
+  </p>
+  <ul>
+    <li>
+      <a href="https://juliacameronlive.com/basic-tools/morning-pages/" target="_blank" rel="noopener">The bedrock tool of a creative recovery is a daily practice called Morning Pages</a> (a 2min video)
+    </li>
+    <li>
+      <a href="https://www.theguardian.com/lifeandstyle/2014/oct/03/morning-pages-change-your-life-oliver-burkeman" target="_blank" rel="noopener">This column will change your life: Morning Pages</a> (a 5min read)
+    </li>
+    <li>
+      <a href="https://qz.com/777929/writing-morning-pages-can-offer-many-of-the-same-benefits-as-meditation/" target="_blank" rel="noopener">How writing 750 words a day could change your life</a>  (a 7min read)
+    </li>
+  </ul>
+</ng-template>

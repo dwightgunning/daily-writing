@@ -1,18 +1,24 @@
-<form #inviteRequestForm="ngForm" (submit)="inviteRequestFormSubmit()">
+<form [formGroup]="inviteRequestFormGroup" (ngSubmit)="onSubmit()">
   <label for="email">Email:</label>
-  <input id="email" name="email" type="email" placeholder="email" [(ngModel)]="model.email" #email="ngModel" autocomplete="on" required>
-  <div [hidden]="email.valid || (email.pristine && email.untouched)">
-    Email is required
-  </div>
+  <input id="email" name="email" type="email" placeholder="email" formControlName="email" autocomplete="on" required>
+  <ul class="form-errors">
+    <li *ngIf="!(inviteRequestFormGroup.get('email').pristine && inviteRequestFormGroup.get('email').untouched) && inviteRequestFormGroup.get('email').errors && inviteRequestFormGroup.get('email').errors.required">Email is required.</li>
+    <li *ngIf="!(inviteRequestFormGroup.get('email').pristine && inviteRequestFormGroup.get('email').untouched) && inviteRequestFormGroup.get('email').errors && inviteRequestFormGroup.get('email').errors.email">Enter a valid email address.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.email">
+      <li *ngFor="let errorMessage of apiErrors.email">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
   <button
     type="submit"
-    class="button primary"
-    [disabled]="inviteRequestForm.form.pristine || !inviteRequestForm.form.valid">
-    Submit
+    class="button primary expanded"
+     [disabled]="!inviteRequestFormGroup.valid">
+    {{ !submitted ? 'Submit' : '' }}
+    <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitted"></i>
   </button>
-  <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitting"></i>
-  <i class="fa fa-check form-submit-success" aria-hidden="true" *ngIf="success"></i>
-  <div [hidden]="!error">
-    An error occurred. Please try again.
-  </div>
+  <ul class="form-errors">
+    <ng-template [ngIf]="apiErrors">
+      <li *ngFor="let errorMessage of apiErrors.nonFieldErrors">{{ errorMessage }}</li>
+      <li *ngFor="let errorMessage of apiErrors.errors">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
 </form>

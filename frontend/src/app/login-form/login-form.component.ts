@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserLoginCredentials } from '../models/user-login-credentials';
@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginFormComponent {
   error: any;
   model = new UserLoginCredentials();
   submitted = false;
@@ -18,9 +18,7 @@ export class LoginFormComponent implements OnInit {
     private router: Router,
     private authService: AuthService) { }
 
-  ngOnInit() { }
-
-  loginFormSubmit() {
+  onSubmit() {
     this.submitted = true;
     this.authService.login(this.model).subscribe(
       (response) => {

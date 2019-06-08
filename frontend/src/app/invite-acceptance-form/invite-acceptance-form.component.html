@@ -1,36 +1,30 @@
-<form [formGroup]="inviteForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label>
-      Username:
-      <input id="username" formControlName="username" type="text" placeholder="username" required>
-      <div *ngIf="inviteForm.get('username').invalid && (inviteForm.get('username').dirty || inviteForm.get('username').touched)" class="alert alert-danger">
-        <div *ngIf="inviteForm.get('username').errors.required">Username is required.</div>
-        <div *ngIf="inviteForm.get('username').errors.minlength">Username must be {{ USERNAME_MIN_LENGTH }} characters long.</div>
-      </div>
-      <div *ngIf="error && error.username">
-        <div *ngFor="let errorMessage of error.username">{{ errorMessage }}</div>
-      </div>
-    </label>
-  </div>
-  <div>
-    <label>
-      Password:
-      <input id="password" formControlName="password" type="password" placeholder="password" autocomplete="off" required>
-      <div *ngIf="inviteForm.get('password').invalid && (inviteForm.get('password').dirty || inviteForm.get('password').touched)" class="alert alert-danger">
-        <div *ngIf="inviteForm.get('password').errors.required">Username is required.</div>
-        <div *ngIf="inviteForm.get('password').errors.minlength">Password must be {{ PASSWORD_MIN_LENGTH }} characters long.</div>
-      </div>
-      <div *ngIf="error && error.password">
-        <div *ngFor="let errorMessage of error.password">{{ errorMessage }}</div>
-      </div>
-    </label>
-  </div>
-  <button type="submit" class="button primary" [disabled]="!inviteForm.valid">Complete signup</button>
-  <div *ngIf="submitted">Loading...</div>
-  <div *ngIf="error && error.errors" class="alert alert-danger">
-    <div *ngFor="let errorMessage of error.errors">{{ errorMessage }}</div>
-  </div>
-  <div *ngIf="error && error.nonFieldErrors" class="alert alert-danger">
-    <div *ngFor="let errorMessage of error.nonFieldErrors">{{ errorMessage }}</div>
-  </div>
+<form [formGroup]="inviteAcceptanceFormGroup" (ngSubmit)="onSubmit()">
+  <label>Username:</label>
+  <input id="username" formControlName="username" type="text" placeholder="username" required>
+  <ul class="form-errors">
+    <li *ngIf="!(inviteAcceptanceFormGroup.get('username').pristine && inviteAcceptanceFormGroup.get('username').untouched) && inviteAcceptanceFormGroup.get('username').errors && inviteAcceptanceFormGroup.get('username').errors.required">Username is required.</li>
+    <li *ngIf="!(inviteAcceptanceFormGroup.get('username').pristine && inviteAcceptanceFormGroup.get('username').untouched) && inviteAcceptanceFormGroup.get('username').errors && inviteAcceptanceFormGroup.get('username').errors.minlength">Username must be {{ USERNAME_MIN_LENGTH }} characters long.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.username">
+      <li *ngFor="let errorMessage of apiErrors.username">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <label>Password:</label>
+  <input id="password" formControlName="password" type="password" placeholder="password" autocomplete="off" required>
+  <ul class="form-errors">
+    <li *ngIf="!(inviteAcceptanceFormGroup.get('password').pristine && inviteAcceptanceFormGroup.get('password').untouched) && inviteAcceptanceFormGroup.get('password').errors && inviteAcceptanceFormGroup.get('password').errors.required">Password is required.</li>
+    <li *ngIf="!(inviteAcceptanceFormGroup.get('password').pristine && inviteAcceptanceFormGroup.get('password').untouched) && inviteAcceptanceFormGroup.get('password').errors && inviteAcceptanceFormGroup.get('password').errors.minlength">Password must be {{ PASSWORD_MIN_LENGTH }} characters long.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.password">
+      <li *ngFor="let errorMessage of apiErrors.password">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <button type="submit" class="button primary expanded" [disabled]="!inviteAcceptanceFormGroup.valid">
+    {{ !submitted ? 'Complete signup' : '' }}
+    <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitted"></i>
+  </button>
+  <ul class="form-errors">
+    <ng-template [ngIf]="apiErrors">
+      <li *ngFor="let errorMessage of apiErrors.nonFieldErrors">{{ errorMessage }}</li>
+      <li *ngFor="let errorMessage of apiErrors.errors">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
 </form>

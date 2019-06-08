@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 
-import { finalize } from 'rxjs/operators';
-
+import { ApiError } from '../models/api-error';
 import { InviteService } from '../services/invite.service';
 import { InviteRequest } from '../models/invite-request';
 
@@ -13,31 +13,33 @@ import { InviteRequest } from '../models/invite-request';
 })
 export class InviteRequestFormComponent {
   @ViewChild('inviteRequestForm') requestInviteForm: any;
-  submitting = false;
-  success = false;
-  error: any;
-  model = new InviteRequest();
+  inviteRequestFormGroup = new FormGroup({
+    email: new FormControl('',
+      [
+        Validators.required,
+        Validators.email
+      ]
+    ),
+  });
+  @Input() token: string;
+  submitted = false;
+  apiErrors: any;
+  @Output() inviteRequested: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private inviteService: InviteService) { }
 
-  inviteRequestFormSubmit() {
-    this.submitting = true;
-    this.inviteService.createInviteRequest(this.model)
-    .pipe(
-      finalize(() => this.submitting = false),
-    ).subscribe(
-      (next: null) => this.confirmSubmission(),
-      (error) => {
-        this.error = 'An error occurred. Please try again.';
+  onSubmit() {
+    this.submitted = true;
+    this.apiErrors = null;
+    const inviteRequest = new InviteRequest(this.inviteRequestFormGroup.value);
+    this.inviteService.createInviteRequest(inviteRequest).subscribe(
+      (result) => {
+        this.submitted = false;
+        if (result instanceof ApiError) {
+          this.apiErrors = result;
+        } else {
+          this.inviteRequested.emit();
+        }
       });
-  }
-
-  confirmSubmission() {
-    this.success = true;
-    ((component) => {
-      setTimeout(() => {
-        component.success = false;
-      }, 3000);
-    })(this);
   }
 }

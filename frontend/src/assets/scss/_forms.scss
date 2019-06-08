@@ -1,0 +1,39 @@
+@import '../../assets/foundation-sites/settings';
+@import '~foundation-sites/scss/foundation';
+
+[type='text'],
+[type='password'],
+[type='email'] {
+  border-color: $light-gray;
+  border-radius: 0;
+  border-width: 0 0 1px;
+  box-shadow: none;
+  margin-bottom: 0.2em;
+  outline: 0;
+}
+
+// sass-lint:disable force-pseudo-nesting
+.ng-invalid:not(form) {
+  &.ng-touched {
+    @include form-input-error(get-color(alert));
+    background-color: $white;
+    border-color: smart-scale(get-color(alert), -75%);
+
+    &:not(:focus) {
+      background-color: $white;
+      border-color: smart-scale(get-color(alert), -50%);
+    }
+  }
+}
+
+.form-errors {
+  @include form-error;
+  display: inherit;
+  margin-top: 0.2em;
+  min-height: 1.6em;
+}
+
+.button {
+  font-weight: 600;
+  margin: 0.2em 0;
+}

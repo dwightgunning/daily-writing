@@ -17,16 +17,23 @@ export class InviteService {
   static readonly INVITE_ENDPOINT = environment.API_BASE_URL + 'auth/registration/invite/';
   constructor(private httpClient: HttpClient) { }
 
-  createInviteRequest(inviteRequest: InviteRequest): Observable<null> {
-    return this.httpClient.post<null>(
+  createInviteRequest(inviteRequest: InviteRequest): Observable<null|ApiError> {
+    return this.httpClient.post<any>(
       InviteService.INVITE_ENDPOINT,
       {
         email: inviteRequest.email
       }).pipe(
-        map(response => null),
-        catchError(error => {
+        map((response: HttpResponse<any>) => null),
+        catchError((error: any) => {
+          if (error.error && error.error.errors) {
+              // API error responses are expected to be an object with a single property 'errors'
+              return of(new ApiError(error.error.errors));
+          } else if (error.status === 404) {
+            return of(new ApiError({errors: ['Not found.']}));
+          }
+          // Log the unexpected backend error and return a generic, reliable message to the user.
           Sentry.captureException(error);
-          return throwError(null);
+          return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
         })
       );
   }
@@ -50,19 +57,18 @@ export class InviteService {
   acceptInvite(inviteToken: string, inviteAcceptance: InviteAcceptance): Observable<null|ApiError> {
     const url = `${InviteService.INVITE_ENDPOINT}${inviteToken}/`;
     return this.httpClient.post<any>(url, inviteAcceptance).pipe(
-        map((response: HttpResponse<any>) => null),
-        catchError((error: any) => {
-          if (error.error && error.error.errors) {
-              // API error responses are expected to be an object with a single property 'errors'
-              return of(new ApiError(error.error.errors));
-          } else if (error.status === 404) {
-            return of(new ApiError({errors: ['Not found.']}));
-          }
-          // Log the unexpected backend error and return a generic, reliable message to the user.
-          Sentry.captureException(error);
-          return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
-        })
-      );
-
+      map((response: HttpResponse<any>) => null),
+      catchError((error: any) => {
+        if (error.error && error.error.errors) {
+            // API error responses are expected to be an object with a single property 'errors'
+            return of(new ApiError(error.error.errors));
+        } else if (error.status === 404) {
+          return of(new ApiError({errors: ['Not found.']}));
+        }
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
 }
