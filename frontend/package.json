@@ -10,7 +10,8 @@
     "test": "ng test --code-coverage",
     "lint": "ng lint",
     "lint-sass": "./node_modules/sass-lint/bin/sass-lint.js -c sass-lint.yaml -v -q",
-    "heroku-postbuild": "./heroku-postbuild-node"
+    "heroku-postbuild": "./heroku-postbuild-node",
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -66,7 +67,8 @@
     "protractor": "^5.4.2",
     "ts-node": "^5.0.1",
     "tslint": "^5.13.1",
-    "typescript": "3.2.4"
+    "typescript": "3.2.4",
+    "webpack-bundle-analyzer": "^3.3.2"
   },
   "engines": {
     "node": ">=9.8.0"
