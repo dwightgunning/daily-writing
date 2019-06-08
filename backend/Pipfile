@@ -34,7 +34,7 @@ django-rest-auth = "*"
 django = "==2.2.2"
 
 [requires]
-python_full_version = "3.6.4"
+python_full_version = "3.7.3"
 
 [pipenv]
 allow_prereleases = true
