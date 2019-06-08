@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
-import * as moment from 'moment-timezone';
+import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
 import {interval as observableInterval, Observable, Subject } from 'rxjs';
 import { sample, takeUntil } from 'rxjs/operators';
 

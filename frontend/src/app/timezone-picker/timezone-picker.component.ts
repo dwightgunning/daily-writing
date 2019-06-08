@@ -10,7 +10,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import * as moment from 'moment-timezone';
+import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
 import * as $ from 'jquery';
 import 'select2';
 
