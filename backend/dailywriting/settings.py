@@ -1,5 +1,6 @@
 import datetime
 import os
+import re
 
 import dj_database_url
 
@@ -135,6 +136,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_USERNAME_REQUIRED = True
+
+# Sentry 404 middleware
+IGNORABLE_404_URLS = (re.compile("/api"),)
 
 # Environment specific settings
 try:
