@@ -10,7 +10,9 @@
     <li [hidden]="password.valid || (password.pristine && password.untouched)">Password is required</li>
   </ul>
   <button type="submit" class="button primary expanded" [disabled]="!loginForm.form.valid">
-  {{ submitted ? 'Loading' : 'Login' }}</button>
+    {{ submitted ? 'Loading' : 'Login' }}
+    <i class="fa fa-spinner fa-spin" aria-hidden="true" *ngIf="submitted"></i>
+  </button>
   <ul class="form-errors">
     <li [hidden]="!error">Username or password is incorrect.</li>
   </ul>

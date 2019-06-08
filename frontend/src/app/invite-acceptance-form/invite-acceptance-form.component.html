@@ -19,7 +19,7 @@
   </ul>
   <button type="submit" class="button primary expanded" [disabled]="!inviteAcceptanceFormGroup.valid">
     {{ !submitted ? 'Complete signup' : '' }}
-    <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitted"></i>
+    <i class="fa fa-spinner fa-spin" aria-hidden="true" *ngIf="submitted"></i>
   </button>
   <ul class="form-errors">
     <ng-template [ngIf]="apiErrors">
