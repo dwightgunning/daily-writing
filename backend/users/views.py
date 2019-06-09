@@ -3,7 +3,7 @@ import logging
 
 from allauth.account.models import EmailConfirmationHMAC
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from rest_framework.exceptions import APIException, NotFound
 from rest_auth.registration.views import RegisterView
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -45,30 +45,22 @@ class InviteRequestAcceptanceView(APIView):
         Returns  token.
         """
         serializer = InviteTokenSerializer(data={"token": kwargs["token"]})
-        if serializer.is_valid():
-            return Response(serializer.data)
-        else:
-            return Response(
-                {"errors": serializer.errors}, status=status.HTTP_404_NOT_FOUND
-            )
+        if not serializer.is_valid():
+            raise NotFound(serializer.errors)
+        return Response(serializer.data)
 
     def post(self, request, format=None, *args, **kwargs):
         request.data["token"] = kwargs["token"]
         serializer = InviteAcceptanceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(request)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
+        if not serializer.is_valid():
             if "token" in serializer.errors:
-                return Response(
-                    {"errors": {"token": serializer.errors["token"]}},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+                raise NotFound({"token": serializer.errors["token"]})
             else:
-                return Response(
-                    {"errors": serializer.errors},
-                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                raise APIException(
+                    serializer.errors, status.HTTP_422_UNPROCESSABLE_ENTITY
                 )
+        serializer.save(request)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class DailyWritingProfileView(RetrieveUpdateAPIView):
@@ -90,5 +82,4 @@ class DailyWritingProfileView(RetrieveUpdateAPIView):
 
     def get_serializer_context(self):
         context = super(DailyWritingProfileView, self).get_serializer_context()
-        # context['user'] = self.request.user
         return context
