@@ -1,12 +1,11 @@
-
-import {share, map} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import * as Sentry from '@sentry/browser';
+import { Observable, of,  ReplaySubject } from 'rxjs';
+import { catchError, map, share } from 'rxjs/operators';
 
-
-import { Observable ,  ReplaySubject } from 'rxjs';
-
+import { ApiError } from '../models/api-error';
 import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 
@@ -45,7 +44,7 @@ export class AuthService {
     }
   }
 
-  public login(credentials: UserLoginCredentials): Observable<UserLoginCredentials|string> {
+  public login(credentials: UserLoginCredentials): Observable<UserLoginCredentials|ApiError> {
     return this.httpClient.post(
         environment.API_BASE_URL + 'auth/login/',
         {
@@ -72,9 +71,20 @@ export class AuthService {
           return userLoginCredentials;
         } else {
           this.userLoginCredentialsSubject.next(null);
-          return 'Invalid username/password';
+          return new ApiError({errors: ['Invalid username/password']});
         }
-      }));
+      }),
+      catchError((error: any) => {
+        if (error.status && error.error) {
+            return of(new ApiError(error.error));
+        } else if (error.status === 404) {
+          return of(new ApiError({errors: ['Not found.']}));
+        }
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
 
   public logout(): void {
