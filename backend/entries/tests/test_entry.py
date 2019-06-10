@@ -16,7 +16,7 @@ class EntryTests(APITestCase):
     def test_list_entries_empty(self):
         username = "tester"
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/" % username)
+        request = factory.get(f"/entries/{username}/")
         self.add_auth(request, username)
 
         view = EntryViewSet.as_view({"get": "list"})
@@ -31,7 +31,7 @@ class EntryTests(APITestCase):
     def test_list_entries(self):
         username = "tester2"
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/" % username)
+        request = factory.get(f"/entries/{username}/")
         self.add_auth(request, username)
 
         view = EntryViewSet.as_view({"get": "list"})
@@ -58,7 +58,7 @@ class EntryTests(APITestCase):
         username = "tester"
 
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/" % username)
+        request = factory.get(f"/entries/{username}/")
 
         view = EntryViewSet.as_view({"get": "list"})
         response = view(request, username=username)
@@ -69,7 +69,7 @@ class EntryTests(APITestCase):
     def test_list_entries_other_user(self):
         username = "tester2"
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/" % username)
+        request = factory.get(f"/entries/{username}/")
         self.add_auth(request, "tester")
 
         view = EntryViewSet.as_view({"get": "list"})
@@ -83,7 +83,7 @@ class EntryTests(APITestCase):
         entry_date = "2017-08-31"
 
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/%s/" % (username, entry_date))
+        request = factory.get(f"/entries/{username}/{entry_date}/")
         self.add_auth(request, username)
 
         view = EntryViewSet.as_view({"get": "retrieve"})
@@ -115,7 +115,7 @@ class EntryTests(APITestCase):
         entry_date = "2017-08-31"
 
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/%s/" % (username, entry_date))
+        request = factory.get(f"/entries/{username}/{entry_date}/")
 
         view = EntryViewSet.as_view({"get": "retrieve"})
         response = view(request, username=username, entry_date=entry_date)
@@ -128,14 +128,14 @@ class EntryTests(APITestCase):
         entry_date = "2017-08-31"
 
         factory = APIRequestFactory()
-        request = factory.get("/entries/%s/%s/" % (username, entry_date))
+        request = factory.get(f"/entries/{username}/{entry_date}/")
         self.add_auth(request, "tester")
 
-        view = EntryViewSet.as_view({"get": "list"})
-        response = view(request, username=username)
+        view = EntryViewSet.as_view({"get": "retrieve"})
+        response = view(request, username=username, entry_date=entry_date)
         response.render()
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 403, response.data)
 
     def test_create_entry(self):
         today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -146,7 +146,7 @@ class EntryTests(APITestCase):
         self.add_auth(request, data["author"])
 
         view = EntryViewSet.as_view({"post": "create"})
-        response = view(request, username=data["author"])
+        response = view(request, data)
         response.render()
 
         self.assertEqual(response.status_code, 201, response.data)
@@ -175,7 +175,7 @@ class EntryTests(APITestCase):
         self.add_auth(request, "tester2")
 
         view = EntryViewSet.as_view({"post": "create"})
-        response = view(request, username=data["author"])
+        response = view(request)
         response.render()
 
         self.assertEqual(response.status_code, 403, response.data)
@@ -192,7 +192,7 @@ class EntryTests(APITestCase):
         self.add_auth(request, "tester2")
 
         view = EntryViewSet.as_view({"post": "create"})
-        response = view(request, username=data["author"])
+        response = view(request)
         response.render()
 
         self.assertEqual(response.status_code, 400, response.data)
@@ -212,7 +212,7 @@ class EntryTests(APITestCase):
         self.add_auth(request, data["author"])
 
         view = EntryViewSet.as_view({"post": "create"})
-        response = view(request, username=data["author"])
+        response = view(request)
         response.render()
 
         self.assertEqual(response.status_code, 400, response.data)
@@ -235,7 +235,9 @@ class EntryTests(APITestCase):
         data["words"] = "Updated words."
 
         factory = APIRequestFactory()
-        request = factory.patch("/", data)
+        request = factory.patch(
+            f"/entries/{data['author']}/{data['entry_date']}/", data
+        )
         self.add_auth(request, data["author"])
 
         view = EntryViewSet.as_view({"patch": "update"})
@@ -252,7 +254,9 @@ class EntryTests(APITestCase):
         }
 
         factory = APIRequestFactory()
-        request = factory.patch("/", data)
+        request = factory.patch(
+            f"/entries/{data['author']}/{data['entry_date']}/", data
+        )
 
         view = EntryViewSet.as_view({"patch": "update"})
         response = view(request, username=data["author"], entry_date=data["entry_date"])
@@ -278,7 +282,9 @@ class EntryTests(APITestCase):
         data["entry_date"] = "2017-01-01"
 
         factory = APIRequestFactory()
-        request = factory.patch("/", data)
+        request = factory.patch(
+            f"/entries/{data['author']}/{data['entry_date']}/", data
+        )
         self.add_auth(request, data["author"])
 
         view = EntryViewSet.as_view({"patch": "update"})
@@ -295,7 +301,9 @@ class EntryTests(APITestCase):
         }
 
         factory = APIRequestFactory()
-        request = factory.patch("/", data)
+        request = factory.patch(
+            f"/entries/{data['author']}/{data['entry_date']}/", data
+        )
         self.add_auth(request, data["author"])
 
         view = EntryViewSet.as_view({"patch": "update"})
@@ -324,7 +332,9 @@ class EntryTests(APITestCase):
         entry.save()
 
         factory = APIRequestFactory()
-        request = factory.patch("/entries/", data)
+        request = factory.patch(
+            f"/entries/{data['author']}/{data['entry_date']}/", data
+        )
         self.add_auth(request, data["author"])
 
         view = EntryViewSet.as_view({"patch": "update"})
