@@ -8,6 +8,8 @@ from rest_framework import status
 from entries.views import EntryViewSet
 from entries.models import Entry
 
+UserModel = get_user_model()
+
 
 class TestEntryViewSet(APITestCase):
     def setUp(self):
@@ -19,10 +21,10 @@ class TestEntryViewSet(APITestCase):
         )
 
         # Test users
-        self.test_user = get_user_model().objects.create(
+        self.test_user = UserModel.objects.create(
             username="tester", email="tester@email.com"
         )
-        self.other_user = get_user_model().objects.create(
+        self.other_user = UserModel.objects.create(
             username="tester2", email="tester2@email.com"
         )
 

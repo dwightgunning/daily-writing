@@ -3,7 +3,7 @@ from unittest import mock, TestCase
 from api.permissions import IsOwnerByUsername
 
 
-class IsOwnerByUsernameTests(TestCase):
+class TestIsOwnerByUsername(TestCase):
     """ Unit tests for IsOwnerByUsername permissions
     """
 

@@ -8,13 +8,20 @@ from django.template.response import TemplateResponse
 from django.test import TestCase
 from django.urls import reverse
 
+from users.admin import DailyWritingUserAdmin, InviteFilter
+
+UserModel = get_user_model()
+
 
 class TestDailyWritingUserAdmin(TestCase):
+    """ Unit test for Daily Writing User admin view
+    """
+
     fixtures = ["dailywriting/fixtures/seed.json"]
 
     @classmethod
     def setUpTestData(cls):
-        cls.superuser = get_user_model().objects.create_superuser(
+        cls.superuser = UserModel.objects.create_superuser(
             username="super", password="secret", email="super@example.com"
         )
 
@@ -24,14 +31,10 @@ class TestDailyWritingUserAdmin(TestCase):
     def test_send_user_invite_select_invite_requested(self):
         """ Users in the Invite Requested group are emailed and moved to the Invited group
         """
-        u1 = get_user_model().objects.create(
-            email="tester1@tester.com", username="tester1"
-        )
+        u1 = UserModel.objects.create(email="tester1@tester.com", username="tester1")
         u1.groups.add(Group.objects.get(name="Invite Requested"))
         EmailAddress.objects.create(email="tester1@tester.com", user=u1)
-        u2 = get_user_model().objects.create(
-            email="tester2@tester.com", username="tester2"
-        )
+        u2 = UserModel.objects.create(email="tester2@tester.com", username="tester2")
         u2.groups.add(Group.objects.get(name="Invite Requested"))
         EmailAddress.objects.create(email="tester2@tester.com", user=u2)
         action_data = {
@@ -90,14 +93,10 @@ class TestDailyWritingUserAdmin(TestCase):
     def test_send_user_invite_select_already_invited(self):
         """ Users in the Invite Accepted group cannot be re-invited
         """
-        u1 = get_user_model().objects.create(
-            email="tester1@tester.com", username="tester1"
-        )
+        u1 = UserModel.objects.create(email="tester1@tester.com", username="tester1")
         u1.groups.add(Group.objects.get(name="Invited"))
         EmailAddress.objects.create(email="tester1@tester.com", user=u1)
-        u2 = get_user_model().objects.create(
-            email="tester2@tester.com", username="tester2"
-        )
+        u2 = UserModel.objects.create(email="tester2@tester.com", username="tester2")
         u2.groups.add(Group.objects.get(name="Invite Accepted"))
         EmailAddress.objects.create(email="tester2@tester.com", user=u2)
         action_data = {
@@ -174,7 +173,7 @@ class TestDailyWritingUserAdmin(TestCase):
     def test_send_user_invite_select_unexpected_groups(self):
         """ Posting action with no users selected is a no-op
         """
-        u1 = get_user_model().objects.create(
+        u1 = UserModel.objects.create(
             email="groupless@tester.com", username="groupless"
         )
         EmailAddress.objects.create(email="tester1@tester.com", user=u1)
@@ -199,3 +198,61 @@ class TestDailyWritingUserAdmin(TestCase):
         self.assertEqual(len(mail.outbox), 0)
         messages = list(get_messages(confirmation.wsgi_request))
         self.assertEqual(len(messages), 0)
+
+
+class TestInviteFilter(TestCase):
+    """ Unit tests fo the Invite Filter
+    """
+
+    fixtures = ["dailywriting/fixtures/seed.json"]
+
+    def setUp(self):
+        self.test_queryset = UserModel.objects.all()
+        self.tester1 = UserModel.objects.create(
+            username="tester1", email="tester1@test.com"
+        )
+        self.tester1.groups.add(Group.objects.get(name="Invite Requested"))
+        self.tester2 = UserModel.objects.create(
+            username="tester2", email="tester2@test.com"
+        )
+        self.tester2.groups.add(Group.objects.get(name="Invited"))
+        self.tester3 = UserModel.objects.create(
+            username="tester3", email="tester3@test.com"
+        )
+        self.tester3.groups.add(Group.objects.get(name="Invite Accepted"))
+
+    def test_requested(self):
+        """ Filter 'requested' returns users in the "Invite Requested" group
+        """
+        invite_filter = InviteFilter(
+            None,
+            {InviteFilter.parameter_name: "requested"},
+            get_user_model(),
+            DailyWritingUserAdmin,
+        )
+        filtered_users = invite_filter.queryset(None, self.test_queryset)
+        self.assertEqual(list(filtered_users), [self.tester1])
+
+    def test_invited(self):
+        """ Filter 'invited' returns users in the "Invited" group
+        """
+        invite_filter = InviteFilter(
+            None,
+            {InviteFilter.parameter_name: "invited"},
+            get_user_model(),
+            DailyWritingUserAdmin,
+        )
+        filtered_users = invite_filter.queryset(None, self.test_queryset)
+        self.assertEqual(list(filtered_users), [self.tester2])
+
+    def test_invite_accepted(self):
+        """ Filter 'accepted' keywoard returns users in the "Invite Accepted" group
+        """
+        invite_filter = InviteFilter(
+            None,
+            {InviteFilter.parameter_name: "accepted"},
+            get_user_model(),
+            DailyWritingUserAdmin,
+        )
+        filtered_users = invite_filter.queryset(None, self.test_queryset)
+        self.assertEqual(list(filtered_users), [self.tester3])

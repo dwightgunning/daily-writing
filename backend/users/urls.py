@@ -2,10 +2,11 @@ from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_auth.registration.views import RegisterView
-from rest_auth.views import PasswordResetConfirmView, PasswordResetView
+from rest_auth.views import PasswordResetConfirmView
 
 from api.views import empty_view
 from users.views import (
+    DailyWritingPasswordResetView,
     DailyWritingProfileView,
     InviteRequestView,
     InviteRequestAcceptanceView,
@@ -26,7 +27,9 @@ urlpatterns = [
         name="invite_token",
     ),
     path(
-        "auth/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"
+        "auth/password/reset/",
+        DailyWritingPasswordResetView.as_view(),
+        name="rest_password_reset",
     ),
     path(
         "auth/password/reset/confirm/",
