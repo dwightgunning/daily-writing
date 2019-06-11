@@ -3,7 +3,7 @@ from unittest import mock, TestCase
 from entries.permissions import IsEntryAuthor
 
 
-class IsEntryAuthorTests(TestCase):
+class TestIsEntryAuthor(TestCase):
     """ Unit tests for IsEntryAuthor permissions
     """
 
