@@ -25,11 +25,8 @@ export class InviteService {
       }).pipe(
         map((response: HttpResponse<any>) => null),
         catchError((error: any) => {
-          if (error.error && error.error.errors) {
-              // API error responses are expected to be an object with a single property 'errors'
-              return of(new ApiError(error.error.errors));
-          } else if (error.status === 404) {
-            return of(new ApiError({errors: ['Not found.']}));
+          if (error.status && error.error) {
+            return of(new ApiError(error.error));
           }
           // Log the unexpected backend error and return a generic, reliable message to the user.
           Sentry.captureException(error);
@@ -59,9 +56,8 @@ export class InviteService {
     return this.httpClient.post<any>(url, inviteAcceptance).pipe(
       map((response: HttpResponse<any>) => null),
       catchError((error: any) => {
-        if (error.error && error.error.errors) {
-            // API error responses are expected to be an object with a single property 'errors'
-            return of(new ApiError(error.error.errors));
+        if (error.status && error.error) {
+            return of(new ApiError(error.error));
         } else if (error.status === 404) {
           return of(new ApiError({errors: ['Not found.']}));
         }

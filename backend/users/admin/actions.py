@@ -2,12 +2,13 @@ from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.admin import helpers
-from django.contrib.admin.models import LogEntry, CHANGE
+from django.contrib.admin.models import CHANGE, LogEntry
 from django.contrib.admin.utils import model_ngettext
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.template.response import TemplateResponse
-from django.utils.translation import gettext as _, gettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 
 def send_invite(modeladmin, request, queryset):

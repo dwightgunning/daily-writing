@@ -1,9 +1,7 @@
+from api.models import BaseModel
 from django.contrib.auth import get_user_model
 from django.db import models
-
 from timezone_field import TimeZoneField
-
-from api.models import BaseModel
 
 
 class Entry(BaseModel):

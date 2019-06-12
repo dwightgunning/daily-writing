@@ -3,7 +3,6 @@
   <input id="email" name="email" type="email" placeholder="email" formControlName="email" autocomplete="on" required>
   <ul class="form-errors">
     <li *ngIf="!(inviteRequestFormGroup.get('email').pristine && inviteRequestFormGroup.get('email').untouched) && inviteRequestFormGroup.get('email').errors && inviteRequestFormGroup.get('email').errors.required">Email is required.</li>
-    <li *ngIf="!(inviteRequestFormGroup.get('email').pristine && inviteRequestFormGroup.get('email').untouched) && inviteRequestFormGroup.get('email').errors && inviteRequestFormGroup.get('email').errors.email">Enter a valid email address.</li>
     <ng-template [ngIf]="apiErrors && apiErrors.email">
       <li *ngFor="let errorMessage of apiErrors.email">{{ errorMessage }}</li>
     </ng-template>

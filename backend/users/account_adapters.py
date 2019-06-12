@@ -14,8 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class DailyWritingAccountAdapter(DefaultAccountAdapter):
-    def is_open_for_signup(self, request):
-        return False
+    """ Daily writing account adapter
+
+    Adds invite capabilities to the standard AllAuth account adapter
+    """
 
     def new_user_invite_request(self, request, form):
         """
@@ -40,10 +42,10 @@ class DailyWritingAccountAdapter(DefaultAccountAdapter):
         if user.groups.filter(name="Invite Requested").exists():
             self.send_invite_request_received_email(user)
         elif user.is_active:
-            # Ignore inactive accounts
+            # Ignore active accounts
             if user.groups.filter(name="Invited").exists():
                 self.send_invite_email(user)
-            elif user.groups.filter(name="Invite Accepted").exists():
+            else:
                 self.send_account_username_email_address_reminder_email(user)
         return user
 
@@ -91,7 +93,7 @@ class DailyWritingAccountAdapter(DefaultAccountAdapter):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 message=f"Hi,\n\nAs a quick reminder, your username is '{user.username}' and the primary email address associated with your account is '{user.email}'.\n\nRegards,\n\nTeam Daily Writing",
                 recipient_list=[user.email],
-                subject="[Daily Writing] Your invitation to Daily Writing",
+                subject="[Daily Writing] Account reminder",
             )
         except:
             logger.exception("Error sending user email")

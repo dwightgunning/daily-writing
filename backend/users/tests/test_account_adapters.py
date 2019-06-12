@@ -1,20 +1,25 @@
-from unittest.mock import ANY, call, Mock, patch
+from unittest.mock import ANY, Mock, call, patch
 
 from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from callee import operators
 from django.core import mail
 from django.test import TestCase
-
 from users.account_adapters import DailyWritingAccountAdapter
 
 
-class DailyWritingAccountAdapterTest(TestCase):
+class TestDailyWritingAccountAdapter(TestCase):
+    """ Unit tests for DailyWritingAccountAdapter
+    """
+
     @patch("users.account_adapters.email_address_exists")
     @patch("users.account_adapters.get_user_model")
-    def test_invite_user_existing_email_invite_requested(
+    def test_new_user_invite_request(
         self, mock_get_user_model, mock_email_address_exists
     ):
+        """
+        Users requesting an invite trigger a request confirmation email
+        """
         test_email = "tester@tester.com"
 
         mock_email_address_exists.return_value = True
@@ -40,17 +45,20 @@ class DailyWritingAccountAdapterTest(TestCase):
 
     @patch("users.account_adapters.email_address_exists")
     @patch("users.account_adapters.get_user_model")
-    def test_invite_user_existing_email_invite_sent(
+    def test_new_user_invite_request_when_invite_already_sent(
         self, mock_get_user_model, mock_email_address_exists
     ):
+        """
+        Users re-requesting an invite trigger the same request confirmation email
+        """
         test_email = "tester@tester.com"
 
         mock_email_address_exists.return_value = True
 
         mock_user = Mock(email=test_email)
         mock_user.groups.filter.side_effect = [
-            Mock(exists=Mock(return_value=False)),  # Invite requested
-            Mock(exists=Mock(return_value=True)),  # Invited
+            Mock(exists=Mock(return_value=False)),  # 1st. call: Invite requested
+            Mock(exists=Mock(return_value=True)),  # 2nd. call: Invited
         ]
 
         mock_request = Mock(user=mock_user)
@@ -73,9 +81,12 @@ class DailyWritingAccountAdapterTest(TestCase):
 
     @patch("users.account_adapters.email_address_exists")
     @patch("users.account_adapters.get_user_model")
-    def test_invite_user_existing_email_invite_accepted(
+    def test_new_user_invite_request_when_invite_sent_and_accepted(
         self, mock_get_user_model, mock_email_address_exists
     ):
+        """
+        Users requesting an invite after having accepted trigger account details reminder email
+        """
         test_email = "tester@tester.com"
 
         mock_email_address_exists.return_value = True
@@ -84,7 +95,6 @@ class DailyWritingAccountAdapterTest(TestCase):
         mock_user.groups.filter.side_effect = [
             Mock(exists=Mock(return_value=False)),  # Invite requested
             Mock(exists=Mock(return_value=False)),  # Invited
-            Mock(exists=Mock(return_value=True)),  # Invite accepted
         ]
 
         mock_request = Mock(user=mock_user)
@@ -101,16 +111,50 @@ class DailyWritingAccountAdapterTest(TestCase):
         mock_email_address_exists.assert_called()
         mock_get_user_model().objects.get.assert_called_with(**{"email": test_email})
         mock_user.groups.filter.assert_has_calls(
-            [
-                call(**{"name": "Invite Requested"}),
-                call(**{"name": "Invited"}),
-                call(**{"name": "Invite Accepted"}),
-            ]
+            [call(**{"name": "Invite Requested"}), call(**{"name": "Invited"})]
         )
         adapter.send_account_username_email_address_reminder_email.assert_called()
 
+    @patch("users.account_adapters.email_address_exists")
+    @patch("users.account_adapters.get_user_model")
+    def test_new_user_invite_request_when_account_inactive(
+        self, mock_get_user_model, mock_email_address_exists
+    ):
+        """
+        Users requesting an invite when account marked inactive triggers no action
+        """
+        test_email = "tester@tester.com"
+
+        mock_email_address_exists.return_value = True
+
+        mock_user = Mock(email=test_email, is_active=False)
+        mock_user.groups.filter.side_effect = [
+            Mock(exists=Mock(return_value=False))  # Invite requested
+        ]
+
+        mock_request = Mock(user=mock_user)
+
+        mock_get_user_model().objects.get.return_value = mock_user
+
+        adapter = DailyWritingAccountAdapter()
+        adapter.send_invite_request_received_email = Mock()
+        adapter.send_account_username_email_address_reminder_email = Mock()
+
+        adapter.new_user_invite_request(
+            mock_request, Mock(cleaned_data={"email": test_email})
+        )
+
+        mock_email_address_exists.assert_called()
+        mock_get_user_model().objects.get.assert_called_with(**{"email": test_email})
+        mock_user.groups.filter.assert_has_calls([call(**{"name": "Invite Requested"})])
+        adapter.send_invite_request_received_email.assert_not_called()
+        adapter.send_account_username_email_address_reminder_email.assert_not_called()
+
     @patch("users.account_adapters.mail")
     def test_send_invite_request_received_email(self, mock_mail):
+        """
+        Sending invite request received confirmation triggers emails to the user and admins
+        """
         mock_mail.send_mail = Mock()
         mock_mail.mail_admins = Mock()
 
@@ -135,6 +179,9 @@ class DailyWritingAccountAdapterTest(TestCase):
     def test_send_invite_request_received_email_send_mail_error(
         self, mock_logger, mock_mail
     ):
+        """
+        Errors when sending invite received confirmation email to the user emits error logs
+        """
         mailing_error = Exception()
         mock_mail.send_mail = Mock(side_effect=mailing_error)
         mock_mail.mail_admins = Mock()
@@ -161,6 +208,9 @@ class DailyWritingAccountAdapterTest(TestCase):
     def test_send_invite_request_received_email_mail_admins_error(
         self, mock_logger, mock_mail
     ):
+        """
+        Errors when sending invite received confirmation email to the admin emits error logs
+        """
         mailing_error = Exception()
         mock_mail.send_mail = Mock()
         mock_mail.mail_admins = Mock(side_effect=mailing_error)
@@ -185,6 +235,9 @@ class DailyWritingAccountAdapterTest(TestCase):
 
     @patch("users.account_adapters.mail")
     def test_send_invite_email(self, mock_mail):
+        """
+        Invite emails are sent
+        """
         adapter = DailyWritingAccountAdapter()
         test_email = "tester@tester.com"
         test_user = adapter.new_user(None)
@@ -208,6 +261,9 @@ class DailyWritingAccountAdapterTest(TestCase):
     @patch("users.account_adapters.mail")
     @patch("users.account_adapters.logger")
     def test_send_invite_email_error(self, mock_logger, mock_mail):
+        """
+        Errors while sending Invite emails are logged
+        """
         test_email = "tester@tester.com"
 
         adapter = DailyWritingAccountAdapter()
@@ -237,6 +293,9 @@ class DailyWritingAccountAdapterTest(TestCase):
 
     @patch("users.account_adapters.mail")
     def test_send_account_username_email_address_reminder_email(self, mock_mail):
+        """
+        Reminder emails are sent
+        """
         test_username = "tester"
         test_email = "tester@tester.com"
 
@@ -266,6 +325,9 @@ class DailyWritingAccountAdapterTest(TestCase):
     def test_send_account_username_email_address_reminder_email_error(
         self, mock_logger, mock_mail
     ):
+        """
+        Errors while sending account details reminder emails are logged
+        """
         test_username = "tester"
         test_email = "tester@tester.com"
 
