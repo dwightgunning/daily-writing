@@ -1,10 +1,11 @@
+from unittest.mock import ANY, Mock, patch
+
 from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core import mail
 from django.core.validators import ValidationError
-from unittest.mock import ANY, Mock, patch
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
 from rest_framework.test import APIRequestFactory, APITestCase

@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-
-from users.models import DailyWritingProfile, User
 from users.admin.actions import send_invite
+from users.models import DailyWritingProfile, User
 
 
 class InviteFilter(admin.SimpleListFilter):

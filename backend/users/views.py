@@ -2,8 +2,8 @@ import json
 import logging
 
 from allauth.account.models import EmailConfirmationHMAC
-from rest_auth.views import PasswordResetView
 from rest_auth.registration.views import RegisterView
+from rest_auth.views import PasswordResetView
 from rest_framework import status
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -11,14 +11,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from users.models import DailyWritingProfile
 from users.serializers import (
+    DailyWritingPasswordResetSerializer,
     DailyWritingProfileSerializer,
+    InviteAcceptanceSerializer,
     InviteRequestSerializer,
     InviteTokenSerializer,
-    InviteAcceptanceSerializer,
-    DailyWritingPasswordResetSerializer,
 )
 
 logger = logging.getLogger(__name__)

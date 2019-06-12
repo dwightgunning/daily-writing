@@ -7,7 +7,6 @@ from django.core import mail
 from django.template.response import TemplateResponse
 from django.test import TestCase
 from django.urls import reverse
-
 from users.admin import DailyWritingUserAdmin, InviteFilter
 
 UserModel = get_user_model()

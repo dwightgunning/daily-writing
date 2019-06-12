@@ -1,7 +1,7 @@
 from unittest import TestCase
-from rest_framework import status
 
 from api.exceptions import UnprocessibleError
+from rest_framework import status
 
 
 class TestUnprocessibleError(TestCase):

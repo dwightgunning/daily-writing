@@ -2,11 +2,10 @@ from datetime import datetime, timedelta, timezone
 
 from django.contrib.auth import get_user_model
 from django.utils import timezone as django_timezone
-from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
-from rest_framework import status
-
-from entries.views import EntryViewSet
 from entries.models import Entry
+from entries.views import EntryViewSet
+from rest_framework import status
+from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 
 UserModel = get_user_model()
 

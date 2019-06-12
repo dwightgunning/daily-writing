@@ -1,7 +1,5 @@
-from rest_framework import exceptions
-from rest_framework import serializers, status
-
 from django.utils.translation import ugettext_lazy as _
+from rest_framework import exceptions, serializers, status
 
 
 class UnprocessibleError(exceptions.APIException):

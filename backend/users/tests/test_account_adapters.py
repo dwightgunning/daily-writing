@@ -1,11 +1,10 @@
-from unittest.mock import ANY, call, Mock, patch
+from unittest.mock import ANY, Mock, call, patch
 
 from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from callee import operators
 from django.core import mail
 from django.test import TestCase
-
 from users.account_adapters import DailyWritingAccountAdapter
 
 

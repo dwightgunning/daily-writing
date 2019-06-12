@@ -1,15 +1,14 @@
+from api.views import empty_view
 from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_auth.registration.views import RegisterView
 from rest_auth.views import PasswordResetConfirmView
-
-from api.views import empty_view
 from users.views import (
     DailyWritingPasswordResetView,
     DailyWritingProfileView,
-    InviteRequestView,
     InviteRequestAcceptanceView,
+    InviteRequestView,
 )
 
 urlpatterns = [

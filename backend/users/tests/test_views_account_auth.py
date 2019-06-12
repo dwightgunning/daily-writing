@@ -6,7 +6,6 @@ from django.core import mail
 from rest_auth.views import LoginView, PasswordResetView
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
-
 from users.views import InviteRequestAcceptanceView, InviteRequestView
 
 UserModel = get_user_model()

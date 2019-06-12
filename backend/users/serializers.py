@@ -1,27 +1,28 @@
 from collections import Counter
 
+import pytz
+
 from allauth.account import app_settings as allauth_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from allauth.account.utils import setup_user_email
 from allauth.utils import get_username_max_length
+from api.exceptions import UnprocessibleError
 from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
-from django.core import exceptions as django_exceptions, mail
+from django.core import exceptions as django_exceptions
+from django.core import mail
 from django.core.validators import ValidationError
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-import pytz
 from rest_auth.serializers import PasswordResetSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException, NotFound
-
-from api.exceptions import UnprocessibleError
-from users.models import DailyWritingProfile
 from users.forms import DailyWritingPasswordResetForm
+from users.models import DailyWritingProfile
 
 
 class TimezoneField(serializers.Field):

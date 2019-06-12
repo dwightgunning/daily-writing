@@ -1,10 +1,10 @@
-from django.contrib.auth import get_user_model
 import pytz
-from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
-from rest_framework import status
 
-from users.views import DailyWritingProfileView
+from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 from users.models import DailyWritingProfile
+from users.views import DailyWritingProfileView
 
 
 class TestDailyWritingProfile(APITestCase):
