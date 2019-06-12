@@ -1,5 +1,4 @@
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
 import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
@@ -14,7 +13,7 @@ import { EntryService } from '../services/entry.service';
   templateUrl: './entry-form.component.html',
   styleUrls: ['./entry-form.component.scss']
 })
-export class EntryFormComponent implements OnInit, OnDestroy {
+export class EntryFormComponent implements AfterViewInit, OnDestroy {
   model: Entry = new Entry();
   ngUnsubscribe = new Subject();
   @ViewChild('entryForm') entryForm: any;
@@ -22,7 +21,7 @@ export class EntryFormComponent implements OnInit, OnDestroy {
   constructor(
     private entryService: EntryService) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.entryService.getOrCreateEntry().subscribe(
       (entry: Entry) => {
         this.model = entry;

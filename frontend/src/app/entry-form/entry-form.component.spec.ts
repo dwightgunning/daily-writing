@@ -11,6 +11,9 @@ import { EntryFormComponent } from './entry-form.component';
 const entryServiceStub = {
   getOrCreateEntry(): Observable<Entry> {
     return of(new Entry()); // tslint:disable-line deprecation
+  },
+  updateEntry(entry: Entry): Observable<Entry> {
+    return of(new Entry()); // tslint:disable-line deprecation
   }
 };
 
@@ -41,12 +44,6 @@ describe('EntryFormComponent', () => {
   });
 
   it('should be created', () => {
-    const entryService = fixture.debugElement.injector.get(EntryService);
-
-    expect(component).toBeTruthy();
-  });
-
-  it('should retrieve the day\'s entry on initialisation', () => {
     expect(component).toBeTruthy();
   });
 

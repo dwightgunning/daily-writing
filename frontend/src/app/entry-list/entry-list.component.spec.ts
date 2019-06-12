@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { of, Observable } from 'rxjs';
 
-import { RouterLinkStubDirective } from '../../testing/router-stubs';
+import { StubRouterLinkDirective } from '../../testing/router-stubs';
 import { EntryListComponent } from '../entry-list/entry-list.component';
 import { ApiDataPage } from '../models/api-data-page';
 import { EntryService } from '../services/entry.service';
@@ -22,7 +22,7 @@ describe('EntryListComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         EntryListComponent,
-        RouterLinkStubDirective
+        StubRouterLinkDirective
       ],
       imports: [],
       providers: [

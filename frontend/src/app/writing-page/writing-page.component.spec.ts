@@ -28,6 +28,10 @@ describe('WritingPageComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    fixture.destroy();
+  });
+
   it('should be created', () => {
     expect(component).toBeTruthy();
   });

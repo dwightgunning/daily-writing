@@ -1,7 +1,7 @@
 <div id="title-bar-responsive" class="title-bar" data-responsive-toggle="responsive-top-bar" data-hide-for="medium">
   <div id="title-bar-logo" class="title-bar-title">
     <h1>
-      <a [routerLink]="(userLoginCredentials | async) ? ['/write'] : ['/']">
+      <a [routerLink]="(userLoginCredentials | async) ? '/write' : '/'">
         <img src="/assets/images/logo.png" title="Daily Writing">
       </a>
     </h1>
@@ -16,7 +16,7 @@
     <ul id="left-menu-bar-logo" class="dropdown menu" data-dropdown-menu>
       <li class="menu-text">
         <h1>
-          <a [routerLink]="(userLoginCredentials | async) ? ['/write'] : ['/']">
+          <a [routerLink]="(userLoginCredentials | async) ? '/write' : '/'">
             <img src="/assets/images/logo.png" title="Daily Writing">
           </a>
         </h1>

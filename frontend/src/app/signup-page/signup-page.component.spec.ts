@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignupPageComponent } from './signup-page.component';
+import { StubRouterLinkDirective } from '../../testing/router-stubs';
+
+@Component({selector: 'app-centered-content-card-wrapper', template: ''})
+class StubCenteredContentCardWrapperComponent {
+  @Input() centeredRightContentPane: TemplateRef<any>;
+}
 
 @Component({selector: 'app-invite-request-form', template: ''})
 class StubRequestInviteComponent {}
@@ -14,7 +20,9 @@ describe('SignupPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         SignupPageComponent,
-        StubRequestInviteComponent
+        StubCenteredContentCardWrapperComponent,
+        StubRequestInviteComponent,
+        StubRouterLinkDirective
       ]
     })
     .compileComponents();
@@ -30,8 +38,4 @@ describe('SignupPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the title "Signup"', () => {
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h2').textContent).toContain('Request an invite to Daily Writing');
-  });
 });

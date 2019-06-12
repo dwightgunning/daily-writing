@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Type } from '@angular/core';
 
 import * as Sentry from '@sentry/browser';
 
@@ -24,9 +25,9 @@ describe('InviteService', () => {
       ]
     });
 
-    // Inject the service and test controller for each test
-    inviteService = TestBed.get(InviteService);
-    httpTestingController = TestBed.get(HttpTestingController);
+    // Obtain the service and test controller injected for each test
+    inviteService = TestBed.get(InviteService as Type<InviteService>);
+    httpTestingController = TestBed.get(HttpTestingController as Type<HttpTestingController>);
   });
 
   afterEach(() => {
@@ -41,6 +42,7 @@ describe('InviteService', () => {
     });
 
     it('maps the service response and completes with \'null\' on success (201)', (onExpectationsMet) => {
+      // inject([InviteService, HttpTestingController], (inviteService: InviteService, httpTestingController: HttpTestingController) => {
       const testData = {
         email: 'test@tester.com'
       };
@@ -56,22 +58,23 @@ describe('InviteService', () => {
       expect(req.request.body).toEqual(testData);
       req.flush(null, {status: 201, statusText: 'Ok'});
     });
+      // })();
+    // });
 
-    it('errors with \'null\' on an unexpected response code (!201)', (onExpectationsMet) => {
+    it('errors with an APIError on an unexpected response code (!201)', (onExpectationsMet) => {
       const testData = {
         email: 'test@tester.com'
       };
       const errorMessage = 'simulated network error';
-      const mockError = new ErrorEvent('Network error', {
-        message: errorMessage,
-      });
+
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
       inviteService.createInviteRequest(testData).subscribe(
-        (data) => fail('should have failed due to the 403 status code'),
-        (error: null) => {
-          expect(error).toBeNull();
+        (result) => {
+          expect(result instanceof ApiError).toBeTruthy();
+          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
+          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
           onExpectationsMet();
         }
       );
@@ -81,28 +84,28 @@ describe('InviteService', () => {
       expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('errors with \'null\' on an error', (onExpectationsMet) => {
+    it('errors with an APIError on unexpected errors', (onExpectationsMet) => {
       const testData = {
         email: 'test@tester.com'
       };
-      const errorMessage = 'simulated network error';
-      const mockError = new ErrorEvent('Network error', {
-        message: errorMessage,
-      });
+      const errorObj = {
+        message: 'simulated network error',
+      };
+      const mockError = new ErrorEvent('Network error', errorObj);
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
       inviteService.createInviteRequest(testData).subscribe(
-        (data) => fail('should have failed with the network error'),
-        (error: null) => {
-          expect(error).toBeNull();
+        (result) => {
+          expect(result instanceof ApiError).toBeTruthy();
+          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
+          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
           onExpectationsMet();
         }
       );
 
       const req = httpTestingController.expectOne(InviteService.INVITE_ENDPOINT);
       req.error(mockError);
-      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -255,7 +258,7 @@ describe('InviteService', () => {
       );
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
-      req.flush({errors: errorsObj}, {status: 422, statusText: 'Unprocessable Entity'});
+      req.flush(errorsObj, {status: 422, statusText: 'Unprocessable Entity'});
     });
 
     it('404 not found: Emits ApiError', (onExpectationsMet) => {
@@ -302,22 +305,21 @@ describe('InviteService', () => {
       req.flush(null, {status: 500, statusText: 'Server error'});
     });
 
-    it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\' '
-        + 'message and captures error with Sentry', (onExpectationsMet) => {
+    it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\'', (onExpectationsMet) => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
         password: 'fakepassword'
       });
-      const errorsObj = ['Unexpected error...'];
+      const errorsObj = ['Unexpected error list...'];
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
       inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
         (result) => {
           expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+          expect(result.errors).toEqual(errorsObj);
+          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
           onExpectationsMet();
         }
       );
