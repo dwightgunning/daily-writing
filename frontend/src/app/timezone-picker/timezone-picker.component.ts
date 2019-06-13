@@ -7,7 +7,6 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
-  OnInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
@@ -36,7 +35,7 @@ import 'select2';
     </ng-template>
   </select>`
 })
-export class TimezonePickerComponent implements OnInit, AfterViewInit, ControlValueAccessor {
+export class TimezonePickerComponent implements AfterViewInit, ControlValueAccessor {
 
   /**
    * Contructor function to define all the timezones
@@ -51,7 +50,7 @@ export class TimezonePickerComponent implements OnInit, AfterViewInit, ControlVa
   /**
    * ElementRef for the select element
    */
-  @ViewChild('select') select: ElementRef;
+  @ViewChild('select', { static: false }) select: ElementRef;
   nativeSelectElement;
 
   /**
@@ -70,17 +69,14 @@ export class TimezonePickerComponent implements OnInit, AfterViewInit, ControlVa
    */
   onChange: any = () => { };
 
-  ngOnInit() {
-    this.nativeSelectElement = $(this.select.nativeElement).select2({
-      placeholder: this.placeholderString,
-      matcher: (term, text) => this.matcher(term, text)
-    });
-  }
-
   /**
    * $ bounding of select2 framework in the selectElement
    */
   ngAfterViewInit() {
+    this.nativeSelectElement = $(this.select.nativeElement).select2({
+      placeholder: this.placeholderString,
+      matcher: (term, text) => this.matcher(term, text)
+    });
     this.nativeSelectElement.on('change', (e: any) => {
         this.onChange($(e.target).val());
     });

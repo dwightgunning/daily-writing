@@ -1,11 +1,9 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Headers, RequestOptions } from '@angular/http';
 
 import { environment } from '../../environments/environment';
 import { Profile } from '../models/profile';

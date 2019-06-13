@@ -16,7 +16,7 @@ import { EntryService } from '../services/entry.service';
 export class EntryFormComponent implements AfterViewInit, OnDestroy {
   model: Entry = new Entry();
   ngUnsubscribe = new Subject();
-  @ViewChild('entryForm') entryForm: any;
+  @ViewChild('entryForm', { static: false }) entryForm: any;
 
   constructor(
     private entryService: EntryService) { }

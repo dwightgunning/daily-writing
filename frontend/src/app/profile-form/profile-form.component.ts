@@ -13,7 +13,7 @@ export class ProfileFormComponent implements OnInit {
   submitting = false;
   success = false;
   error: any;  model: Profile = new Profile();
-  @ViewChild('profileForm') profileForm: any;
+  @ViewChild('profileForm', { static: false }) profileForm: any;
 
 
   constructor(
