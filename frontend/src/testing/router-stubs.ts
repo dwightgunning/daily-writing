@@ -9,9 +9,4 @@ import { Directive, Input } from '@angular/core';
 })
 export class StubRouterLinkDirective {
   @Input('routerLink') linkParams: string;
-  navigatedTo: any = null;
-
-  onClick() {
-    this.navigatedTo = this.linkParams;
-  }
 }
