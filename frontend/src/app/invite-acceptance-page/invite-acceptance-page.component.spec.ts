@@ -16,7 +16,10 @@ export class ActivatedRouteMock {
     };
 }
 
-@Component({selector: 'app-centered-content-card-wrapper', template: ''})
+@Component({
+  selector: 'app-centered-content-card-wrapper',
+  template: '<ng-container *ngTemplateOutlet="centeredRightContentPane"></ng-container>'
+})
 class StubCenteredContentCardWrapperComponent {
   @Input() centeredRightContentPane: TemplateRef<any>;
 }
@@ -28,6 +31,12 @@ export class StubInviteAcceptanceFormComponent {
 
 @Component({selector: 'app-login-form', template: ''})
 export class StubLoginFormComponent {}
+
+@Component({selector: 'app-page-spinner', template: ''})
+class StubPageSpinnerComponent { }
+
+@Component({selector: 'app-page-error', template: ''})
+class StubPageErrorComponent { }
 
 describe('InviteAcceptancePageComponent', () => {
   let component: InviteAcceptancePageComponent;
@@ -43,6 +52,8 @@ describe('InviteAcceptancePageComponent', () => {
         InviteAcceptancePageComponent,
         StubCenteredContentCardWrapperComponent,
         StubLoginFormComponent,
+        StubPageErrorComponent,
+        StubPageSpinnerComponent,
         StubRouterLinkDirective
       ],
       providers: [
@@ -64,46 +75,54 @@ describe('InviteAcceptancePageComponent', () => {
     expect(component.token).toEqual('abc123');
   });
 
-  // it('checks token validity on intialisation', () => {
-  //   expect(component.inviteAccepted).toBeFalsy();
-  //   expect(component.tokenCheckState).toEqual(TokenCheckStates.NotStarted);
+  it('checks token validity on intialisation', () => {
+    expect(component.inviteAccepted).toBeFalsy();
+    expect(component.tokenCheckState).toEqual(TokenCheckStates.NotStarted);
 
-  //   // Subject used in order to defer emitting the result so the intermediate state can tested
-  //   const deferredCheckResult = new Subject();
-  //   inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(deferredCheckResult);
+    // Subject used in order to defer emitting the entry; intermediate state can be tested
+    const deferredCheckResult = new Subject();
+    inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(deferredCheckResult);
 
-  //   fixture.detectChanges();
+    fixture.detectChanges();
 
-  //   // Test the component passes through the 'in progress' state
-  //   expect(component.tokenCheckState).toEqual(TokenCheckStates.InProgress);
-  //   expect(inviteServiceSpy.checkInviteTokenIsValid).toHaveBeenCalledWith('abc123');
+    // Test the component passes through the 'in progress' state
+    expect(component.tokenCheckState).toEqual(TokenCheckStates.InProgress);
+    expect(inviteServiceSpy.checkInviteTokenIsValid).toHaveBeenCalledWith('abc123');
 
-  //   deferredCheckResult.next(null); // Emit the result
+    deferredCheckResult.next(null); // Emit the token check result
 
-  //   expect(component.tokenCheckState).toEqual(TokenCheckStates.Complete);
-  //   expect(component.inviteAccepted).toBeFalsy();
-  // });
+    expect(component.tokenCheckState).toEqual(TokenCheckStates.Complete);
+    expect(component.inviteAccepted).toBeFalsy();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#inviteAcceptanceForm')).toBeTruthy();
+  });
 
-  // it('handles invalid tokens by displaying an error message', () => {
-  //   const serviceErrorMessage = 'This token appears to be invalid.';
-  //   inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(of(new ApiError({errors: [serviceErrorMessage]})));
-  //   fixture.detectChanges();
-  //   expect(component.tokenCheckState).toEqual(TokenCheckStates.Error);
-  //   expect(component.inviteAccepted).toBeFalsy();
-  //   expect(fixture.debugElement.nativeElement.querySelector('p').textContent).toContain(serviceErrorMessage);
-  // });
+  it('handles invalid tokens by displaying an error message', () => {
+    inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(of(new ApiError({errors: ['This token appears to be invalid.']})));
+    fixture.detectChanges();
 
-  // it('handles exception case with token check completes but is invalid', () => {
-  //   const serviceErrorMessage = 'An error occurred. Please try again later.';
-  //   inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(of(new ApiError({errors: [serviceErrorMessage]})));
-  //   fixture.detectChanges();
-  //   expect(fixture.debugElement.nativeElement.querySelector('p').textContent).toContain(serviceErrorMessage);
-  //   expect(component.inviteAccepted).toBeFalsy();
-  // });
+    expect(component.tokenCheckState).toEqual(TokenCheckStates.Error);
+    expect(component.inviteAccepted).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('#appError')).toBeTruthy();
+  });
 
-  // it('recieves inviteAccepted events', () => {
-  //   inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(of(null));
-  //   component.onInviteAccepted();
-  //   expect(component.inviteAccepted).toBeTruthy();
-  // });
+  it('handles exception case with token check completes but is invalid', () => {
+    inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(of(new ApiError({errors: ['This token appears to be invalid.']})));
+    fixture.detectChanges();
+
+    expect(component.tokenCheckState).toEqual(TokenCheckStates.Error);
+    expect(component.inviteAccepted).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('#appError')).toBeTruthy();
+  });
+
+  it('recieves inviteAccepted events updates the template with a confirmation message', () => {
+    inviteServiceSpy.checkInviteTokenIsValid.and.returnValue(of(null));
+    fixture.detectChanges();
+    expect(component.tokenCheckState).toEqual(TokenCheckStates.Complete);
+
+    component.onInviteAccepted();
+    fixture.detectChanges();
+    expect(component.inviteAccepted).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('#inviteAcceptanceConfirmation')).toBeTruthy();
+  });
 });

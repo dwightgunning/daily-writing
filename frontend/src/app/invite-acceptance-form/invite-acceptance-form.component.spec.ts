@@ -61,7 +61,7 @@ describe('InviteAcceptanceFormComponent', () => {
         return of(null); // tslint:disable-line deprecation
       });
     component.onSubmit();
-    expect(component.inviteAccepted.emit).toHaveBeenCalledWith();
+    expect(component.inviteAccepted.emit).toHaveBeenCalled();
   });
 
   it('handles form field errors returned from the InviteService', (onExpectationsMet) => {
