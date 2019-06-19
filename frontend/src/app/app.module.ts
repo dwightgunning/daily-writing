@@ -3,12 +3,12 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { MomentModule } from 'ngx-moment';
 import { init as sentryInit } from '@sentry/browser';
+import { MomentModule } from 'ngx-moment';
 
 import { AppComponent } from './app.component';
-import { AuthGuard } from './guards/auth.guard';
 import { AppRoutingModule } from './app-routing.module';
+import { AuthGuard } from './guards/auth.guard';
 import { AuthHeaderInterceptor } from './auth-header.interceptor';
 import { CenteredContentCardWrapperComponent } from './centered-content-card-wrapper/centered-content-card-wrapper.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
@@ -16,12 +16,14 @@ import { EntryListComponent } from './entry-list/entry-list.component';
 import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
 import { environment } from '../environments/environment';
 import { HomePageComponent } from './home-page/home-page.component';
-import { InviteRequestFormComponent } from './invite-request-form/invite-request-form.component';
-import { InviteAcceptancePageComponent } from './invite-acceptance-page/invite-acceptance-page.component';
 import { InviteAcceptanceFormComponent } from './invite-acceptance-form/invite-acceptance-form.component';
+import { InviteAcceptancePageComponent } from './invite-acceptance-page/invite-acceptance-page.component';
+import { InviteRequestFormComponent } from './invite-request-form/invite-request-form.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { LogoutComponent } from './logout/logout.component';
+import { PageErrorComponent } from './page-error/page-error.component';
+import { PageSpinnerComponent } from './page-spinner/page-spinner.component';
 import { ProfileFormComponent } from './profile-form/profile-form.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { ReviewPageComponent } from './review-page/review-page.component';
@@ -38,7 +40,6 @@ sentryInit({
   declarations: [
     AppComponent,
     CenteredContentCardWrapperComponent,
-    ProfilePageComponent,
     EntryFormComponent,
     EntryListComponent,
     EntryReviewPageComponent,
@@ -49,7 +50,10 @@ sentryInit({
     LoginPageComponent,
     LoginFormComponent,
     LogoutComponent,
+    PageErrorComponent,
+    PageSpinnerComponent,
     ProfileFormComponent,
+    ProfilePageComponent,
     ReviewPageComponent,
     SignupPageComponent,
     TopNavBarComponent,

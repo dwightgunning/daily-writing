@@ -7,9 +7,10 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { environment } from '../../environments/environment';
 import { ApiDataPage } from '../models/api-data-page';
+import { ApiError } from '../models/api-error';
 import { Entry } from '../models/entry';
+import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from './auth.service';
 
@@ -29,7 +30,7 @@ export class EntryService {
     );
   }
 
-  public getOrCreateEntry(): Observable<Entry>  {
+  public getOrCreateEntry(): Observable<Entry|ApiError>  {
     const entryDate: string =  moment().utc().format('YYYY-MM-DD');
 
     return this.http.get(this.entryBaseUrl + this.user.username + '/' + entryDate + '/').pipe(
@@ -57,12 +58,10 @@ export class EntryService {
               return entry;
             }),
             catchError((createEntryErrorResponse: HttpErrorResponse, createEntryCaught: Observable<any>) => {
-              // TODO: Raise an appropriate error
-              return of(null);  // tslint:disable-line deprecation
+              return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
             }), );
           } else {
-            // TODO: Raise an appropriate error
-            return of(null);  // tslint:disable-line deprecation
+            return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
           }
         }), );
   }

@@ -1,0 +1,24 @@
+@import '../../assets/foundation-sites/settings';
+@import '~foundation-sites/scss/foundation';
+
+.outer-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.inner-container {
+  margin: auto;
+}
+
+@keyframes flickerAnimation {
+  0%   { opacity: 1; }
+
+  50%  { opacity: 0; }
+
+  100% { opacity: 1; }
+}
+
+.spinner {
+  animation: flickerAnimation 2s infinite;
+}
