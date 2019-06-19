@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Output  } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from '../services/auth.service';
@@ -10,28 +10,28 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  error: any;
-  model = new UserLoginCredentials();
+  userLoginFormGroup = new FormGroup({
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required])
+  });
   submitted = false;
+  apiErrors: any;
+  @Output() loginSucessful: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(
-    private router: Router,
-    private authService: AuthService) { }
+  constructor(private authService: AuthService) { }
 
   onSubmit() {
     this.submitted = true;
-    this.authService.login(this.model).subscribe(
-      (response) => {
+    this.apiErrors = null;
+    const userLoginCredentials = new UserLoginCredentials(this.userLoginFormGroup.value);
+    this.authService.login(userLoginCredentials).subscribe(
+      (result) => {
         this.submitted = false;
-        if (response instanceof UserLoginCredentials) {
-          this.router.navigate(['/write']);
+        if (result instanceof UserLoginCredentials) {
+          this.loginSucessful.emit();
         } else {
-          this.error = response;
+          this.apiErrors = result;
         }
-      },
-      (error) => {
-        this.submitted = false;
-        this.error = error;
-      });
+    });
   }
 }

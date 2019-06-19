@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as Sentry from '@sentry/browser';
@@ -45,34 +45,20 @@ export class AuthService {
   }
 
   public login(credentials: UserLoginCredentials): Observable<UserLoginCredentials|ApiError> {
-    return this.httpClient.post(
-        environment.API_BASE_URL + 'auth/login/',
-        {
-          username: credentials.username,
-          password: credentials.password,
-
-        }).pipe(
-      map((authenticatedToken: UserLoginCredentials) => {
-        if (authenticatedToken.token) {
-          const userLoginCredentials = new UserLoginCredentials(
-            credentials.username,
-            undefined,
-            authenticatedToken.token);
-          try {
-            localStorage.setItem(
-              this.LOGIN_CREDENTIALS_KEY,
-              JSON.stringify(userLoginCredentials));
-          } catch (e) {
-            // If credentials cannot be stored (e.g. Safari incognito mode)
-            // we can carry on with the user stored in the service's
-            // user credentials Subject.
-          }
-          this.userLoginCredentialsSubject.next(userLoginCredentials);
-          return userLoginCredentials;
-        } else {
-          this.userLoginCredentialsSubject.next(null);
-          return new ApiError({errors: ['Invalid username/password']});
+    return this.httpClient.post(environment.API_BASE_URL + 'auth/login/', credentials).pipe(
+      map((response: HttpResponse<any>) => {
+        const authenticatedUserLoginCredentials = new UserLoginCredentials(response);
+        try {
+          localStorage.setItem(
+            this.LOGIN_CREDENTIALS_KEY,
+            JSON.stringify(authenticatedUserLoginCredentials));
+        } catch (e) {
+          // If credentials cannot be stored (e.g. Safari incognito mode)
+          // we can carry on with the user stored in the service's
+          // user credentials Subject.
         }
+        this.userLoginCredentialsSubject.next(authenticatedUserLoginCredentials);
+        return authenticatedUserLoginCredentials;
       }),
       catchError((error: any) => {
         if (error.status && error.error) {

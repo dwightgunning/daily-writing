@@ -128,6 +128,7 @@ JWT_AUTH = {"JWT_EXPIRATION_DELTA": datetime.timedelta(days=7)}
 
 # django-rest-auth
 REST_USE_JWT = True
+REST_AUTH_SERIALIZERS = {"JWT_SERIALIZER": "users.serializers.AuthJWTSerializer"}
 
 # django-allauth
 ACCOUNT_ADAPTER = "users.account_adapters.DailyWritingAccountAdapter"

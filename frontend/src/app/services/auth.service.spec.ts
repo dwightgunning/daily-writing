@@ -19,11 +19,9 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   }));
 
-  xit('should logout when an authenticated user is present', () => {
-    expect(false).toBeTruthy();
-  });
+  xit('should logout when an authenticated user is present', () => {});
 
-  xit('should logout when an authenticated user isn not present', () => {
-    expect(false).toBeTruthy();
-  });
+  xit('should logout when an authenticated user isn not present', () => {});
+
+  xit('should add / remove user details to Sentry scope', () => {});
 });

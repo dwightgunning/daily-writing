@@ -1,19 +1,28 @@
-<form #loginForm="ngForm"  (ngSubmit)="onSubmit()">
-  <label for="username">Username:</label>
-  <input id="username" name="username" type="text" placeholder="username" [(ngModel)]="model.username" #username="ngModel" autocomplete="on" required>
+<form [formGroup]="userLoginFormGroup" (ngSubmit)="onSubmit()">
+  <label>Username:</label>
+  <input id="username" formControlName="username" type="text" placeholder="username" required>
   <ul class="form-errors">
-    <li [hidden]="username.valid || (username.pristine && username.untouched)">Username is required</li>
+    <li *ngIf="!(userLoginFormGroup.get('username').pristine && userLoginFormGroup.get('username').untouched) && userLoginFormGroup.get('username').errors && userLoginFormGroup.get('username').errors.required">Username is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.username">
+      <li *ngFor="let errorMessage of apiErrors.username">{{ errorMessage }}</li>
+    </ng-template>
   </ul>
-  <label for="password">Password:</label>
-  <input id="password" name="password" type="password" placeholder="password" [(ngModel)]="model.password" #password="ngModel" autocomplete="off" required>
+  <label>Password:</label>
+  <input id="password" formControlName="password" type="password" placeholder="password" autocomplete="off" required>
   <ul class="form-errors">
-    <li [hidden]="password.valid || (password.pristine && password.untouched)">Password is required</li>
+    <li *ngIf="!(userLoginFormGroup.get('password').pristine && userLoginFormGroup.get('password').untouched) && userLoginFormGroup.get('password').errors && userLoginFormGroup.get('password').errors.required">Password is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.password">
+      <li *ngFor="let errorMessage of apiErrors.password">{{ errorMessage }}</li>
+    </ng-template>
   </ul>
-  <button type="submit" class="button primary expanded" [disabled]="!loginForm.form.valid">
-    {{ submitted ? 'Loading' : 'Login' }}
+  <button type="submit" class="button primary expanded" [disabled]="!userLoginFormGroup.valid">
+    {{ !submitted ? 'Login' : '' }}
     <i class="fa fa-spinner fa-spin" aria-hidden="true" *ngIf="submitted"></i>
   </button>
   <ul class="form-errors">
-    <li [hidden]="!error">Username or password is incorrect.</li>
+    <ng-template [ngIf]="apiErrors">
+      <li *ngFor="let errorMessage of apiErrors.nonFieldErrors">{{ errorMessage }}</li>
+      <li *ngFor="let errorMessage of apiErrors.errors">{{ errorMessage }}</li>
+    </ng-template>
   </ul>
 </form>
