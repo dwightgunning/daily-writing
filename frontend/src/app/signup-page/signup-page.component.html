@@ -3,11 +3,11 @@
 <ng-template #inviteRequestForm>
   <h2 class="h2">Request an invite</h2>
   <p>Let us know your email address and we'll be in touch with an invite code.</p>
-  <app-invite-request-form  (inviteRequested)="onInviteRequested()"></app-invite-request-form>
+  <app-invite-request-form id="inviteRequestForm" (inviteRequested)="onInviteRequested()"></app-invite-request-form>
   <div class="auth-alt-nav">
     <p>
       Already have an account?<br/>
-      <a class="cta" [routerLink]="'/login'">Login here</a>
+      <a class="login-cta" [routerLink]="'/login'">Login here</a>
     </p>
   </div>
 </ng-template>
