@@ -1,4 +1,5 @@
 @import 'node_modules/foundation-sites/scss/foundation';
+@import '~assets/scss/forms';
 
 .timezone {
   box-sizing: border-box;
@@ -6,24 +7,75 @@
   width: 100%;
 }
 
-:host ::ng-deep .select2-container { // sass-lint:disable-line force-element-nesting
+.form-submit-spinner {
+  padding: 0.85em 1em;
+  vertical-align: top;
+}
+
+.select2-dropdown {
+  border-color: $light-gray;
+  border-radius: $input-radius;
+}
+
+.select2-search--dropdown {
+  padding: 0;
+
+  .select2-search__field {
+    border-color: $light-gray;
+    border-radius: $input-radius;
+    border-width: $input-border-width;
+    margin-bottom: 0;
+    padding: $input-padding;
+  }
+}
+
+.select2-container { // sass-lint:disable-line force-element-nesting
   @include form-select;
   background-image: none;
+  border-color: $light-gray;
+  border-radius: $input-radius;
+  border-width: $input-border-width;
+  padding: $input-padding;
+
+  .select2-selection--single {
+    .select2-selection__rendered {
+      color: $black;
+      padding: 0;
+    }
+
+    .select2-selection__arrow {
+      height: 100%;
+    }
+  }
+
+  &.select2-container--open {
+    &.select2-container--above,
+    &.select2-container--below {
+      border-width: 1px;
+    }
+  }
+
+  .select2-results__option {
+    padding: $input-padding;
+
+    &[aria-selected='true'] {
+      background-color: $primary-color;
+      color: $white;
+    }
+
+    &.select2-results__option--highlighted {
+      background-color: $success-color;
+      color: $white;
+
+      &[aria-selected='true'] {
+        background-color: $primary-color;
+        color: $white;
+      }
+    }
+  }
 
   &:focus {
     outline: none;
-  }
-
-
-  &.select2-container--focus { // sass-lint:disable-line class-name-format
-    background-color: $input-background-focus;
-    border: $input-border-focus;
-    box-shadow: $input-shadow-focus;
-    outline: none;
-
-    @if has-value($input-transition) {
-      transition: $input-transition;
-    }
   }
 
   .select2-selection {
@@ -32,30 +84,5 @@
     &:focus {
       outline: none;
     }
-
-    .select2-selection__rendered { // sass-lint:disable-line class-name-format
-      line-height: inherit;
-      padding-left: 0;
-
-      &:focus {
-        outline: none;
-      }
-    }
   }
-
-  .select2-selection__arrow { // sass-lint:disable-line class-name-format
-    height: 100%;
-  }
-}
-
-.form-submit-spinner {
-  padding: 0.85em 1em;
-  vertical-align: top;
-}
-
-.form-submit-success {
-  opacity: 1;
-  padding: 0.85em 1em;
-  transition: opacity 3s ease-in-out;
-  vertical-align: top;
 }

@@ -1,12 +1,13 @@
 export class Profile {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  timezone?: string;
+  targetMilestoneWordCount?: number;
 
-  constructor(
-    public email?: string,
-    public firstName?: string,
-    public lastName?: string,
-    public timezone?: string,
-    public targetMilestoneWordCount?: number
-
-  ) {  }
-
+  constructor(obj?: any) {
+    if (obj) {
+      Object.assign(this, obj);
+    }
+  }
 }

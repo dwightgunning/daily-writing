@@ -1,72 +1,69 @@
-<div class="grid-container full">
-  <div class="grid-x">
-    <form #profileForm="ngForm" (submit)="profileFormSubmit()" class="medium-6 cell">
-      <div>
-        <label>Email
-          <input
-            id="email"
-            name="email"
-            type="email"
-            tabindex="0"
-            [(ngModel)]="model.email"
-            #email="ngModel" readonly>
-        </label>
-      </div>
-      <div>
-        <label>First name
-          <input
-            id="firstName"
-            name="firstName"
-            type="text"
-            tabindex="0"
-            [(ngModel)]="model.firstName"
-            #firstName="ngModel">
-        </label>
-      </div>
-      <div>
-        <label>Last name
-          <input
-            id="lastName"
-            name="lastName"
-            type="text"
-            tabindex="0"
-            [(ngModel)]="model.lastName"
-            #lastName="ngModel">
-        </label>
-      </div>
-      <div>
-        <label>Timezone
-          <app-timezone-picker
-            id="timezone"
-            name="timezone"
-            class="timezone"
-            [(ngModel)]="model.timezone"
-            #timezone="ngModel">
-          </app-timezone-picker>
-        </label>
-      </div>
-      <div>
-        <label>Wordcount target
-          <input
-            id="targetMilestoneWordCount"
-            name="targetMilestoneWordCount"
-            type="text"
-            tabindex="0"
-            [(ngModel)]="model.targetMilestoneWordCount"
-            #targetMilestoneWordCount="ngModel">
-          </label>
-        </div>
-      <div>
-        <button
-          type="submit"
-          class="button primary expanded"
-          tabindex="0"
-          [disabled]="profileForm.form.pristine || !profileForm.form.valid">
-          Update
-        </button>
-        <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitting"></i>
-        <i class="fa fa-check form-submit-success" aria-hidden="true" *ngIf="success"></i>
-      </div>
-    </form>
-  </div>
-</div>
+<form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
+  <label>Email:</label>
+  <input
+    id="email"
+    formControlName="email"
+    type="text"
+    readonly>
+  <ul class="form-errors">
+    <li *ngIf="!(profileFormGroup.get('email').pristine && profileFormGroup.get('email').untouched) && profileFormGroup.get('email').errors && profileFormGroup.get('email').errors.required">Email is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.email">
+      <li *ngFor="let errorMessage of apiErrors.email">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <label>First name:</label>
+  <input
+    id="firstName"
+    formControlName="firstName"
+    type="text">
+  <ul class="form-errors">
+    <li *ngIf="!(profileFormGroup.get('firstName').pristine && profileFormGroup.get('firstName').untouched) && profileFormGroup.get('firstName').errors && profileFormGroup.get('firstName').errors.required">First name is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.firstName">
+      <li *ngFor="let errorMessage of apiErrors.firstName">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <label>Last name:</label>
+  <input
+    id="lastName"
+    formControlName="lastName"
+    type="text">
+  <ul class="form-errors">
+    <li *ngIf="!(profileFormGroup.get('lastName').pristine && profileFormGroup.get('lastName').untouched) && profileFormGroup.get('lastName').errors && profileFormGroup.get('lastName').errors.required">Last name is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.lastName">
+      <li *ngFor="let errorMessage of apiErrors.lastName">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <label>Timezone:</label>
+  <app-timezone-picker
+    id="timezone"
+    class="timezone"
+    formControlName="timezone">
+  </app-timezone-picker>
+  <ul class="form-errors">
+    <li *ngIf="!(profileFormGroup.get('timezone').pristine && profileFormGroup.get('timezone').untouched) && profileFormGroup.get('timezone').errors && profileFormGroup.get('timezone').errors.required">Timezone is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.timezone">
+      <li *ngFor="let errorMessage of apiErrors.lastName">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <label>Target word count:</label>
+  <input
+    id="targetMilestoneWordCount"
+    formControlName="targetMilestoneWordCount"
+    type="text">
+  <ul class="form-errors">
+    <li *ngIf="!(profileFormGroup.get('targetMilestoneWordCount').pristine && profileFormGroup.get('targetMilestoneWordCount').untouched) && profileFormGroup.get('targetMilestoneWordCount').errors && profileFormGroup.get('targetMilestoneWordCount').errors.required">Target word count is required.</li>
+    <ng-template [ngIf]="apiErrors && apiErrors.targetMilestoneWordCount">
+      <li *ngFor="let errorMessage of apiErrors.targetMilestoneWordCount">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+  <button type="submit" class="button primary expanded" [disabled]="profileFormGroup.pristine || !profileFormGroup.valid">
+    {{ !submitted ? 'Update' : '' }}
+    <i class="fa fa-spinner fa-spin form-submit-spinner" aria-hidden="true" *ngIf="submitting"></i>
+  </button>
+  <ul class="form-errors">
+    <ng-template [ngIf]="apiErrors">
+      <li *ngFor="let errorMessage of apiErrors.nonFieldErrors">{{ errorMessage }}</li>
+      <li *ngFor="let errorMessage of apiErrors.errors">{{ errorMessage }}</li>
+    </ng-template>
+  </ul>
+</form>
