@@ -63,7 +63,7 @@ describe('AuthHeaderInterceptor', () => {
   it('capture errors encountered when retrieving credentials from storage', () => {
     localStorageGetItemSpy.withArgs(LOGIN_CREDENTIALS_KEY).and.throwError('error getting storage item');
     const captureExceptionSpy = jasmine.createSpy('captureException');
-    const sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException', 'get').and.returnValue(captureExceptionSpy);
+    const sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException').and.returnValue(captureExceptionSpy);
 
     httpTestClient.get('/api').subscribe(response => expect(response).toBeTruthy());
 

@@ -13,58 +13,86 @@ import { UserLoginCredentials } from '../models/user-login-credentials';
   providedIn: 'root'
 })
 export class AuthService {
-  private LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
+  static readonly LOGIN_ENDPOINT = `${environment.API_BASE_URL}auth/login/`;
+  static readonly LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
+  static readonly USER_ENDPOINT = `${environment.API_BASE_URL}auth/user/`;
+
   userLoginCredentialsSubject = new ReplaySubject<UserLoginCredentials>(1);
 
   constructor(private httpClient: HttpClient) {
-    let storedUserLoginCredentials: UserLoginCredentials;
+    let storedCredentialData: string;
+    let userLoginCredentials: UserLoginCredentials;
     try {
-      storedUserLoginCredentials = JSON.parse(
-        localStorage.getItem(this.LOGIN_CREDENTIALS_KEY)) as UserLoginCredentials;
-    } catch ( err ) {
-      // TODO: Shouldn't occur in practice. Investigate error reporting options.
-    } finally {
-      if (storedUserLoginCredentials && storedUserLoginCredentials.token) {
-        // Check the stored credentials are still valid
-        this.httpClient.get(environment.API_BASE_URL + 'auth/user/')
-          .subscribe(
-            (authenticatedToken: UserLoginCredentials) => {
-              this.userLoginCredentialsSubject.next(storedUserLoginCredentials);
-            },
-            (err: any) => {
-              localStorage.removeItem(this.LOGIN_CREDENTIALS_KEY);
-              // TODO: log error, display user a message
-              this.userLoginCredentialsSubject.next(null);
-            }
-          );
+      storedCredentialData = localStorage.getItem(AuthService.LOGIN_CREDENTIALS_KEY);
+    } catch (error) {
+      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      Sentry.captureException(error);
+    }
+    if (!storedCredentialData) {
+      this.userLoginCredentialsSubject.next(null);
+      return;
+    }
+
+    try {
+      userLoginCredentials = new UserLoginCredentials(JSON.parse(storedCredentialData));
+    } catch (error) {
+      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      this.userLoginCredentialsSubject.next(null);
+      Sentry.captureException(error);
+      return;
+    }
+
+    if (!userLoginCredentials || !(userLoginCredentials.username && userLoginCredentials.token)) {
+      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      this.userLoginCredentialsSubject.next(null);
+      Sentry.captureException('Malformed user credentials in local storage');
+      return;
+    }
+
+    // Check the stored credentials are still valid
+    this.httpClient.get(AuthService.USER_ENDPOINT).pipe(
+    map((response) => userLoginCredentials as UserLoginCredentials),
+    catchError((error) => {
+      // Log the unexpected backend error and return a generic, reliable message to the user.
+      if (!error.status || error.status >= 500) {
+        Sentry.captureException(error);
+      }
+      return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+    })).subscribe((authenticatedToken: UserLoginCredentials|ApiError) => {
+      if (authenticatedToken instanceof UserLoginCredentials) {
+        this.userLoginCredentialsSubject.next(userLoginCredentials);
+        Sentry.configureScope((scope) => {
+          scope.setUser({username: userLoginCredentials.username});
+        });
       } else {
-        localStorage.removeItem(this.LOGIN_CREDENTIALS_KEY);
+        localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
         this.userLoginCredentialsSubject.next(null);
       }
-    }
+    });
   }
 
   public login(credentials: UserLoginCredentials): Observable<UserLoginCredentials|ApiError> {
-    return this.httpClient.post(environment.API_BASE_URL + 'auth/login/', credentials).pipe(
-      map((response: HttpResponse<any>) => {
-        const authenticatedUserLoginCredentials = new UserLoginCredentials(response);
+    return this.httpClient.post(AuthService.LOGIN_ENDPOINT, credentials).pipe(
+      map((response) => {
+        const userLoginCredentials = new UserLoginCredentials(response);
         try {
           localStorage.setItem(
-            this.LOGIN_CREDENTIALS_KEY,
-            JSON.stringify(authenticatedUserLoginCredentials));
-        } catch (e) {
+            AuthService.LOGIN_CREDENTIALS_KEY,
+            JSON.stringify(userLoginCredentials));
+        } catch (error) {
           // If credentials cannot be stored (e.g. Safari incognito mode)
           // we can carry on with the user stored in the service's
           // user credentials Subject.
         }
-        this.userLoginCredentialsSubject.next(authenticatedUserLoginCredentials);
-        return authenticatedUserLoginCredentials;
+        this.userLoginCredentialsSubject.next(userLoginCredentials);
+        Sentry.configureScope((scope) => {
+          scope.setUser({username: userLoginCredentials.username});
+        });
+        return userLoginCredentials;
       }),
       catchError((error: any) => {
         if (error.status && error.error) {
             return of(new ApiError(error.error));
-        } else if (error.status === 404) {
-          return of(new ApiError({errors: ['Not found.']}));
         }
         // Log the unexpected backend error and return a generic, reliable message to the user.
         Sentry.captureException(error);
@@ -75,8 +103,10 @@ export class AuthService {
 
   public logout(): void {
     try {
-      localStorage.removeItem(this.LOGIN_CREDENTIALS_KEY);
-    } catch ( err ) { }
+      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+    } catch (error) {
+        Sentry.captureException(error);
+    }
     this.userLoginCredentialsSubject.next(null);
   }
 
