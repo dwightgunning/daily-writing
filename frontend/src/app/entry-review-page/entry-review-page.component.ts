@@ -3,8 +3,7 @@ import {switchMap} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-
-
+import { ApiError } from '../models/api-error';
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry.service';
 
@@ -24,7 +23,11 @@ export class EntryReviewPageComponent implements OnInit {
   ngOnInit() {
     this.route.params.pipe(
       switchMap((params: Params) => this.entryService.getEntry(params.entryDate)))
-      .subscribe(entry => this.entry = entry);
+      .subscribe((entry: Entry|ApiError) => {
+        if (entry instanceof Entry) {
+          this.entry = entry;
+        }
+        // TODO: Handle errors
+      });
   }
-
 }

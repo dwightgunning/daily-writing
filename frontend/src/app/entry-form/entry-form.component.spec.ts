@@ -283,9 +283,9 @@ describe('EntryFormComponent', () => {
       entryServiceSpy.updateEntry.and.returnValue(deferredUpdateEntryResult);
 
       let sentryCaptureExceptionSpy;
-      const sentryWithScopeSpy = spyOnProperty(Sentry, 'withScope', 'get').and.callFake(() => (fn) => {
+      const sentryWithScopeSpy = spyOnProperty(Sentry, 'withScope').and.callFake(() => (fn) => {
         sentryCaptureExceptionSpy = jasmine.createSpy('captureException');
-        spyOnProperty(Sentry, 'captureException', 'get').and.returnValue(sentryCaptureExceptionSpy);
+        spyOnProperty(Sentry, 'captureException').and.returnValue(sentryCaptureExceptionSpy);
         return fn({setExtra: jasmine.createSpy()});
       });
 
