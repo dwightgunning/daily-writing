@@ -13,13 +13,13 @@ import { Profile } from '../models/profile';
   providedIn: 'root'
 })
 export class ProfileService {
-  profileUrl = environment.API_BASE_URL + 'profile/';
+  static readonly PROFILE_ENDPOINT = `${environment.API_BASE_URL}profile/`;
 
   constructor(private httpClient: HttpClient) { }
 
   public getProfile(): Observable<Profile|ApiError>  {
-    return this.httpClient.get<any>(this.profileUrl).pipe(
-      map((response: HttpResponse<Profile>) => response as Profile),
+    return this.httpClient.get(ProfileService.PROFILE_ENDPOINT).pipe(
+      map((response) => new Profile(response)),
       catchError((error: any) => {
         // Log the unexpected backend error and return a generic, reliable message to the user.
         Sentry.captureException(error);
@@ -29,8 +29,8 @@ export class ProfileService {
   }
 
   public updateProfile(profile: Profile): Observable<Profile|ApiError> {
-    return this.httpClient.patch(this.profileUrl, profile).pipe(
-      map((response: HttpResponse<Profile>) => response as Profile),
+    return this.httpClient.patch(ProfileService.PROFILE_ENDPOINT, profile).pipe(
+      map((response) => new Profile(response)),
       catchError((error: any) => {
         if (error.status && error.error) {
           return of(new ApiError(error.error));

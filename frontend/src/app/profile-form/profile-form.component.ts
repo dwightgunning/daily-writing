@@ -13,7 +13,7 @@ import { ProfileService } from '../services/profile.service';
 })
 export class ProfileFormComponent implements OnInit {
   submitted = false;
-  apiErrors: ApiError;
+  apiErrors: any; // TODO: Type properly
   model: Profile = new Profile();
   profileFormGroup = new FormGroup({
     email: new FormControl('', [Validators.required]),
