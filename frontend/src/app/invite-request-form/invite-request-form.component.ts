@@ -22,7 +22,7 @@ export class InviteRequestFormComponent {
   });
   @Input() token: string;
   submitted = false;
-  apiErrors: any;
+  apiErrors: any; // TODO: Type properly
   @Output() inviteRequested: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private inviteService: InviteService) { }

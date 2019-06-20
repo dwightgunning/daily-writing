@@ -14,7 +14,7 @@ import { InviteRequest } from '../models/invite-request';
   providedIn: 'root'
 })
 export class InviteService {
-  static readonly INVITE_ENDPOINT = environment.API_BASE_URL + 'auth/registration/invite/';
+  static readonly INVITE_ENDPOINT = `${environment.API_BASE_URL}auth/registration/invite/`;
   constructor(private httpClient: HttpClient) { }
 
   createInviteRequest(inviteRequest: InviteRequest): Observable<null|ApiError> {
