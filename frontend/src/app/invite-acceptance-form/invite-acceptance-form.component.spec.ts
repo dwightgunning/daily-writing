@@ -50,9 +50,9 @@ describe('InviteAcceptanceFormComponent', () => {
     const testInviteAcceptance = new InviteAcceptance(testFormFields);
 
     component.token = testToken;
-    component.inviteForm.controls.username.setValue(testFormFields.username);
-    component.inviteForm.controls.password.setValue(testFormFields.password);
-    expect(component.inviteForm.valid).toBeTruthy();
+    component.inviteAcceptanceFormGroup.controls.username.setValue(testFormFields.username);
+    component.inviteAcceptanceFormGroup.controls.password.setValue(testFormFields.password);
+    expect(component.inviteAcceptanceFormGroup.valid).toBeTruthy();
     spyOn(component.inviteAccepted, 'emit');
     const acceptInviteSpy = inviteServiceSpy.acceptInvite.and.callFake(
       (data) => {
@@ -61,7 +61,7 @@ describe('InviteAcceptanceFormComponent', () => {
         return of(null); // tslint:disable-line deprecation
       });
     component.onSubmit();
-    expect(component.inviteAccepted.emit).toHaveBeenCalledWith();
+    expect(component.inviteAccepted.emit).toHaveBeenCalled();
   });
 
   it('handles form field errors returned from the InviteService', (onExpectationsMet) => {
@@ -76,7 +76,7 @@ describe('InviteAcceptanceFormComponent', () => {
         return of(apiError);
       });
     component.onSubmit();
-    expect(component.error).toEqual(apiError);
+    expect(component.apiErrors).toEqual(apiError);
   });
 
 });

@@ -12,7 +12,7 @@ import { InviteRequest } from '../models/invite-request';
   styleUrls: ['./invite-request-form.component.scss']
 })
 export class InviteRequestFormComponent {
-  @ViewChild('inviteRequestForm') requestInviteForm: any;
+  @ViewChild('inviteRequestForm', { static: false }) requestInviteForm: any;
   inviteRequestFormGroup = new FormGroup({
     email: new FormControl('',
       [
@@ -22,7 +22,7 @@ export class InviteRequestFormComponent {
   });
   @Input() token: string;
   submitted = false;
-  apiErrors: any;
+  apiErrors: any; // TODO: Type properly
   @Output() inviteRequested: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private inviteService: InviteService) { }

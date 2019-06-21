@@ -2,6 +2,7 @@ from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.core import mail
 from rest_auth.views import LoginView, PasswordResetView
 from rest_framework import status
@@ -79,24 +80,6 @@ class TestInviteAPIViews(APITestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, "[Daily Writing] Account reminder")
 
-    def test_login_without_password(self):
-        """ Login without password
-        """
-        request = self.factory.post(
-            path="/api/auth/login/",
-            data={"email": self.requested_invite_user.email},
-            format="json",
-        )
-
-        view = LoginView.as_view()
-        response = view(request)
-        response.render()
-
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse("email" in response.data)
-        self.assertEqual(len(response.data["password"]), 1)
-        self.assertEqual(response.data["password"][0].code, "required")
-
     def test_initiate_password_reset_with_requested_invite_user(self):
         """ Request password reset with user that has requested invite
 
@@ -127,6 +110,91 @@ class TestInviteAPIViews(APITestCase):
         # Response always successul to avoid exposing whether an account with the provided email exists (or not)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(mail.outbox[0].to, [self.existing_user.email])
+
+
+class TestLoginAPIViews(APITestCase):
+    """
+    Unit tests for the Login API view
+    """
+
+    fixtures = ["dailywriting/fixtures/seed.json"]
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.existing_user = UserModel.objects.create(
+            username="tester", email="tester@test.com"
+        )
+        self.existing_user.groups.add(Group.objects.get(name="Invite Accepted"))
+        EmailAddress.objects.create(
+            email=self.existing_user.email, user=self.existing_user, verified=True
+        )
+        self.requested_invite_user = UserModel.objects.create(
+            username="tester2", email="tester2@test.com"
+        )
+        self.requested_invite_user.groups.add(
+            Group.objects.get(name="Invite Requested")
+        )
+
+    def test_login(self):
+        """ Login successfully returns token and username
+        """
+        test_password = "testtesttest1"
+        self.existing_user.set_password(test_password)
+        self.existing_user.save()
+        test_data = {"username": self.existing_user.username, "password": test_password}
+
+        request = self.factory.post(
+            path="/api/auth/login/", data=test_data, format="json"
+        )
+        # adding session
+        middleware = SessionMiddleware()
+        middleware.process_request(request)
+        request.session.save()
+
+        view = LoginView.as_view()
+        response = view(request, data=test_data)
+        response.render()
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertTrue("token" in response.data)
+        self.assertEqual(response.data["username"], self.existing_user.username)
+
+    def test_login_invalid_password(self):
+        """ Login that is unsuccessful returns NonFieldError
+        """
+        self.existing_user.set_password("testtesttest1")
+        self.existing_user.save()
+        test_data = {"username": self.existing_user.username, "password": "incorrect"}
+
+        request = self.factory.post(
+            path="/api/auth/login/", data=test_data, format="json"
+        )
+        # adding session
+        middleware = SessionMiddleware()
+        middleware.process_request(request)
+        request.session.save()
+
+        view = LoginView.as_view()
+        response = view(request, data=test_data)
+        response.render()
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue("non_field_errors" in response.data)
+
+    def test_login_without_password(self):
+        """ Login without password
+        """
+        test_data = {"username": self.requested_invite_user.username}
+        request = self.factory.post(
+            path="/api/auth/login/", data=test_data, format="json"
+        )
+
+        view = LoginView.as_view()
+        response = view(request, data=test_data)
+        response.render()
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse("email" in response.data)
+        self.assertEqual(len(response.data["password"]), 1)
+        self.assertEqual(response.data["password"][0].code, "required")
 
 
 class TestInviteRequestAcceptanceView(APITestCase):

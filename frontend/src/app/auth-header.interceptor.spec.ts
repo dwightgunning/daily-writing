@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -8,9 +9,9 @@ import { AuthHeaderInterceptor } from './auth-header.interceptor';
 
 describe('AuthHeaderInterceptor', () => {
   const LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
-  let httpTestClient: HttpClient;
-  let mockTestController: HttpTestingController;
   let localStorageGetItemSpy;
+  let httpTestClient: HttpClient;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,13 +25,14 @@ describe('AuthHeaderInterceptor', () => {
       }]
     });
 
-    httpTestClient = TestBed.get(HttpClient);
-    mockTestController = TestBed.get(HttpTestingController);
     localStorageGetItemSpy = spyOn(Storage.prototype, 'getItem');
+    // Obtain the service and test controller injected for each test
+    httpTestClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController as Type<HttpTestingController>);
   });
 
   afterEach(() => {
-    mockTestController.verify();
+    httpTestingController.verify();
   });
 
   it('should add credentials to Authorization header when stored', () => {
@@ -40,7 +42,7 @@ describe('AuthHeaderInterceptor', () => {
 
     httpTestClient.get('/api').subscribe(response => expect(response).toBeTruthy());
 
-    const request = mockTestController.expectOne(req => {
+    const request = httpTestingController.expectOne(req => {
       expect(req.headers.has('Authorization')).toBeTruthy();
       expect(req.headers.get('Authorization')).toEqual('JWT ' + testCredentials.token);
       return true;
@@ -54,18 +56,18 @@ describe('AuthHeaderInterceptor', () => {
 
     httpTestClient.get('/api').subscribe(response => expect(response).toBeTruthy());
 
-    const request = mockTestController.expectOne(req => !req.headers.has('Authorization'));
+    const request = httpTestingController.expectOne(req => !req.headers.has('Authorization'));
     request.flush({data: 'test'});
   });
 
   it('capture errors encountered when retrieving credentials from storage', () => {
     localStorageGetItemSpy.withArgs(LOGIN_CREDENTIALS_KEY).and.throwError('error getting storage item');
     const captureExceptionSpy = jasmine.createSpy('captureException');
-    const sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException', 'get').and.returnValue(captureExceptionSpy);
+    const sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException').and.returnValue(captureExceptionSpy);
 
     httpTestClient.get('/api').subscribe(response => expect(response).toBeTruthy());
 
-    const request = mockTestController.expectOne(req => !req.headers.has('Authorization'));
+    const request = httpTestingController.expectOne(req => !req.headers.has('Authorization'));
     request.flush({data: 'test'});
     expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
   });

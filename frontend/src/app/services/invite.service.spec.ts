@@ -1,11 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClient, HttpErrorResponse, HttpParams, HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Type } from '@angular/core';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import * as Sentry from '@sentry/browser';
 
 import { ApiError } from '../models/api-error';
-import { environment } from '../../environments/environment';
 import { InviteAcceptance } from '../models/invite-acceptance';
 import { InviteRequest } from '../models/invite-request';
 import { InviteService } from './invite.service';
@@ -24,9 +23,9 @@ describe('InviteService', () => {
       ]
     });
 
-    // Inject the service and test controller for each test
-    inviteService = TestBed.get(InviteService);
-    httpTestingController = TestBed.get(HttpTestingController);
+    // Obtain the service and test controller injected for each test
+    inviteService = TestBed.get(InviteService as Type<InviteService>);
+    httpTestingController = TestBed.get(HttpTestingController as Type<HttpTestingController>);
   });
 
   afterEach(() => {
@@ -37,203 +36,213 @@ describe('InviteService', () => {
     let sentryCaptureExceptionSpy;
 
     beforeEach(() => {
-      sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException', 'get');
+      sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException');
     });
 
-    it('maps the service response and completes with \'null\' on success (201)', (onExpectationsMet) => {
+    it('maps the service response and completes with \'null\' on success (201)', fakeAsync(() => {
       const testData = {
         email: 'test@tester.com'
       };
-      const inviteRequest = new InviteRequest(testData);
-      inviteService.createInviteRequest(testData).subscribe(
-        (data) => {
-          expect(data).toBeNull();
-          onExpectationsMet();
-        });
+      let inviteRequest;
+      inviteService.createInviteRequest(testData).subscribe(result => inviteRequest = result);
 
       const req = httpTestingController.expectOne(InviteService.INVITE_ENDPOINT);
       expect(req.request.method).toEqual('POST');
       expect(req.request.body).toEqual(testData);
       req.flush(null, {status: 201, statusText: 'Ok'});
-    });
+      tick();
 
-    it('errors with \'null\' on an unexpected response code (!201)', (onExpectationsMet) => {
+      expect(inviteRequest).toBeNull();
+    }));
+
+    it('errors with an APIError on an unexpected response code (!201)', fakeAsync(() => {
       const testData = {
         email: 'test@tester.com'
       };
       const errorMessage = 'simulated network error';
-      const mockError = new ErrorEvent('Network error', {
-        message: errorMessage,
-      });
+
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.createInviteRequest(testData).subscribe(
-        (data) => fail('should have failed due to the 403 status code'),
-        (error: null) => {
-          expect(error).toBeNull();
-          onExpectationsMet();
-        }
-      );
+      let inviteRequest;
+      inviteService.createInviteRequest(testData).subscribe(result => inviteRequest = result);
 
       const req = httpTestingController.expectOne(InviteService.INVITE_ENDPOINT);
       req.flush(null, {status: 403, statusText: 'Forbidden'});
-      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-    });
+      tick();
 
-    it('errors with \'null\' on an error', (onExpectationsMet) => {
+      expect(inviteRequest instanceof ApiError).toBeTruthy();
+      expect(inviteRequest.errors).toEqual(['An unexpected error occurred. Please try again.']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('errors with an APIError on an unexpected response code with payload (!201)', fakeAsync(() => {
       const testData = {
         email: 'test@tester.com'
       };
-      const errorMessage = 'simulated network error';
+      const captureExceptionSpy = jasmine.createSpy('captureException');
+      sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
+
+      let inviteRequest;
+      inviteService.createInviteRequest(testData).subscribe(result => inviteRequest = result);
+
+      const req = httpTestingController.expectOne(InviteService.INVITE_ENDPOINT);
+      req.flush({errors: ['Field error']}, {status: 403, statusText: 'Forbidden'});
+      tick();
+
+      expect(inviteRequest instanceof ApiError).toBeTruthy();
+      expect(inviteRequest.errors).toEqual(['Field error']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
+
+    it('errors with an APIError on unexpected errors', fakeAsync(() => {
+      const testData = {
+        email: 'test@tester.com'
+      };
       const mockError = new ErrorEvent('Network error', {
-        message: errorMessage,
+        message: 'simulated network error',
       });
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.createInviteRequest(testData).subscribe(
-        (data) => fail('should have failed with the network error'),
-        (error: null) => {
-          expect(error).toBeNull();
-          onExpectationsMet();
-        }
-      );
+      let inviteRequest;
+      inviteService.createInviteRequest(testData).subscribe(result => inviteRequest = result);
 
       const req = httpTestingController.expectOne(InviteService.INVITE_ENDPOINT);
       req.error(mockError);
+      tick();
+
+      expect(inviteRequest instanceof ApiError).toBeTruthy();
+      expect(inviteRequest.errors).toEqual(['An unexpected error occurred. Please try again.']);
       expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-    });
+    }));
   });
 
   describe('checkInviteTokenIsValid', () => {
     let sentryCaptureExceptionSpy;
 
     beforeEach(() => {
-      sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException', 'get');
+      sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException');
     });
 
-    it('200 ok: emits \'null\'', (onExpectationsMet) => {
+    it('200 ok: emits \'null\'', fakeAsync(() => {
       const testToken = 'abc123';
 
-      inviteService.checkInviteTokenIsValid(testToken).subscribe(
-        (result) => {
-          expect(result).toBeNull();
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
-          onExpectationsMet();
-        });
+      let tokenCheck;
+      inviteService.checkInviteTokenIsValid(testToken).subscribe(result => tokenCheck = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       expect(req.request.method).toEqual('GET');
       req.flush({tokenValid: true}, {status: 200, statusText: 'Ok'});
-    });
+      tick();
 
-    it('404 not found: Emits ApiError', (onExpectationsMet) => {
+      expect(tokenCheck).toBeNull();
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
+
+    it('404 not found: Emits ApiError', fakeAsync(() => {
       const testToken = 'abc123';
       const errorsObj = {
         errors: ['Not found.']
       };
 
-      inviteService.checkInviteTokenIsValid(testToken).subscribe(
-        (result: any) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(errorsObj.errors);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
-          onExpectationsMet();
-        });
+      let tokenCheck;
+      inviteService.checkInviteTokenIsValid(testToken).subscribe(result => tokenCheck = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.flush(null, {status: 404, statusText: 'Not found'});
-    });
+
+      tick();
+
+      expect(tokenCheck instanceof ApiError).toBeTruthy();
+      expect(tokenCheck.errors).toEqual(errorsObj.errors);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
 
     it('HTTP Errors without body: Emits ApiError with \'unexpected error\''
-        + ' message and captures error with Sentry', (onExpectationsMet) => {
+        + ' message and captures error with Sentry', fakeAsync(() => {
       const testToken = 'abc123';
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.checkInviteTokenIsValid(testToken).subscribe(
-        (result: any) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-          onExpectationsMet();
-        }
-      );
+      let tokenCheck;
+      inviteService.checkInviteTokenIsValid(testToken).subscribe(result => tokenCheck = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.flush(null, {status: 500, statusText: 'Server error'});
-    });
+
+      tick();
+      expect(tokenCheck instanceof ApiError).toBeTruthy();
+      expect(tokenCheck.errors).toEqual(['An unexpected error occurred. Please try again.']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+    }));
 
     it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\''
-        + ' message and captures error with Sentry', (onExpectationsMet) => {
+        + ' message and captures error with Sentry', fakeAsync(() => {
       const testToken = 'abc123';
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
       const errorsObj = ['Other error...'];
 
-      inviteService.checkInviteTokenIsValid(testToken).subscribe(
-        (result: any) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-          onExpectationsMet();
-        }
-      );
+      let tokenCheck;
+      inviteService.checkInviteTokenIsValid(testToken).subscribe(result => tokenCheck = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.flush(errorsObj, {status: 500, statusText: 'Server error'});
-    });
+
+      tick();
+      expect(tokenCheck instanceof ApiError).toBeTruthy();
+      expect(tokenCheck.errors).toEqual(['An unexpected error occurred. Please try again.']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+    }));
 
     it('Other errors: Emits ApiError with \'unexpected error\''
-      + ' message and captures error with Sentry', (onExpectationsMet) => {
+      + ' message and captures error with Sentry', fakeAsync(() => {
       const testToken = 'abc123';
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.checkInviteTokenIsValid(testToken).subscribe(
-        (result) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-          onExpectationsMet();
-        }
-      );
+      let tokenCheck;
+      inviteService.checkInviteTokenIsValid(testToken).subscribe(result => tokenCheck = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.error(null);
-    });
+
+      tick();
+      expect(tokenCheck instanceof ApiError).toBeTruthy();
+      expect(tokenCheck.errors).toEqual(['An unexpected error occurred. Please try again.']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+    }));
   });
 
   describe('acceptInvite', () => {
     let sentryCaptureExceptionSpy;
 
     beforeEach(() => {
-      sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException', 'get');
+      sentryCaptureExceptionSpy = spyOnProperty(Sentry, 'captureException');
     });
 
-    it('200 ok: Emits \'null\'', (onExpectationsMet) => {
+    it('200 ok: Emits \'null\'', fakeAsync(() => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'user',
         password: 'invalid'
       });
 
-      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
-        (result) => {
-          expect(result).toBeNull();
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
-          onExpectationsMet();
-        }
-      );
+      let acceptedInvite;
+      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(result => acceptedInvite = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       expect(req.request.method).toEqual('POST');
       expect(req.request.body).toEqual(testInviteAcceptance);
       req.flush(null, {status: 200, statusText: 'Ok'});
-    });
+      tick();
 
-    it('422 unprocessable entity: Emits ApiError', (onExpectationsMet) => {
+      expect(acceptedInvite).toBeNull();
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
+
+    it('422 unprocessable entity: Emits ApiError', fakeAsync(() => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'user',
@@ -245,20 +254,19 @@ describe('InviteService', () => {
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
-        (result) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result).toEqual(new ApiError(errorsObj));
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
-          onExpectationsMet();
-        }
-      );
+      let acceptedInvite;
+      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(result => acceptedInvite = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
-      req.flush({errors: errorsObj}, {status: 422, statusText: 'Unprocessable Entity'});
-    });
+      req.flush(errorsObj, {status: 422, statusText: 'Unprocessable Entity'});
 
-    it('404 not found: Emits ApiError', (onExpectationsMet) => {
+      tick();
+      expect(acceptedInvite instanceof ApiError).toBeTruthy();
+      expect(acceptedInvite).toEqual(new ApiError(errorsObj));
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
+
+    it('404 not found: Emits ApiError', fakeAsync(() => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
@@ -266,21 +274,20 @@ describe('InviteService', () => {
       });
       const errorsObj = {errors: ['Not found.']};
 
-      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
-        (result) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(errorsObj.errors);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
-          onExpectationsMet();
-        }
-      );
+      let acceptedInvite;
+      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(result => acceptedInvite = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.flush(null, {status: 404, statusText: 'Not found'});
-    });
+
+      tick();
+      expect(acceptedInvite instanceof ApiError).toBeTruthy();
+      expect(acceptedInvite.errors).toEqual(errorsObj.errors);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
 
     it('HTTP Errors without body: Emits ApiError with \'unexpected error\''
-        + ' message and captures error with Sentry', (onExpectationsMet) => {
+        + ' message and captures error with Sentry', fakeAsync(() => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
@@ -289,45 +296,42 @@ describe('InviteService', () => {
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
-        (result) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-          onExpectationsMet();
-        }
-      );
+      let acceptedInvite;
+      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(result => acceptedInvite = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.flush(null, {status: 500, statusText: 'Server error'});
-    });
 
-    it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\' '
-        + 'message and captures error with Sentry', (onExpectationsMet) => {
+      tick();
+      expect(acceptedInvite instanceof ApiError).toBeTruthy();
+      expect(acceptedInvite.errors).toEqual(['An unexpected error occurred. Please try again.']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('HTTP Errors with unexpected body: Emits ApiError with \'unexpected error\'', fakeAsync(() => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
         password: 'fakepassword'
       });
-      const errorsObj = ['Unexpected error...'];
+      const errorsObj = ['Unexpected error list...'];
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
-        (result) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-          onExpectationsMet();
-        }
-      );
+      let acceptedInvite;
+      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(result => acceptedInvite = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.flush(errorsObj, {status: 500, statusText: 'Server error'});
-    });
+
+      tick();
+      expect(acceptedInvite instanceof ApiError).toBeTruthy();
+      expect(acceptedInvite.errors).toEqual(errorsObj);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(0);
+    }));
 
     it('Other errors: Emits ApiError with \'unexpected error\''
-        + ' message and captures error with Sentry', (onExpectationsMet) => {
+        + ' message and captures error with Sentry', fakeAsync(() => {
       const testToken = 'abc123';
       const testInviteAcceptance = new InviteAcceptance({
         username: 'tester123',
@@ -336,18 +340,16 @@ describe('InviteService', () => {
       const captureExceptionSpy = jasmine.createSpy('captureException');
       sentryCaptureExceptionSpy.and.returnValue(captureExceptionSpy);
 
-      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(
-        (result) => {
-          expect(result instanceof ApiError).toBeTruthy();
-          expect(result.errors).toEqual(['An unexpected error occurred. Please try again.']);
-          expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
-          onExpectationsMet();
-        }
-      );
+      let acceptedInvite;
+      inviteService.acceptInvite(testToken, testInviteAcceptance).subscribe(result => acceptedInvite = result);
 
       const req = httpTestingController.expectOne(`${InviteService.INVITE_ENDPOINT}${testToken}/`);
       req.error(null);
-    });
 
+      tick();
+      expect(acceptedInvite instanceof ApiError).toBeTruthy();
+      expect(acceptedInvite.errors).toEqual(['An unexpected error occurred. Please try again.']);
+      expect(sentryCaptureExceptionSpy).toHaveBeenCalledTimes(1);
+    }));
   });
 });

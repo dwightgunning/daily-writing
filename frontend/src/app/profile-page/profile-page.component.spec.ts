@@ -2,11 +2,9 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { of } from 'rxjs';
-import { Observable } from 'rxjs/observable';
+import { Observable, of } from 'rxjs';
 
 import { UserLoginCredentials } from '../models/user-login-credentials';
-import { UserService } from '../services/user.service';
 import { ProfilePageComponent } from './profile-page.component';
 
 @Component({selector: 'app-profile-form', template: ''})
@@ -30,9 +28,6 @@ describe('ProfilePageComponent', () => {
       ],
       imports: [
         RouterTestingModule.withRoutes([])
-      ],
-      providers: [
-        {provide: UserService, useValue: userServiceStub }
       ]
     })
     .compileComponents();
@@ -50,10 +45,6 @@ describe('ProfilePageComponent', () => {
 
   it('should have the title "Profile"', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Profile');
-  });
-
-  xit('should input the user object into the child form', () => {
-    expect(false).toBeTruthy();
+    expect(compiled.querySelector('h2').textContent).toContain('Profile');
   });
 });

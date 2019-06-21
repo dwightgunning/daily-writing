@@ -1,18 +1,22 @@
 import { User } from './user';
 
 export class Entry {
-  author = '';
+  author: string;
   entryDate: Date = new Date();
   words = '';
-  createdDate?: Date;
-  entryTimezone?: string;
+  createdDate: Date = new Date();
+  entryTimezone = 'Etc/UTC';
   finishTime?: Date;
   milestoneTime?: Date;
-  milestoneWordCount?: number;
+  milestoneWordCount = 700;
   modifiedDate?: Date;
   startTime?: Date;
 
-  constructor() { }
+  constructor(obj?: any) {
+    if (obj) {
+      Object.assign(this, obj);
+    }
+  }
 
   public countWords(): number {
     if (this.words.length) {

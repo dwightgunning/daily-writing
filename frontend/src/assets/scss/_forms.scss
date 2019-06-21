@@ -1,12 +1,26 @@
 @import '../../assets/foundation-sites/settings';
 @import '~foundation-sites/scss/foundation';
 
+input,
+textarea {
+  // Disabled/readonly state
+  &:disabled,
+  &[readonly] {
+    color: $medium-gray;
+
+    &:focus {
+      border-color: $light-gray;
+      border-width: $input-border-width;
+      box-shadow: none;
+    }
+  }
+}
+
 [type='text'],
 [type='password'],
 [type='email'] {
   border-color: $light-gray;
-  border-radius: 0;
-  border-width: 0 0 1px;
+  border-width: $input-border-width;
   box-shadow: none;
   margin-bottom: 0.2em;
   outline: 0;

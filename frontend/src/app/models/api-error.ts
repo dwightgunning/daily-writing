@@ -29,6 +29,10 @@ export class ApiError {
   errors?: Array<any>|object;
 
   constructor(errorObj: object) {
-    Object.assign(this, errorObj);
+    if (errorObj instanceof Array) {
+      this.errors = errorObj;
+    } else {
+      Object.assign(this, errorObj);
+    }
   }
 }

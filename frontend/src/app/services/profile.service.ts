@@ -1,12 +1,11 @@
-
-import {throwError as observableThrowError,  Observable } from 'rxjs';
-import { of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Headers, RequestOptions } from '@angular/http';
 
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import * as Sentry from '@sentry/browser';
+
+import { ApiError } from '../models/api-error';
 import { environment } from '../../environments/environment';
 import { Profile } from '../models/profile';
 
@@ -14,33 +13,32 @@ import { Profile } from '../models/profile';
   providedIn: 'root'
 })
 export class ProfileService {
-  profileUrl = environment.API_BASE_URL + 'profile/';
+  static readonly PROFILE_ENDPOINT = `${environment.API_BASE_URL}profile/`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  public getProfile(): Observable<Profile>  {
-    return this.http.get(this.profileUrl)
-      .pipe(
-        map((response) => response as Profile),
-        catchError((error: any) => observableThrowError(error))
-      );
+  public getProfile(): Observable<Profile|ApiError>  {
+    return this.httpClient.get(ProfileService.PROFILE_ENDPOINT).pipe(
+      map((response) => new Profile(response)),
+      catchError((error: any) => {
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
 
-  public updateProfile(profile: Profile): Observable<Profile> {
-    return this.http.patch(this.profileUrl, profile)
-      .pipe(
-        map((data: any) => {
-          const updatedProfile = new Profile();
-          for (const propName of Object.keys(data)) {
-            updatedProfile[propName] = data[propName];
-          }
-          return updatedProfile;
-        }),
-        catchError((response: HttpErrorResponse, caught: Observable<any>) => {
-          // TODO: Raise an appropriate error
-          return of(null);  // tslint:disable-line deprecation
-        })
-      );
+  public updateProfile(profile: Profile): Observable<Profile|ApiError> {
+    return this.httpClient.patch(ProfileService.PROFILE_ENDPOINT, profile).pipe(
+      map((response) => new Profile(response)),
+      catchError((error: any) => {
+        if (error.status && error.error) {
+          return of(new ApiError(error.error));
+        }
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
-
 }

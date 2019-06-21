@@ -162,6 +162,15 @@ class InviteAcceptanceSerializer(InviteTokenSerializer):
         email_address.user.groups.remove(Group.objects.get(name="Invited"))
 
 
+class AuthJWTSerializer(serializers.Serializer):
+    """
+    Serializer for JWT authentication.
+    """
+
+    token = serializers.CharField()
+    username = serializers.CharField(source="user.username")
+
+
 class DailyWritingProfileSerializer(serializers.ModelSerializer):
     """
     Daily writing profile serializer combines fields from the DailyWritingProfile and User model.

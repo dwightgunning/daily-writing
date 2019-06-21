@@ -1,9 +1,11 @@
 export class UserLoginCredentials {
+  username?: string;
+  password?: string;
+  token?: string;
 
-  constructor(
-    public username?: string,
-    public password?: string,
-    public token?: string
-  ) {  }
-
+  constructor(obj?: any) {
+    if (obj) {
+      Object.assign(this, obj);
+    }
+  }
 }

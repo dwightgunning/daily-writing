@@ -139,7 +139,7 @@ class TestInviteAcceptanceSerializer(APITestCase):
 
         serializer = InviteAcceptanceSerializer(data=test_data)
         validate_data = serializer.validate(data=test_data)
-        self.assertEquals(validate_data, test_data)
+        self.assertEqual(validate_data, test_data)
 
     def test_validate_username_matching_other_user_model(self):
         other_user = get_adapter().new_user(None)
@@ -161,7 +161,7 @@ class TestInviteAcceptanceSerializer(APITestCase):
         serializer = InviteAcceptanceSerializer(data=test_data)
         with self.assertRaises(ValidationError):
             validate_data = serializer.validate(data=test_data)
-            self.assertEquals(validate_data, test_data)
+            self.assertEqual(validate_data, test_data)
 
     def test_save(self):
         self.test_user.groups.add(Group.objects.get(name="Invited"))

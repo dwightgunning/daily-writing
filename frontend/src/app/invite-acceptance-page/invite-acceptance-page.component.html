@@ -1,27 +1,21 @@
 <ng-template #content>
-  <div class="c" *ngIf="tokenCheckState == TokenCheckStates.InProgress">
-    <div class="i">
-      <div class="spinner">
-        <svg width="41" height="48" viewBox="0 0 641 448">
-          <path fill="currentColor" d="M290.74 93.24l128.02 128.02-277.99 277.99-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.7-114.22 277.9-277.88zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55 128.02 128.02 56.55-56.55c18.75-18.76 18.75-49.16 0-67.91z"></path>
-        </svg>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="tokenCheckState == TokenCheckStates.Complete && !inviteAccepted">
+
+  <app-page-spinner *ngIf="tokenCheckState == TokenCheckStates.InProgress"></app-page-spinner>
+
+  <div id="inviteAcceptanceForm" *ngIf="tokenCheckState == TokenCheckStates.Complete && !inviteAccepted">
     <h2 class="h2">Accept your invite</h2>
     <p>Create an account to continue.</p>
     <app-invite-acceptance-form [(token)]="token" (inviteAccepted)="onInviteAccepted()"></app-invite-acceptance-form>
   </div>
-  <div *ngIf="tokenCheckState == TokenCheckStates.Complete && inviteAccepted">
+
+  <div id="inviteAcceptanceConfirmation" *ngIf="tokenCheckState == TokenCheckStates.Complete && inviteAccepted">
     <h2 class="h2">Account activated</h2>
     <div class="callout success small">Awesome! You're account is activated. You can now login via the form below.</div>
     <app-login-form></app-login-form>
   </div>
-  <div *ngIf="tokenCheckState == TokenCheckStates.Error">
-    <h2 class="h2">That didn't go to plan</h2>
-    <p>Please try again and <a href="mailto:info@daily-writing.com">contact us</a> if the problem persists.</p>
-  </div>
+
+  <app-page-error id="appError" *ngIf="tokenCheckState == TokenCheckStates.Error"></app-page-error>
+
 </ng-template>
 
 <app-centered-content-card-wrapper [centeredRightContentPane]="content"></app-centered-content-card-wrapper>

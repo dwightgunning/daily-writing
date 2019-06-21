@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, of, throwError } from 'rxjs';
@@ -14,7 +14,7 @@ import { InviteRequest } from '../models/invite-request';
   providedIn: 'root'
 })
 export class InviteService {
-  static readonly INVITE_ENDPOINT = environment.API_BASE_URL + 'auth/registration/invite/';
+  static readonly INVITE_ENDPOINT = `${environment.API_BASE_URL}auth/registration/invite/`;
   constructor(private httpClient: HttpClient) { }
 
   createInviteRequest(inviteRequest: InviteRequest): Observable<null|ApiError> {

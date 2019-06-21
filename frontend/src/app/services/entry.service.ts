@@ -1,15 +1,16 @@
 
-import { of,  Observable } from 'rxjs';
-
 import {map, catchError} from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
+import { of,  Observable } from 'rxjs';
+import * as Sentry from '@sentry/browser';
 
-import { environment } from '../../environments/environment';
 import { ApiDataPage } from '../models/api-data-page';
+import { ApiError } from '../models/api-error';
 import { Entry } from '../models/entry';
+import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from './auth.service';
 
@@ -17,93 +18,81 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class EntryService {
-  private entryBaseUrl = environment.API_BASE_URL + 'entries/';
+  static readonly ENTRY_ENDPOINT = `${environment.API_BASE_URL}entries/`;
   private user: UserLoginCredentials;
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private httpClient: HttpClient) {
 
     this.authService.getUserLoginCredentials().subscribe(
       (userLoginCredentials) => this.user = userLoginCredentials
     );
   }
 
-  public getOrCreateEntry(): Observable<Entry>  {
-    const entryDate: string =  moment().utc().format('YYYY-MM-DD');
+  public getOrCreateEntry(): Observable<Entry|ApiError>  {
+    const entryDate: string = moment().utc().format('YYYY-MM-DD');
 
-    return this.http.get(this.entryBaseUrl + this.user.username + '/' + entryDate + '/').pipe(
-      map((data: object) => {
-        const entry = new Entry();
-        for (const propName of Object.keys(data)) {
-          entry[propName] = data[propName];
+    return this.httpClient.get(`${EntryService.ENTRY_ENDPOINT}${this.user.username}/${entryDate}/`).pipe(
+      map((response) => new Entry(response)),
+      catchError((error: any) => {
+        if (error.status === 404) {
+          const newEntry = new Entry({ author: this.user.username, entryDate });
+          return this.httpClient.post(EntryService.ENTRY_ENDPOINT, newEntry).pipe(
+            map((response) => new Entry(response)),
+            catchError((newEntryError: any) => {
+              // Log the unexpected backend error and return a generic, reliable message to the user.
+              Sentry.captureException(newEntryError);
+              return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+            })
+          );
+        } else {
+          // Log the unexpected backend error and return a generic, reliable message to the user.
+          Sentry.captureException(error);
+          return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
         }
-
-        return entry;
-      }),
-      catchError((getEntryErrorResponse: HttpErrorResponse, getEntryCaught: Observable<any>) => {
-          if (getEntryErrorResponse.status === 404) {
-            return this.http.post(this.entryBaseUrl,
-            {
-              author: this.user.username,
-              entryDate,
-              words: '' // TODO: Fix backend error when not provided; shouldn't be mandatory
-            }).pipe(map((data: object) => {
-              const entry = new Entry();
-              for (const propName of Object.keys(data)) { // TODO: Flip so that the local Class properties are keyed
-                entry[propName] = data[propName];
-                // TODO: Unit Test that date fields are parsed assuming current timezone is UTC.
-              }
-              return entry;
-            }),
-            catchError((createEntryErrorResponse: HttpErrorResponse, createEntryCaught: Observable<any>) => {
-              // TODO: Raise an appropriate error
-              return of(null);  // tslint:disable-line deprecation
-            }), );
-          } else {
-            // TODO: Raise an appropriate error
-            return of(null);  // tslint:disable-line deprecation
-          }
-        }), );
+      })
+    );
   }
 
-  public getEntry(entryDate: string): Observable<Entry> {
-    const entryUrl = this.entryBaseUrl + this.user.username + '/' + entryDate + '/';
-
-    return this.http.get(entryUrl).pipe(
-      map((data: any) => {
-        const entry = new Entry();
-        for (const propName of Object.keys(data)) {
-          entry[propName] = data[propName];
-        }
-        return entry;
-      }));
+  public getEntry(entryDate: string): Observable<Entry|ApiError> {
+    return this.httpClient.get(`${EntryService.ENTRY_ENDPOINT}${this.user.username}/${entryDate}/`).pipe(
+      map((response) => new Entry(response)),
+      catchError((error: any) => {
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
 
-  public updateEntry(entry: Entry): Observable<Entry> {
-    const entryUrl = this.entryBaseUrl + this.user.username + '/' + entry.entryDate + '/';
-
-    return this.http.patch(entryUrl, entry).pipe(
-      map((data: any) => {
-        const updatedEntry = new Entry();
-        for (const propName of Object.keys(data)) {
-          updatedEntry[propName] = data[propName];
+  public updateEntry(entry: Entry): Observable<Entry|ApiError> {
+    return this.httpClient.patch(`${EntryService.ENTRY_ENDPOINT}${this.user.username}/${entry.entryDate}/`, entry).pipe(
+      map((response) => new Entry(response)),
+      catchError((error: any) => {
+        if (error.status && error.error) {
+          return of(new ApiError(error.error));
         }
-        return updatedEntry;
-      }),
-      catchError((response: HttpErrorResponse, caught: Observable<any>) => {
-          // TODO: Raise an appropriate error
-          return of(null);  // tslint:disable-line deprecation
-      }), );
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
 
-  public listEntries(entriesUrl?: string): Observable<ApiDataPage> {
+  public listEntries(entriesUrl?: string): Observable<ApiDataPage|ApiError> {
+    // TODO: Better encapsulate paging URLs
     if (!entriesUrl) {
-      entriesUrl = this.entryBaseUrl + this.user.username + '/';
+      entriesUrl = `${EntryService.ENTRY_ENDPOINT}${this.user.username}/`;
     }
 
-    return this.http.get(entriesUrl).pipe(map(
-      entryList => new ApiDataPage(entryList)
-    ));
+    return this.httpClient.get(entriesUrl).pipe(
+      map((entryList) => new ApiDataPage(entryList)),
+      catchError((error: any) => {
+        // Log the unexpected backend error and return a generic, reliable message to the user.
+        Sentry.captureException(error);
+        return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
+      })
+    );
   }
 }
