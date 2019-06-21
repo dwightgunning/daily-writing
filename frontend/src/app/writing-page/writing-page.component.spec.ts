@@ -32,9 +32,4 @@ describe('WritingPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the title "Writing"', () => {
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Writing');
-  });
-
 });
