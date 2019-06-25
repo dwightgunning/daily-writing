@@ -3,6 +3,6 @@
 .words {
   @include words-textarea;
   background-color: $white;
+  border-bottom-width: 1px;
   cursor: default;
 }
-
