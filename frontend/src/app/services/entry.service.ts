@@ -14,6 +14,14 @@ import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from './auth.service';
 
+
+export enum EntryServiceActionState {
+  NotStarted,
+  InProgress,
+  Complete,
+  Error
+}
+
 @Injectable({
   providedIn: 'root'
 })

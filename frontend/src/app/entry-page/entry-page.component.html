@@ -1,0 +1,14 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="medium-12 cell">
+      <app-page-spinner id="page-loading" *ngIf="(getOrCreateEntryStateSubj | async) < EntryServiceActionState.Complete"></app-page-spinner>
+
+      <div id="entry-area" class="entry-area" *ngIf="(getOrCreateEntryStateSubj | async) == EntryServiceActionState.Complete">
+        <app-entry-form [(entryObs)]="entrySubj" (entryUpdated)="onEntryUpdated($event)"></app-entry-form>
+        <app-entry-drawer [(entryObs)]="entrySubj" [(updateEntryStateObs)]="updateEntryState"></app-entry-drawer>
+      </div>
+
+      <app-page-error id="page-error" *ngIf="(getOrCreateEntryStateSubj | async) == EntryServiceActionState.Error"></app-page-error>
+    </div>
+  </div>
+</div>

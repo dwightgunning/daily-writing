@@ -1,0 +1,5 @@
+@import 'node_modules/foundation-sites/scss/foundation';
+
+.entry-area {
+  @include shadow;
+}

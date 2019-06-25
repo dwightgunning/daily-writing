@@ -10,7 +10,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { ReviewPageComponent } from './review-page/review-page.component';
 import { SignupPageComponent } from './signup-page/signup-page.component';
-import { WritingPageComponent } from './writing-page/writing-page.component';
+import { EntryPageComponent } from './entry-page/entry-page.component';
 
 const routes: Routes = [
   {
@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: 'write',
     canActivate: [AuthGuard],
-    component: WritingPageComponent,
+    component: EntryPageComponent,
   },
   {
     path: 'profile',

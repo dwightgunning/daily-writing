@@ -81,6 +81,11 @@
         "allowProperties": true
       }]
     },
-    "rxjs-throw-error": true
+    "rxjs-throw-error": true,
+    "variable-name": {
+      "options": [
+        "allow-leading-underscore"
+      ]
+    }
   }
 }

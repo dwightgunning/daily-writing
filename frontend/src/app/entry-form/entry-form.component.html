@@ -1,16 +1,5 @@
-<app-page-spinner id="inProgressSpinner" *ngIf="getOrCreateEntryState == EntryServiceActionState.InProgress"></app-page-spinner>
-
-<div id="entryForm" *ngIf="getOrCreateEntryState == EntryServiceActionState.Complete">
+<div id="entryForm">
   <form>
     <textarea id="words" type="text" [formControl]="wordsFormControl"></textarea>
   </form>
-  <div>
-    Date: {{ entry.entryDate | amLocal | amDateFormat: 'YYYY-MM-DD' }}.
-    <span id="updateInProgressSpinner" *ngIf="updateEntryState == EntryServiceActionState.InProgress"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Saving</span>
-  </div>
-  <div id="wordCount">Word count: {{ entry.countWords() }}</div>
-  <div id="finishTime" *ngIf="entry.finishTime">Last saved: {{ lastSavedLocalString() }} {{ entry.entryTimezone }}</div>
-  <div id="milestoneTime" *ngIf="entry.milestoneTime">Milestone reached at: {{ milestoneTimeLocalString() }} {{ entry.entryTimezone }}</div>
 </div>
-
-<app-page-error id="appError" *ngIf="getOrCreateEntryState == EntryServiceActionState.Error"></app-page-error>

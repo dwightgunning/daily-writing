@@ -1,0 +1,15 @@
+<div id="entry-drawer" *ngIf="(entryObs | async) as entry" class="accordion" data-accordion data-allow-all-closed="true">
+  <div class="accordion-item" data-accordion-item>
+    <a class="accordion-title"></a>
+    <div class="accordion-content" data-tab-content>
+      <div id="word-count">
+        Words: {{ entry.countWords() }} / {{ entry.milestoneWordCount }}
+      </div>
+      <div id="milestone-time" *ngIf="entry.milestoneTime">
+        Milestone reached: {{ entry.milestoneTimeLocalString() }} {{ entry.entryTimezone }}</div>
+      <div id="modified-date" *ngIf="entry.modifiedDate">
+        Last saved: {{ entry.lastSavedLocalString() }} {{ entry.entryTimezone }}<span id="updateInProgressSpinner" *ngIf="(updateEntryStateObs | async) == EntryServiceActionState.InProgress"> <i class="fa fa-spinner fa-spin" aria-hidden="true"></i></span>
+      </div>
+    </div>
+  </div>
+</div>

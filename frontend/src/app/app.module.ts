@@ -30,7 +30,8 @@ import { ReviewPageComponent } from './review-page/review-page.component';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { TimezonePickerModule } from './timezone-picker/timezone-picker.module';
 import { TopNavBarComponent } from './top-nav-bar/top-nav-bar.component';
-import { WritingPageComponent } from './writing-page/writing-page.component';
+import { EntryPageComponent } from './entry-page/entry-page.component';
+import { EntryDrawerComponent } from './entry-drawer/entry-drawer.component';
 
 sentryInit({
   dsn: environment.SENTRY_DSN_PUBLIC
@@ -57,7 +58,8 @@ sentryInit({
     ReviewPageComponent,
     SignupPageComponent,
     TopNavBarComponent,
-    WritingPageComponent
+    EntryPageComponent,
+    EntryDrawerComponent
   ],
   imports: [
     AppRoutingModule,
