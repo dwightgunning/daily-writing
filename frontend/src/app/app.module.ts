@@ -13,7 +13,6 @@ import { AuthHeaderInterceptor } from './auth-header.interceptor';
 import { CenteredContentCardWrapperComponent } from './centered-content-card-wrapper/centered-content-card-wrapper.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { EntryListComponent } from './entry-list/entry-list.component';
-import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
 import { environment } from '../environments/environment';
 import { HomePageComponent } from './home-page/home-page.component';
 import { InviteAcceptanceFormComponent } from './invite-acceptance-form/invite-acceptance-form.component';
@@ -43,7 +42,6 @@ sentryInit({
     CenteredContentCardWrapperComponent,
     EntryFormComponent,
     EntryListComponent,
-    EntryReviewPageComponent,
     HomePageComponent,
     InviteRequestFormComponent,
     InviteAcceptancePageComponent,

@@ -13,6 +13,7 @@ import { Entry } from '../models/entry';
 })
 export class EntryFormComponent implements OnInit, OnDestroy {
   private entry: Entry;
+  @Input() formDisabled: Observable<boolean>;
   @Input() entryObs: Observable<Entry>;
   @Output() entryUpdated: EventEmitter<Entry> = new EventEmitter<Entry>();
   wordsFormControl = new FormControl('');

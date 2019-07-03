@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomePageComponent } from './home-page/home-page.component';
 import { InviteAcceptancePageComponent } from './invite-acceptance-page/invite-acceptance-page.component';
@@ -53,7 +52,8 @@ const routes: Routes = [
       },
       {
         path: 'entry/:entryDate',
-        component: EntryReviewPageComponent
+        component: EntryPageComponent,
+        data: { mode: 'review' }
       }
     ]
   },

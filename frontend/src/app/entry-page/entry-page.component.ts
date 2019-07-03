@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
 import { BehaviorSubject, interval, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
@@ -15,36 +16,60 @@ import { EntryService, EntryServiceActionState } from '../services/entry.service
   styleUrls: ['./entry-page.component.scss']
 })
 export class EntryPageComponent implements OnInit, OnDestroy {
+  displayTitle: boolean;
+  entryFormDisabled: boolean;
   EntryServiceActionState: typeof EntryServiceActionState = EntryServiceActionState;
-  getOrCreateEntryStateSubj = new BehaviorSubject<EntryServiceActionState>(EntryServiceActionState.NotStarted);
+  initEntryStateSubj = new BehaviorSubject<EntryServiceActionState>(EntryServiceActionState.NotStarted);
   updateEntryStateSubj = new BehaviorSubject<EntryServiceActionState>(EntryServiceActionState.NotStarted);
   private entry: Entry;
+  mode: string;
   entrySubj = new ReplaySubject<Entry>(1);
   entryUpdateUnsubscribeNotifier = new Subject<boolean>();
   errors: ApiError;
 
-  constructor(private entryService: EntryService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private entryService: EntryService) { }
 
   ngOnInit() {
-    this.getOrCreateEntryStateSubj.next(EntryServiceActionState.InProgress);
-    this.entryService.getOrCreateEntry().subscribe(
-      (result: Entry|ApiError) => {
+    this.mode = this.activatedRoute.snapshot.data.mode || 'write';
+    this.displayTitle = this.entryFormDisabled = this.mode === 'review';
+    this.initEntryStateSubj.next(EntryServiceActionState.InProgress);
+    if (this.mode === 'write') {
+      this.entryService.getOrCreateEntry().subscribe(
+        (result: Entry|ApiError) => {
+          if (result instanceof Entry) {
+            this.entry = Object.assign(new Entry(), result);
+            this.entrySubj.next(result);
+            this.createEntryChangeHandler();
+            this.initEntryStateSubj.next(EntryServiceActionState.Complete);
+          } else {
+            this.initEntryStateSubj.next(EntryServiceActionState.Error);
+            this.errors = result;
+          }
+        });
+    } else {
+      this.activatedRoute.params.pipe(
+        switchMap((params: Params) => this.entryService.getEntry(params.entryDate))
+      ).subscribe((result: Entry|ApiError) => {
         if (result instanceof Entry) {
           this.entry = Object.assign(new Entry(), result);
           this.entrySubj.next(result);
-          this.createEntryChangeHandler();
-          this.getOrCreateEntryStateSubj.next(EntryServiceActionState.Complete);
+          this.initEntryStateSubj.next(EntryServiceActionState.Complete);
         } else {
-          this.getOrCreateEntryStateSubj.next(EntryServiceActionState.Error);
+          this.initEntryStateSubj.next(EntryServiceActionState.Error);
           this.errors = result;
         }
       });
+    }
   }
 
   ngOnDestroy() {
     this.entryUpdateUnsubscribeNotifier.next(true);
     this.entryUpdateUnsubscribeNotifier.complete();
-    this.attemptLastEntryUpdate();
+    if (this.mode === 'write') {
+      this.attemptLastEntryUpdate();
+    }
   }
 
   onEntryUpdated(entry: Entry) {

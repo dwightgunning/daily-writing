@@ -1,5 +1,5 @@
 <div id="entryForm">
   <form>
-    <textarea id="words" type="text" [formControl]="wordsFormControl"></textarea>
+    <textarea id="words" type="text" [formControl]="wordsFormControl" [attr.disabled]="formDisabled ? '' : null"></textarea>
   </form>
 </div>
