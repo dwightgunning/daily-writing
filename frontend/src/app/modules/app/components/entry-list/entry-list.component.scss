@@ -1,0 +1,11 @@
+@import '../../../../../assets/foundation-sites/settings';
+@import '~foundation-sites/scss/foundation';
+
+.list-paging-button-group {
+  @include button-group('.button', 20px);
+  margin-bottom: 0;
+  margin-top: 20px;
+  @include breakpoint(medium) {
+    margin-top: 40px;
+  }
+}
