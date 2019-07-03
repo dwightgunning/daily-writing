@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
 import { BehaviorSubject, interval, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { sample, takeUntil } from 'rxjs/operators';
+import { filter, sample, takeUntil, tap, switchMap } from 'rxjs/operators';
 import * as Sentry from '@sentry/browser';
 
 import { ApiError } from '../models/api-error';
@@ -53,41 +53,46 @@ export class EntryPageComponent implements OnInit, OnDestroy {
 
   private createEntryChangeHandler() {
     this.entrySubj
-      .pipe(takeUntil(this.entryUpdateUnsubscribeNotifier))
-      .pipe(sample(interval(5000))) // Update with a 5-sec sampling interval
-      .subscribe(entry => {
-        if (this.entry.words !== entry.words) {
-          this.updateEntryStateSubj.next(EntryServiceActionState.InProgress);
-          this.entryService.updateEntry(entry).subscribe((result: Entry|ApiError) => {
-            if (result instanceof Entry) {
-              this.updateEntryStateSubj.next(EntryServiceActionState.Complete);
-              Object.assign(this.entry, result);
-              this.entrySubj.next(result);
-            } else {
-              this.updateEntryStateSubj.next(EntryServiceActionState.Error);
-              this.errors = result;
-            }
-          });
+      .pipe(
+        takeUntil(this.entryUpdateUnsubscribeNotifier),
+        sample(interval(5000)),
+        // TODO: Refactor such that subscription doesn't rely on external scope
+        filter(entry => this.entry.words !== entry.words), // tslint:disable-line rxjs-no-unsafe-scope
+        tap(() => this.updateEntryStateSubj.next(EntryServiceActionState.InProgress)),
+        switchMap(entry => this.entryService.updateEntry(entry))
+      ).subscribe((result: Entry|ApiError) => {
+        if (result instanceof Entry) {
+          this.updateEntryStateSubj.next(EntryServiceActionState.Complete);
+          Object.assign(this.entry, result);
+          this.entrySubj.next(result);
+        } else {
+          this.updateEntryStateSubj.next(EntryServiceActionState.Error);
+          this.errors = result;
         }
       });
   }
 
   private attemptLastEntryUpdate() {
+    let entryToUpdate: Entry; // TODO: Refactor such that subscription doesn't rely on external scope
     this.updateEntryStateSubj.next(EntryServiceActionState.InProgress);
-    this.entrySubj.subscribe((entry) => {
-      this.entryService.updateEntry(entry).subscribe((result: Entry|ApiError) => {
-        if (result instanceof Entry) {
-          this.updateEntryStateSubj.next(EntryServiceActionState.Complete);
-        } else {
-          this.updateEntryStateSubj.next(EntryServiceActionState.Error);
-          Sentry.withScope((scope) => {
-            scope.setExtra('entry date', entry.entryDate);
-            scope.setExtra('entry finish time', entry.finishTime);
-            Sentry.captureException(result);
-          });
-          this.errors = result;
-        }
-      });
+    this.entrySubj.pipe(
+      filter(entry => this.entry.words !== entry.words), // tslint:disable-line rxjs-no-unsafe-scope
+      switchMap(entry => {
+        entryToUpdate = entry; // tslint:disable-line rxjs-no-unsafe-scope
+        return this.entryService.updateEntry(entry);
+      })
+    ).subscribe((result: Entry|ApiError) => {
+      if (result instanceof Entry) {
+        this.updateEntryStateSubj.next(EntryServiceActionState.Complete);
+      } else {
+        this.updateEntryStateSubj.next(EntryServiceActionState.Error);
+        Sentry.withScope((scope) => {
+          scope.setExtra('entry date', entryToUpdate.entryDate);
+          scope.setExtra('entry finish time', entryToUpdate.finishTime);
+          Sentry.captureException(result);
+        });
+        this.errors = result;
+      }
     });
   }
 }

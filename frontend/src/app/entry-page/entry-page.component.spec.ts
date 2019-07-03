@@ -139,6 +139,7 @@ describe('EntryPageComponent', () => {
       expect(component.updateEntryStateSubj.getValue()).toBe(EntryServiceActionState.NotStarted);
       expect(component.entryUpdateUnsubscribeNotifier.isStopped).toBe(false);
 
+      component.onEntryUpdated(new Entry({words: 'test entry words'}));
       component.ngOnDestroy();
 
       fixture.detectChanges();
@@ -161,6 +162,7 @@ describe('EntryPageComponent', () => {
       expect(component.updateEntryStateSubj.getValue()).toBe(EntryServiceActionState.NotStarted);
       expect(component.entryUpdateUnsubscribeNotifier.isStopped).toBe(false);
 
+      component.onEntryUpdated(new Entry({words: 'test entry words'}));
       component.ngOnDestroy();
 
       deferredUpdateEntryResult.next(apiError);
