@@ -17,15 +17,16 @@ export class AuthService {
   static readonly LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
   static readonly USER_ENDPOINT = `${environment.API_BASE_URL}auth/user/`;
 
+  browserStorage = window.localStorage;
   userLoginCredentialsSubject = new ReplaySubject<UserLoginCredentials>(1);
 
   constructor(private httpClient: HttpClient) {
     let storedCredentialData: string;
     let userLoginCredentials: UserLoginCredentials;
     try {
-      storedCredentialData = localStorage.getItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      storedCredentialData = this.browserStorage.getItem(AuthService.LOGIN_CREDENTIALS_KEY);
     } catch (error) {
-      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
       Sentry.captureException(error);
     }
     if (!storedCredentialData) {
@@ -36,14 +37,14 @@ export class AuthService {
     try {
       userLoginCredentials = new UserLoginCredentials(JSON.parse(storedCredentialData));
     } catch (error) {
-      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
       this.userLoginCredentialsSubject.next(null);
       Sentry.captureException(error);
       return;
     }
 
     if (!userLoginCredentials || !(userLoginCredentials.username && userLoginCredentials.token)) {
-      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
       this.userLoginCredentialsSubject.next(null);
       Sentry.captureException('Malformed user credentials in local storage');
       return;
@@ -51,21 +52,22 @@ export class AuthService {
 
     // Check the stored credentials are still valid
     this.httpClient.get(AuthService.USER_ENDPOINT).pipe(
-    map((response) => userLoginCredentials as UserLoginCredentials),
+    map((response) => true),
+    // map((response) => new UserLoginCredentials(userLoginCredentials)), // as UserLoginCredentials),
     catchError((error) => {
       // Log the unexpected backend error and return a generic, reliable message to the user.
       if (!error.status || error.status >= 500) {
         Sentry.captureException(error);
       }
       return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
-    })).subscribe((authenticatedToken: UserLoginCredentials|ApiError) => {
-      if (authenticatedToken instanceof UserLoginCredentials) {
+    })).subscribe((authenticated: boolean|ApiError) => {
+      if (!(authenticated instanceof ApiError)) {
         this.userLoginCredentialsSubject.next(userLoginCredentials);
         Sentry.configureScope((scope) => {
           scope.setUser({username: userLoginCredentials.username});
         });
       } else {
-        localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+        this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
         this.userLoginCredentialsSubject.next(null);
       }
     });
@@ -76,7 +78,7 @@ export class AuthService {
       map((response) => {
         const userLoginCredentials = new UserLoginCredentials(response);
         try {
-          localStorage.setItem(
+          this.browserStorage.setItem(
             AuthService.LOGIN_CREDENTIALS_KEY,
             JSON.stringify(userLoginCredentials));
         } catch (error) {
@@ -103,7 +105,7 @@ export class AuthService {
 
   public logout(): void {
     try {
-      localStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
+      this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
     } catch (error) {
         Sentry.captureException(error);
     }

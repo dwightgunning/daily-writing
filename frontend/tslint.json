@@ -1,5 +1,8 @@
 {
-  "extends": "tslint:recommended",
+  "extends": [
+    "tslint:recommended",
+    "rxjs-tslint-rules"
+  ],
   "rulesDirectory": [
     "codelyzer"
   ],
@@ -70,6 +73,14 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "directive-class-suffix": true,
+    "rxjs-no-subject-unsubscribe": true,
+    "rxjs-no-unsafe-scope": {
+      "options": [{
+        "allowMethods": true,
+        "allowProperties": true
+      }]
+    },
+    "rxjs-throw-error": true
   }
 }
