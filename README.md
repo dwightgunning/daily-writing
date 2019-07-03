@@ -60,7 +60,7 @@ Now navigate to `http://localhost:8000/api/`.
 
 ### Angular.io - Frontend Development with Angular CLI
 
-This frontend for this project is developed with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
+This frontend for this project is developed with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.6 and Node.js 12.4.0.
 
 #### Further help
 
@@ -68,7 +68,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### Django - Backend API Development
 
-The backend API for this project is developed with [Django](https://www.djangoproject.com) version 2.2.1.
+The backend API for this project is developed with [Django](https://www.djangoproject.com) version 2.2.3.
 
 #### Further help
 
