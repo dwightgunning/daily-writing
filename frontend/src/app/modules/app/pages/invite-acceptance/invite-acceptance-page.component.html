@@ -1,0 +1,21 @@
+<ng-template #content>
+
+  <app-page-spinner *ngIf="tokenCheckState == TokenCheckStates.InProgress"></app-page-spinner>
+
+  <div id="inviteAcceptanceForm" *ngIf="tokenCheckState == TokenCheckStates.Complete && !inviteAccepted">
+    <h2 class="h2">Accept your invite</h2>
+    <p>Create an account to continue.</p>
+    <app-invite-acceptance-form [(token)]="token" (inviteAccepted)="onInviteAccepted()"></app-invite-acceptance-form>
+  </div>
+
+  <div id="inviteAcceptanceConfirmation" *ngIf="tokenCheckState == TokenCheckStates.Complete && inviteAccepted">
+    <h2 class="h2">Account activated</h2>
+    <div class="callout success small">Awesome! You're account is activated. You can now login via the form below.</div>
+    <app-login-form></app-login-form>
+  </div>
+
+  <app-page-error id="appError" *ngIf="tokenCheckState == TokenCheckStates.Error"></app-page-error>
+
+</ng-template>
+
+<app-centered-card [centeredRightContentPane]="content"></app-centered-card>

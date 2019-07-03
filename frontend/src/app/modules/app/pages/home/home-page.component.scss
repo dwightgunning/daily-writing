@@ -1,0 +1,109 @@
+@import '../../../../../assets/foundation-sites/settings';
+@import '~foundation-sites/scss/foundation';
+
+$small-background-linear-gradient-step1: rgba(255, 255, 255, 0);
+$small-background-linear-gradient-step2: rgba(255, 255, 255, 0.2);
+$small-background-linear-gradient-step3: rgba(255, 255, 255, 0.7);
+$small-background-linear-gradient-step4: rgba(255, 255, 255, 1);
+
+$medium-background-radial-gradient-step1: rgba(255, 255, 255, 0);
+$medium-background-radial-gradient-step2: rgba(255, 255, 255, 0);
+$medium-background-radial-gradient-step3: rgba(255, 255, 255, 0.1);
+$medium-background-radial-gradient-step4: rgba(255, 255, 255, 1);
+
+$medium-background-linear-gradient-step1: rgba(255, 255, 255, 1);
+$medium-background-linear-gradient-step2: rgba(255, 255, 255, .8);
+$medium-background-linear-gradient-step3: rgba(255, 255, 255, .7);
+$medium-background-linear-gradient-step4: rgba(255, 255, 255, 0);
+
+.grid-container {
+  &::before {
+    background:
+    linear-gradient(
+      0deg,
+      $small-background-linear-gradient-step1 10%,
+      $small-background-linear-gradient-step2 40%,
+      $small-background-linear-gradient-step3 80%,
+      $small-background-linear-gradient-step4 95%
+    ),
+    url('/assets/images/background-pebbles.jpg') no-repeat center center;
+    bottom: 0%;
+    content: '';
+    height: 50%;
+    left: 0%;
+    opacity: 0.5;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+    @include breakpoint(medium) {
+      background:
+      radial-gradient(
+        at top right,
+        $medium-background-radial-gradient-step1 0%,
+        $medium-background-radial-gradient-step2 33%,
+        $medium-background-radial-gradient-step3 70%,
+        $medium-background-radial-gradient-step4 80%
+        ),
+      linear-gradient(
+        90deg,
+        $medium-background-linear-gradient-step1,
+        $medium-background-linear-gradient-step2,
+        $medium-background-linear-gradient-step3,
+        $medium-background-linear-gradient-step4
+        ),
+      linear-gradient(
+        0deg,
+        $medium-background-linear-gradient-step1 5%,
+        $medium-background-linear-gradient-step2 10%,
+        $medium-background-linear-gradient-step3 50%,
+        $medium-background-linear-gradient-step4 90%
+        ),
+      url('/assets/images/background-pebbles.jpg') no-repeat center center;
+      height: 80%;
+      opacity: 0.5;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: -1;
+    }
+  }
+}
+
+.hero-cta {
+  margin-top: 60px;
+  @include breakpoint(medium) {
+    margin-top: 120px;
+  }
+}
+
+.lead {
+  color: $dark-gray;
+  font-size: 14px;
+  line-height: 22px;
+  margin-top: 32px;
+  @include breakpoint(medium) {
+    margin-top: 64px;
+  }
+}
+
+.action-button-group {
+  @include button-group('.button', 20px);
+  margin-bottom: 0;
+  margin-top: 20px;
+  @include breakpoint(medium) {
+    margin-top: 40px;
+  }
+
+  .button {
+    font-weight: 600;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    @include breakpoint(medium) {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+}
