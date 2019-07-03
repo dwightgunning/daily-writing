@@ -13,7 +13,6 @@ import { AuthHeaderInterceptor } from './auth-header.interceptor';
 import { CenteredContentCardWrapperComponent } from './centered-content-card-wrapper/centered-content-card-wrapper.component';
 import { EntryFormComponent } from './entry-form/entry-form.component';
 import { EntryListComponent } from './entry-list/entry-list.component';
-import { EntryReviewPageComponent } from './entry-review-page/entry-review-page.component';
 import { environment } from '../environments/environment';
 import { HomePageComponent } from './home-page/home-page.component';
 import { InviteAcceptanceFormComponent } from './invite-acceptance-form/invite-acceptance-form.component';
@@ -30,7 +29,8 @@ import { ReviewPageComponent } from './review-page/review-page.component';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { TimezonePickerModule } from './timezone-picker/timezone-picker.module';
 import { TopNavBarComponent } from './top-nav-bar/top-nav-bar.component';
-import { WritingPageComponent } from './writing-page/writing-page.component';
+import { EntryPageComponent } from './entry-page/entry-page.component';
+import { EntryDrawerComponent } from './entry-drawer/entry-drawer.component';
 
 sentryInit({
   dsn: environment.SENTRY_DSN_PUBLIC
@@ -42,7 +42,6 @@ sentryInit({
     CenteredContentCardWrapperComponent,
     EntryFormComponent,
     EntryListComponent,
-    EntryReviewPageComponent,
     HomePageComponent,
     InviteRequestFormComponent,
     InviteAcceptancePageComponent,
@@ -57,7 +56,8 @@ sentryInit({
     ReviewPageComponent,
     SignupPageComponent,
     TopNavBarComponent,
-    WritingPageComponent
+    EntryPageComponent,
+    EntryDrawerComponent
   ],
   imports: [
     AppRoutingModule,

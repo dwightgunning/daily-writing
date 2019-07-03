@@ -74,13 +74,14 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
+    "rxjs-no-nested-subscribe": true,
     "rxjs-no-subject-unsubscribe": true,
-    "rxjs-no-unsafe-scope": {
-      "options": [{
-        "allowMethods": true,
-        "allowProperties": true
-      }]
-    },
-    "rxjs-throw-error": true
+    "rxjs-no-unsafe-scope": true,
+    "rxjs-throw-error": true,
+    "variable-name": {
+      "options": [
+        "allow-leading-underscore"
+      ]
+    }
   }
 }

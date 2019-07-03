@@ -32,7 +32,7 @@
 @include foundation-tooltip;
 
 // Containers
-// @include foundation-accordion;
+@include foundation-accordion;
 // @include foundation-media-object;
 // @include foundation-orbit;
 // @include foundation-responsive-embed;
@@ -42,7 +42,7 @@
 // Menu-based containers
 @include foundation-menu;
 @include foundation-menu-icon;
-// @include foundation-accordion-menu;
+@include foundation-accordion-menu;
 // @include foundation-drilldown-menu;
 @include foundation-dropdown-menu;
 

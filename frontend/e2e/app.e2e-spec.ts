@@ -1,10 +1,10 @@
-import { DailyWritingPage } from './app.po';
+import { DailyEntryPage } from './app.po';
 
-describe('DailyWritingPage App', () => {
-  let page: DailyWritingPage;
+describe('DailyEntryPage App', () => {
+  let page: DailyEntryPage;
 
   beforeEach(() => {
-    page = new DailyWritingPage();
+    page = new DailyEntryPage();
   });
 
   it('should display welcome message', () => {

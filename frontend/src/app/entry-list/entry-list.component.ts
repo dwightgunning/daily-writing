@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import * as moment from 'moment';
+import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022.min';
 
 import { ApiDataPage } from '../models/api-data-page';
 import { Entry } from '../models/entry';

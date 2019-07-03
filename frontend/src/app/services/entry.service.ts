@@ -14,6 +14,14 @@ import { environment } from '../../environments/environment';
 import { UserLoginCredentials } from '../models/user-login-credentials';
 import { AuthService } from './auth.service';
 
+
+export enum EntryServiceActionState {
+  NotStarted,
+  InProgress,
+  Complete,
+  Error
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,7 +45,8 @@ export class EntryService {
       map((response) => new Entry(response)),
       catchError((error: any) => {
         if (error.status === 404) {
-          const newEntry = new Entry({ author: this.user.username, entryDate });
+          // TODO: Refactor such that subscription doesn't rely on external scope
+          const newEntry = new Entry({ author: this.user.username, entryDate }); // tslint:disable-line rxjs-no-unsafe-scope
           return this.httpClient.post(EntryService.ENTRY_ENDPOINT, newEntry).pipe(
             map((response) => new Entry(response)),
             catchError((newEntryError: any) => {
