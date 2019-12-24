@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "raven.contrib.django.raven_compat",
     "rest_framework",
-    "rest_framework.authtoken",
+    # "rest_framework.authtoken",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",

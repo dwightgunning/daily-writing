@@ -5,7 +5,7 @@ from api.exceptions import UnprocessibleError
 from api.validators import UniqueTogetherProcessableValidator
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from entries.models import Entry
 from rest_framework import serializers
 from users.serializers import TimezoneField
