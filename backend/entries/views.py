@@ -1,4 +1,3 @@
-from api.permissions import IsOwnerByUsername
 from entries.models import Entry
 from entries.permissions import IsEntryAuthor
 from entries.serializers import EntrySerializer
@@ -19,11 +18,9 @@ class EntryViewSet(viewsets.ModelViewSet):
         - Other actions: all the above
         """
         if self.action == "create":
-            permission_classes = [IsAuthenticated, IsEntryAuthor]
-        elif self.action == "list":
-            permission_classes = [IsAuthenticated, IsOwnerByUsername]
+            permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [IsAuthenticated, IsOwnerByUsername, IsEntryAuthor]
+            permission_classes = [IsAuthenticated, IsEntryAuthor]
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):

@@ -1,7 +1,7 @@
 <div id="title-bar-responsive" class="title-bar" data-responsive-toggle="responsive-top-bar" data-hide-for="medium">
   <div id="title-bar-logo" class="title-bar-title">
     <h1>
-      <a [routerLink]="(userLoginCredentials | async) ? '/write' : '/'">
+      <a [routerLink]="(userTokens | async) ? '/write' : '/'">
         <img src="/assets/images/logo.png" title="Daily Writing">
       </a>
     </h1>
@@ -16,7 +16,7 @@
     <ul id="left-menu-bar-logo" class="dropdown menu" data-dropdown-menu>
       <li class="menu-text">
         <h1>
-          <a [routerLink]="(userLoginCredentials | async) ? '/write' : '/'">
+          <a [routerLink]="(userTokens | async) ? '/write' : '/'">
             <img src="/assets/images/logo.png" title="Daily Writing">
           </a>
         </h1>
@@ -24,13 +24,14 @@
     </ul>
   </div>
   <div class="top-bar-right">
-    <ul id="right-nav-menu"  class="dropdown menu" data-dropdown-menu *ngIf="(userLoginCredentials | async)">
+    <ul id="right-nav-menu"  class="dropdown menu" data-dropdown-menu *ngIf="(userTokens | async)">
       <li><a class="hvr-line" [routerLink]="'/write'" routerLinkActive="active-link">Write</a></li>
       <li><a class="hvr-line" [routerLink]="'/review'" routerLinkActive="active-link">Review</a></li>
       <li><a class="hvr-line" [routerLink]="'/profile'" routerLinkActive="active-link">Profile</a></li>
       <li><a class="hvr-line" [routerLink]="'/logout'" routerLinkActive="active-link">Logout</a></li>
     </ul>
-    <ul id="right-nav-menu"  class="dropdown menu" data-dropdown-menu *ngIf="!(userLoginCredentials | async)">
+    <ul id="right-nav-menu"  class="dropdown menu" data-dropdown-menu *ngIf="!(userTokens
+ | async)">
       <li><a class="hvr-line" [routerLink]="'/login'" routerLinkActive="active-link">Login</a></li>
       <li><a class="hvr-line" [routerLink]="'/signup'" routerLinkActive="active-link">Signup</a></li>
     </ul>

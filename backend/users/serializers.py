@@ -10,6 +10,8 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_auth.serializers import PasswordResetSerializer
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from users.forms import DailyWritingPasswordResetForm
 from users.models import DailyWritingProfile
 
@@ -206,3 +208,17 @@ class DailyWritingPasswordResetSerializer(PasswordResetSerializer):
     """
 
     password_reset_form_class = DailyWritingPasswordResetForm
+
+
+class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Extends the REST Simple JWT obtain token pair serializer to include the authenticated username
+    """
+
+    username = serializers.CharField(source="user.username")
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["username"] = attrs["username"]
+
+        return data

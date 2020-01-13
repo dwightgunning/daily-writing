@@ -18,11 +18,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "raven.contrib.django.raven_compat",
-    "rest_framework",
-    # "rest_framework.authtoken",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "rest_framework",
     "rest_auth",
     "rest_auth.registration",
     "timezone_field",
@@ -102,7 +101,7 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
@@ -124,11 +123,26 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = "users.User"
 
-JWT_AUTH = {"JWT_EXPIRATION_DELTA": datetime.timedelta(days=7)}
-
-# django-rest-auth
-REST_USE_JWT = True
-REST_AUTH_SERIALIZERS = {"JWT_SERIALIZER": "users.serializers.AuthJWTSerializer"}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
+    # 'ROTATE_REFRESH_TOKENS': False,
+    # 'BLACKLIST_AFTER_ROTATION': True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": "ABC12345",  # TODO: Fix this...
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "AUTH_HEADER_TYPES": ("Bearer", "JWT"),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "JTI_CLAIM": "jti",
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": datetime.timedelta(days=1),
+}
 
 # django-allauth
 ACCOUNT_ADAPTER = "users.account_adapters.DailyWritingAccountAdapter"

@@ -11,7 +11,7 @@ import { ApiDataPage } from '../../../core/models/api-data-page';
 import { ApiError } from '../../../core/models/api-error';
 import { Entry } from '../models/entry';
 import { environment } from '../../../../environments/environment';
-import { UserLoginCredentials } from '../../../core/models/user-login-credentials';
+import { UserTokens } from '../../../core/models/user-tokens';
 import { AuthService } from '../../../core/services/auth.service';
 
 
@@ -27,26 +27,26 @@ export enum EntryServiceActionState {
 })
 export class EntryService {
   static readonly ENTRY_ENDPOINT = `${environment.API_BASE_URL}entries/`;
-  private user: UserLoginCredentials;
+  private userTokens: UserTokens;
 
   constructor(
     private authService: AuthService,
     private httpClient: HttpClient) {
 
-    this.authService.getUserLoginCredentials().subscribe(
-      (userLoginCredentials) => this.user = userLoginCredentials
+    this.authService.getUserTokens().subscribe(
+      (userTokens) => this.userTokens = userTokens
     );
   }
 
   public getOrCreateEntry(): Observable<Entry|ApiError>  {
     const entryDate: string = moment().utc().format('YYYY-MM-DD');
 
-    return this.httpClient.get(`${EntryService.ENTRY_ENDPOINT}${this.user.username}/${entryDate}/`).pipe(
+    return this.httpClient.get(`${EntryService.ENTRY_ENDPOINT}${this.userTokens.username}/${entryDate}/`).pipe(
       map((response) => new Entry(response)),
       catchError((error: any) => {
         if (error.status === 404) {
           // TODO: Refactor such that subscription doesn't rely on external scope
-          const newEntry = new Entry({ author: this.user.username, entryDate }); // tslint:disable-line rxjs-no-unsafe-scope
+          const newEntry = new Entry({ author: this.userTokens.username, entryDate }); // tslint:disable-line rxjs-no-unsafe-scope
           return this.httpClient.post(EntryService.ENTRY_ENDPOINT, newEntry).pipe(
             map((response) => new Entry(response)),
             catchError((newEntryError: any) => {
@@ -65,7 +65,7 @@ export class EntryService {
   }
 
   public getEntry(entryDate: string): Observable<Entry|ApiError> {
-    return this.httpClient.get(`${EntryService.ENTRY_ENDPOINT}${this.user.username}/${entryDate}/`).pipe(
+    return this.httpClient.get(`${EntryService.ENTRY_ENDPOINT}${this.userTokens.username}/${entryDate}/`).pipe(
       map((response) => new Entry(response)),
       catchError((error: any) => {
         // Log the unexpected backend error and return a generic, reliable message to the user.
@@ -76,7 +76,7 @@ export class EntryService {
   }
 
   public updateEntry(entry: Entry): Observable<Entry|ApiError> {
-    return this.httpClient.patch(`${EntryService.ENTRY_ENDPOINT}${this.user.username}/${entry.entryDate}/`, entry).pipe(
+    return this.httpClient.patch(`${EntryService.ENTRY_ENDPOINT}${this.userTokens.username}/${entry.entryDate}/`, entry).pipe(
       map((response) => new Entry(response)),
       catchError((error: any) => {
         if (error.status && error.error) {
@@ -92,7 +92,7 @@ export class EntryService {
   public listEntries(entriesUrl?: string): Observable<ApiDataPage|ApiError> {
     // TODO: Better encapsulate paging URLs
     if (!entriesUrl) {
-      entriesUrl = `${EntryService.ENTRY_ENDPOINT}${this.user.username}/`;
+      entriesUrl = `${EntryService.ENTRY_ENDPOINT}${this.userTokens.username}/`;
     }
 
     return this.httpClient.get(entriesUrl).pipe(

@@ -8,21 +8,23 @@ import { catchError, map, share } from 'rxjs/operators';
 import { ApiError } from '../../core/models/api-error';
 import { environment } from '../../../environments/environment';
 import { UserLoginCredentials } from '../../core/models/user-login-credentials';
+import { UserTokens } from '../../core/models/user-tokens';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  static readonly LOGIN_ENDPOINT = `${environment.API_BASE_URL}auth/login/`;
+  static readonly LOGIN_ENDPOINT = `${environment.API_BASE_URL}auth/token/`;
   static readonly LOGIN_CREDENTIALS_KEY = 'userLoginCredentials';
-  static readonly USER_ENDPOINT = `${environment.API_BASE_URL}auth/user/`;
+  static readonly REFRESH_ENDPOINT = `${environment.API_BASE_URL}auth/refresh/`;
+  static readonly VERIFY_ENDPOINT = `${environment.API_BASE_URL}auth/refresh/`;
 
   browserStorage = window.localStorage;
-  userLoginCredentialsSubject = new ReplaySubject<UserLoginCredentials>(1);
+  userTokens$ = new ReplaySubject<UserTokens>(1);
 
   constructor(private httpClient: HttpClient) {
     let storedCredentialData: string;
-    let userLoginCredentials: UserLoginCredentials;
+    let userTokens: UserTokens;
     try {
       storedCredentialData = this.browserStorage.getItem(AuthService.LOGIN_CREDENTIALS_KEY);
     } catch (error) {
@@ -30,28 +32,28 @@ export class AuthService {
       Sentry.captureException(error);
     }
     if (!storedCredentialData) {
-      this.userLoginCredentialsSubject.next(null);
+      this.userTokens$.next(null);
       return;
     }
 
     try {
-      userLoginCredentials = new UserLoginCredentials(JSON.parse(storedCredentialData));
+      userTokens = new UserTokens(JSON.parse(storedCredentialData));
     } catch (error) {
       this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
-      this.userLoginCredentialsSubject.next(null);
+      this.userTokens$.next(null);
       Sentry.captureException(error);
       return;
     }
 
-    if (!userLoginCredentials || !(userLoginCredentials.username && userLoginCredentials.token)) {
+    if (!userTokens || !(userTokens.username && userTokens.access)) {
       this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
-      this.userLoginCredentialsSubject.next(null);
+      this.userTokens$.next(null);
       Sentry.captureException('Malformed user credentials in local storage');
       return;
     }
 
     // Check the stored credentials are still valid
-    this.httpClient.get(AuthService.USER_ENDPOINT).pipe(
+    this.httpClient.get(AuthService.VERIFY_ENDPOINT).pipe(
     map((response) => true),
     // map((response) => new UserLoginCredentials(userLoginCredentials)), // as UserLoginCredentials),
     catchError((error) => {
@@ -62,35 +64,36 @@ export class AuthService {
       return of(new ApiError({errors: ['An unexpected error occurred. Please try again.']}));
     })).subscribe((authenticated: boolean|ApiError) => {
       if (!(authenticated instanceof ApiError)) {
-        this.userLoginCredentialsSubject.next(userLoginCredentials);
+        this.userTokens$.next(userTokens);
         Sentry.configureScope((scope) => {
-          scope.setUser({username: userLoginCredentials.username});
+          scope.setUser({username: userTokens.username});
         });
       } else {
         this.browserStorage.removeItem(AuthService.LOGIN_CREDENTIALS_KEY);
-        this.userLoginCredentialsSubject.next(null);
+        this.userTokens$.next(null);
       }
     });
   }
 
-  public login(credentials: UserLoginCredentials): Observable<UserLoginCredentials|ApiError> {
+  public login(credentials: UserLoginCredentials): Observable<UserTokens|ApiError> {
     return this.httpClient.post(AuthService.LOGIN_ENDPOINT, credentials).pipe(
       map((response) => {
-        const userLoginCredentials = new UserLoginCredentials(response);
+        console.log(response);
+        const userTokens = new UserTokens(response);
         try {
           this.browserStorage.setItem(
             AuthService.LOGIN_CREDENTIALS_KEY,
-            JSON.stringify(userLoginCredentials));
+            JSON.stringify(userTokens));
         } catch (error) {
           // If credentials cannot be stored (e.g. Safari incognito mode)
           // we can carry on with the user stored in the service's
           // user credentials Subject.
         }
-        this.userLoginCredentialsSubject.next(userLoginCredentials);
+        this.userTokens$.next(userTokens);
         Sentry.configureScope((scope) => {
-          scope.setUser({username: userLoginCredentials.username});
+          scope.setUser({username: userTokens.username});
         });
-        return userLoginCredentials;
+        return userTokens;
       }),
       catchError((error: any) => {
         if (error.status && error.error) {
@@ -109,10 +112,10 @@ export class AuthService {
     } catch (error) {
         Sentry.captureException(error);
     }
-    this.userLoginCredentialsSubject.next(null);
+    this.userTokens$.next(null);
   }
 
-  public getUserLoginCredentials(): Observable<UserLoginCredentials> {
-    return this.userLoginCredentialsSubject.asObservable().pipe(share());
+  public getUserTokens(): Observable<UserTokens> {
+    return this.userTokens$.asObservable().pipe(share());
   }
 }

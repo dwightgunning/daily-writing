@@ -1,14 +1,22 @@
 from api.views import empty_view
-from django.urls import include, path
+from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
+
 from rest_auth.registration.views import RegisterView
 from rest_auth.views import PasswordResetConfirmView
+from rest_framework_simplejwt.views import (
+    # TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
+
+
 from users.views import (
     DailyWritingPasswordResetView,
     DailyWritingProfileView,
     InviteRequestAcceptanceView,
     InviteRequestView,
+    UserTokenObtainPairView,
 )
 
 urlpatterns = [
@@ -43,6 +51,8 @@ urlpatterns = [
         empty_view,
         name="invite_acceptance",
     ),
-    path("auth/", include("rest_auth.urls")),
+    path("auth/token/", UserTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("profile/", DailyWritingProfileView.as_view(), name="profile"),
 ]

@@ -1,16 +1,13 @@
-import json
 import logging
 
-from allauth.account.models import EmailConfirmationHMAC
 from rest_auth.registration.views import RegisterView
 from rest_auth.views import PasswordResetView
-from rest_framework import status
-from rest_framework.exceptions import APIException, NotFound
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenViewBase
+
 from users.models import DailyWritingProfile
 from users.serializers import (
     DailyWritingPasswordResetSerializer,
@@ -18,6 +15,7 @@ from users.serializers import (
     InviteAcceptanceSerializer,
     InviteRequestSerializer,
     InviteTokenSerializer,
+    UserTokenObtainPairSerializer,
 )
 
 logger = logging.getLogger(__name__)
@@ -78,3 +76,11 @@ class DailyWritingPasswordResetView(PasswordResetView):
     """
 
     serializer_class = DailyWritingPasswordResetSerializer
+
+
+class UserTokenObtainPairView(TokenViewBase):
+    """
+    Extends the REST Simple JWT obtain token pair view to make use of a custom serializer
+    """
+
+    serializer_class = UserTokenObtainPairSerializer
