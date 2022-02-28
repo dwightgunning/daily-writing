@@ -31,7 +31,7 @@ six = "*"
 black = "==19.3b0"
 django-allauth = "*"
 django-rest-auth = "*"
-django = "==3.0.1"
+django = "==3.1.14"
 
 [requires]
 python_full_version = "3.7.3"
