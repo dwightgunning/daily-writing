@@ -28,7 +28,7 @@
     "@sentry/browser": "^5.6.1",
     "core-js": "^3.2.1",
     "foundation-sites": "^6.5.3",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "newrelic": "^5.11.0",
