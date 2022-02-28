@@ -13,9 +13,14 @@ Thumbs.db
 *.sqlite3
 
 # Yarn
-.yarn/
-.yarnrc
-yarn-error.log
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/sdks
+!frontend/.yarn/versions
+frontend/yarn-error.log
 
 # NPM
 node_modules/
