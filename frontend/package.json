@@ -29,7 +29,7 @@
     "core-js": "^3.2.1",
     "foundation-sites": "^6.5.3",
     "jquery": "^3.4.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.26",
     "newrelic": "^5.11.0",
     "ngx-moment": "^3.3.0",
